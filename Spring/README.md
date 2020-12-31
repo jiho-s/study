@@ -6,18 +6,18 @@
 
 ## 목차
 
-[1. Spring Framework](#1.-spring-framework)
-
-- [OverView](#overview)
-- [Core Technologies](#core-technologies)
+1. [Spring Framework](#1.-spring-framework)
+   - [OverView](#overview)
+   - [Core Technologies](#core-technologies)
 
 ## 1. Spring Framework
 
-- ###  [OverView](./SpringFramework/OverView.md)
+- ###  OverView
+
+  - [Over View](./SpringFramework/OverView.md)
 
 
-- ### Core Technologies
+- ### [Core Technologies](./SpringFramework/CoreTechnologies)
 
 
   - [IoC Container](./SpringFramework/CoreTechnologies/1_IoC_Container.md)
-
