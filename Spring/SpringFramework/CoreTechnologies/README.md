@@ -6,7 +6,7 @@
 
 1. [IoC Container](#1.-ioc-container)
 
-## 1. [IoC Container](./1_IoC_Container.md)
+## [IoC Container](./1_IoC_Container.md)
 
 - ### Spring IoC Container와 Beans
 
@@ -15,4 +15,8 @@
 - ### Bean 개요
 
 - ### Dependencies
+
+- ### Bean Scope
+
+- ### Customizing the Nature of a Bean
 
