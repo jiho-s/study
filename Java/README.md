@@ -2,11 +2,11 @@
 
 > 자바 공부한 내용 정리
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)[![Java: 11](https://img.shields.io/badge/Java-11-orange)](https://docs.oracle.com/en/java/javase/11/books.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)[![Java: 11](https://img.shields.io/badge/Java-11-brightgreen)](https://docs.oracle.com/en/java/javase/11/books.html)
 
 ## 목차
 
-1. [HotSpot Virtual Machine Garbage Collection Tuning](#hotspot-virtual-machine-garbage-collection-tuning)
+1. [Garbage Collector](#garbage-collector)
 
-## HotSpot Virtual Machine Garbage Collection Tuning
+## [Garbage Collector](./GarbageCollector)
 
