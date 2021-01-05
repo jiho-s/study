@@ -20,3 +20,6 @@
 
 - ### Customizing the Nature of a Bean
 
+- ### Bean Definition Inheritance
+
+- ### Container Extension Point

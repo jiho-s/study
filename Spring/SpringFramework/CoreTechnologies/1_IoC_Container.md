@@ -2,14 +2,16 @@
 
 ## 목차
 
-1. [Spring IoC Container와 Beans](#1.-spring-ioc-container와-beans)
-2. [Container 개요](#2.-container-개요)
-3. [Bean 개요](#3.-bean-개요)
-4. [Dependencies](#4.-dependencies)
+1. [Spring IoC Container와 Beans](#spring-ioc-container와-beans)
+2. [Container 개요](#container-개요)
+3. [Bean 개요](#bean-개요)
+4. [Dependencies](#dependencies)
 5. [Bean Scope](#bean-scope)
 6. [Customizing the Nature of a Bean](#customizing-the-nature-of-a-bean)
+7. [Bean Definition Inheritance](#bean-definition-inheritance)
+8. [Container Extension Point](#container-extension-point)
 
-# 1. Spring IoC Container와 Beans
+# Spring IoC Container와 Beans
 
 ## IoC(Inversion of Control)
 
@@ -29,7 +31,7 @@ BeanFactory를 상속받음 Spring에서 실제 사용, 아래의 기능 추가
 - Message resource handling(메세지 다국화)
 - 이벤트 발행
 
-# 2. Container 개요
+# Container 개요
 
 ApplicationContext 구성 정보는 XML, Java Annotaions, Java 코드로 부터 가져올수 있다
 
@@ -146,7 +148,7 @@ PetStoreService service = context.getBean("petStore", PetStoreService.class);
 List<String> userList = service.getUsernameList();
 ```
 
-# 3. Bean 개요
+# Bean 개요
 
 Spring IoC Container은 한 개 이상의 Bean을 관리하고 Bean은 Bean 설정에 의해 생성된다
 
@@ -243,7 +245,7 @@ public class DefaultServiceLocator {
 
 런타임 타입을 알기 위해서는 `BeanFactory.getType` 을 이용해 알 수 있다.
 
-# 4. Dependencies
+# Dependencies
 
 ## Dependency Injection
 
@@ -1080,7 +1082,7 @@ public class AnotherExampleBean implements InitializingBean {
 
 ```
 
-### Destructin Callbacks
+### Destruction Callbacks
 
 `DisposableBean` 인터페이스를 구현하면 빈을 포함하는 컨테이너가 파괴될때 빈이 콜백을 받을 수 있다
 
@@ -1120,4 +1122,241 @@ public class AnotherExampleBean implements DisposableBean {
     }
 }
 ```
+
+### Default Initialization and Destroy Methods
+
+프로젝트 전체에서 Initialization, Destroy Methods를 설정 할수 있다.
+
+#### Initialization 메소드 등록
+
+`init-method="init"`형식으로 등록 할 수 있다. Bean이 생성될때 해당 메소드가 있으면 메소드를 실행한다.
+
+```java
+public class DefaultBlogService implements BlogService {
+
+    private BlogDao blogDao;
+
+    public void setBlogDao(BlogDao blogDao) {
+        this.blogDao = blogDao;
+    }
+
+    // this is (unsurprisingly) the initialization callback method
+    public void init() {
+        if (this.blogDao == null) {
+            throw new IllegalStateException("The [blogDao] property must be set.");
+        }
+    }
+}
+```
+
+```xml
+<beans default-init-method="init">
+
+    <bean id="blogService" class="com.something.DefaultBlogService">
+        <property name="blogDao" ref="blogDao" />
+    </bean>
+
+</beans>
+```
+
+#### Destroy 메소드 등록
+
+`default-destroy-method`를 사용하여 등록할 수 있다.
+
+### Lifecycle Mechanisms 결합
+
+##### Bean의 Lifecycle 동작을 제어하는 방법
+
+- `InitializingBean` 및 `DisposableBean` 인터페이스
+- Custom `init()`, `destroy()` 메소드
+- `@PostConstruct`, `@PreDestroy` annotation
+
+#### 결합하여 사용하는 경우 호출 순서
+
+1. `@PostConstruct`
+2. `InitializingBean`에 정의된 `afterPropertiesSet()`
+3. custom `init()`
+
+1. `@PreDestroy`
+2. `DisposableBean`에 정의된 `destroy()`
+3. custom `destroy()`
+
+### Startup and Shutdown Callbacks
+
+```java
+public interface Lifecycle {
+
+    void start();
+
+    void stop();
+
+    boolean isRunning();
+}
+```
+
+스프링이 관리하는 모든 객체는 `Lifecycle` 인터페이스를 구현 가능하다. `ApplicationContext`가 시작 및 중지 신호를 받으면 context 안에 정의되어 있는 `Lifecycle` 구현체에 이를 전달한다. `LifecycleProcessor` 가 이를 위임 받아 처리한다.
+
+```java
+public interface LifecycleProcessor extends Lifecycle {
+
+    void onRefresh();
+
+    void onClose();
+}
+```
+
+#### SmartLifecycle
+
+시작과 종료 순서가 중요 할 수 있다. 특정 타입의 객체가 다른 타입의 객체보다 먼저 시작되어야하는 경우 `SmartLifecycle`을 이용하여 순서를 지정할 수 있다
+
+```java
+public interface Phased {
+
+    int getPhase();
+}
+```
+
+```java
+public interface SmartLifecycle extends Lifecycle, Phased {
+
+    boolean isAutoStartup();
+
+    void stop(Runnable callback);
+}
+```
+
+`getPhase()`를 이용하여 시작 순서를 정할 수 있다 낮은 순서부터 시작되고 종료시에는 역순으로 종료된다. `SmartLifecycle`을 구현하지 않은 일반적인 객체는 기본값이 0으로 설정된다.
+
+`SmartLifecycle`의 `stop`메소드는 callback을 인자로 받는다. 모든 `SmartLifecycle` 구현체는 
+
+종료가 완료되면 이를 실행해야한다. 이를 이용하여 필요한경우 비동기 종료가 가능하다. `LifecycleProcessor`의 기본 구현체인 `DefaultLifecycleProcessor`를 이용하여 timeout 시간만 다음과 같이 수정할 수 있다. 기본 값은 30초이다.
+
+```xml
+<bean id="lifecycleProcessor" class="org.springframework.context.support.DefaultLifecycleProcessor">
+    <!-- timeout value in milliseconds -->
+    <property name="timeoutPerShutdownPhase" value="10000"/>
+</bean>
+```
+
+## `ApplicationContextAware`과 `BeanNameAware`
+
+`ApplicationContext`가 `ApplicationContextAware`의 구현체를 생성할때 구현체는 `ApplicationContext`에게 정보를 제공할 수 있다
+
+```java
+public interface ApplicationContextAware {
+
+    void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
+}
+```
+
+빈은 `ApplicationContext`가 빈을 생성할때 `ApplicationContext`인터페이스 또는 하위 인터페이스를 조작할 수 있다. 이를 이용해 다른 빈들의 프로그램 방식을 알수 있다. 그러나 코드가 스프링에 종속되고 IoC 스타일을 따르지 않기 때문에 사용을 피하는 것이 좋다. 또한 `ApplicationContext`의 메소드는 파일 리소스에 접근 이벤트 발생, `MessageSource`에 접근을 제공한다.
+
+다른 방법으로는 Autowiring을 통해 `ApplicationContext`의 정보를 얻을 수 있다
+
+`ApplicationContext`가 `BeanNameAware` 인터페이스의 구현체를 생성 할때 클래스는 객체 정의에서 정의된 이름에 관한 정보를 제공해준다.
+
+```java
+public interface BeanNameAware {
+
+    void setBeanName(String name) throws BeansException;
+}
+```
+
+# Bean Definition Inheritance
+
+Bean definition은 설정 정보, 생성자 인수, 프로퍼티 값, 컨테이너 틍정 정보를 포함한 많은 구성정보가 포함될 수 있다. child 빈은 이러한 설정 정보를 상속 받을 수 있다. child definition은 상속 받은 값 재정의 및 또는 필요한 다른 값을 추가 할 수 있다.
+
+XML 기반 구성을 사용 할 때, child bean definition을 `parent` 속성을 사용해 나타낼 수 있다.
+
+```xml
+<bean id="inheritedTestBean" abstract="true"
+        class="org.springframework.beans.TestBean">
+    <property name="name" value="parent"/>
+    <property name="age" value="1"/>
+</bean>
+
+<bean id="inheritsWithDifferentClass"
+        class="org.springframework.beans.DerivedTestBean"
+        parent="inheritedTestBean" init-method="initialize">  
+    <property name="name" value="override"/>
+    <!-- the age property value of 1 will be inherited from parent -->
+</bean>
+```
+
+`abstact` 속성을 이용해 명시적으로 parent bean의 정의를 추상화 시켰다
+
+# Container Extension Point
+
+특정 통합 인터페이스 구현을 Spring IoC container에 확장 시킬 수 있다.
+
+## `BeanPostProcessor`를 이용한 Bean Custom
+
+`BeanPostProcessor` 인터페이스는 callback method가 있고, 콜백 메서드를 구현 하여 인스턴스화 로직, 의존성 구성 로직 등을 설정 할 수 있다. Spring Container가 인스턴스를 만들고 빈에 대한 구성과 초기화가 끝난후 로직을 추가시키고 싶으면 BeanPostProcessor 구현체를 이용해 추가할 수 있다
+
+여러개의 `BeanPostProcessor` 인스턴스를 구성할수 있으며, `order` 속성을 이용하여 순서를 설정 할 수 있다. `BeanPostProcesser`인스턴스가 `Ordered` 인터페이를 구현 한 경우에만 속성을 설정 할 수 있다.
+
+`BeanPostProcessor`는 두개의 콜백 메소드로 구성되어 있다. 컨테이너에 post-processor로 등록이 되면, 각각의 bean이 컨테이너에 의 해 생성될때 initialization methods 전에 콜백을 받고 initialization methods 후에 콜백을 받는다. Post-processor는 bean 인스턴스에 관련한 모든 것을 할 수 있다. 일반적으로 콜백 인스턴스를 확인하거나 프록시로 빈을 래핑 할 수 있다. 일부 Spring AOP 인프라 클래스는 프록시 랩핑 로직을 제공하기 위해 post-processor를 사용한다.
+
+`@Bean`을 이용해 `BeanPostProcessor`를 선언 할때, 리턴 타입은 `BeanPostProcessor`의 구현체 이거나 또는 `BeanPostProcessor`인터페이스 여야한다. 그렇지 않으면 `ApplicationContext` 가 구성될 때 자동으로 등록 할 수 없다.
+
+> #### 프로그램 방식으로 `BeanPostProcessor` 인터페이스 등록
+>
+> `ApplicationContext`자동 검색으로 등록되는 것을 권장하지만, `ConfigurableBeanFactory`의 `addBeanPostProcessor` 메소드를 이용하여 등록할 수 있다. 그러나 `Ordered`를 고려하지 않고 등록이 된다.
+
+## `BeanFactoryPostProcessor`를 이용한 설정 데이터 Custom
+
+`BeanFactoryPostProcessor`는 `BeanPostProcessor`와 비슷하지만 가장큰 차이는 `BeanFactoryPostProcessor`는 빈 설정데이터에서 작동한다. Spring IoC container가 `BeanFactoryPostProcessor`이외의 빈들의 인스턴스를 만들기 전에 `BeanPostProcessor`가 설정 데이터를 읽고 이를 변경할 수 있다.
+
+여러개의 `BeanFactoryPostProcessor`를 설정 할 수 있으며 `Orderd`인터페이스를 구현한 경우 `order`를 이용해 순서를 정할 수 있다.
+
+> 실제 빈 인스턴스를 변경 하려는 경우 `BeanPostProcessor`를 이용해야한다. `BeanFactoryPostProcessor`를 이용해서도 변경 할 수 있지만 컨테이너 표준 라이프 사이클에 위반된다.
+
+`ApplicationContext`는 자동으로 `BeanFactoryPostProcessor` 구현체를 감지하여 등록한다.
+
+> `Bean(Factory)PostProcessor`는 지연초기화를 설정해도 무시된다.
+
+#### BeanFactoryPostProcessor 예시: `PropertySourcePlaceholderConfigurer`
+
+`PropertySourcePlaceholderConfigurer`를 사용하여 Java `Properties` 포맷을 사용하여 별도의 파일에 있는 bean definition의 프로퍼티를 사용할 수 있다. 이를 이용해 데이터베이스 url 같은 환경 변수 설정을 XML 정의 파일 또는 컨테이너 파일 수정없이 변경 할 수 있다.
+
+다음 `DataSource`에는 placeholder 값이 정의 되어 있다.
+
+```xml
+<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+    <property name="locations" value="classpath:com/something/jdbc.properties"/>
+</bean>
+
+<bean id="dataSource" destroy-method="close"
+        class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+    <property name="url" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+</bean>
+```
+
+런타임시 `PropertySourcePlaceholderConfigurer`는 다른 값으로 `DataSource`의 프로퍼티로 변경한다.
+
+```properties
+jdbc.driverClassName=org.hsqldb.jdbcDriver
+jdbc.url=jdbc:hsqldb:hsql://production:9002
+jdbc.username=sa
+jdbc.password=root
+```
+
+`${jdbc.username}`은 'sa'로 바뀐다.
+
+`PropertySourcePlcaeholderConfigurer`는 `Properties` file에서 프로퍼티를 찾을 뿐아니라, Spring `Environment` 프로퍼티와 자바의 `System` 프로퍼티도 찾는다.
+
+## `FactoryBean`으로 인스턴스 로직 Custom
+
+`FactoryBean`을 사용하면 생성자나 정적 메소드가 아닌 다른 방법으로 생성되는 객체를 스프링 빈으로 사용할 수 있게 된다.
+
+`FactoryBean` 는 세개의 메소드를 제공한다
+
+- `Object getObject()`: 팩토리가 생산하는 객체를 반환한다. 팩토리가 싱글톤 또는 프로토 타입의 빈을 리턴하는지에 따라 공유할 수 있는지 정해진다.
+- `boolean isSingleton()`: 싱글톤 타입의 빈인경우 `true`를 리턴한다.
+- `Class getObjectType()`: 객체의 타입을 리턴한다.
+
+`ApplicationContext`의 `getBean` 메소드에 `FactoryBean`을 알고 싶은 `Bean`의 `id`에 `&`를 붙이면 해당 빈의 `FactoryBean`을 알 수 있다.
 
