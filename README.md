@@ -8,6 +8,7 @@
 
 1. [Spring](#Spring)
 2. [Java](#java)
+3. [Algorithm](#algorithm)
 
 ## [Spring](./Spring)
 
@@ -18,4 +19,8 @@
 ## [Java](./Java)
 
 - [Garbage Collector](./Java/GarbageCollector)
+
+## [Algorithm](./Algorithm)
+
+- [알고리즘 문제 해결 전략](./Algorithm/Book)
 
