@@ -9,4 +9,3 @@
 1. [Garbage Collector](#garbage-collector)
 
 ## [Garbage Collector](./GarbageCollector)
-
