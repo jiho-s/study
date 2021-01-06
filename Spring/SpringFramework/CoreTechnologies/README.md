@@ -6,22 +6,23 @@
 
 1. [IoC Container](#1.-ioc-container)
 
-## [IoC Container](./1_IoC_Container.md)
+## [IoC Container](./1_IoC_Container)
 
-- ### Spring IoC Container와 Beans
+- ### [Spring IoC Container와 Beans](./1_IoC_Container/01_Spring_IoC_Container와_Beans)
 
-- ### Container 개요
+- ### [Container 개요](./1_IoC_Container/02_Container_Overview)
 
-- ### Bean 개요
+- ### [Bean 개요](./1_IoC_Container/03_Bean_Overview)
 
-- ### Dependencies
+- ### [Dependencies](./1_IoC_Container/04_Dependencies)
 
-- ### Bean Scope
+- ### [Bean Scope](./1_IoC_Container/05_Bean_Scope)
 
-- ### Customizing the Nature of a Bean
+- ### [Customizing the Nature of a Bean](./1_IoC_Container/06_Customizing_the_Nature_of_a_Bean)
 
-- ### Bean Definition Inheritance
+- ### [Bean Definition Inheritance](./1_IoC_Container/07_Bean_Definition_Inheritance)
 
-- ### Container Extension Point
+- ### [Container Extension Point](./1_IoC_Container/08_Container_Extension_Point)
 
-- ### Annotation-based Container Configuration
+- ### [Annotation-based Container Configuration](./1_IoC_Container/09_Annotation-based_Container_Configuration)
+
