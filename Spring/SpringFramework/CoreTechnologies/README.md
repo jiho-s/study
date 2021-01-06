@@ -16,7 +16,7 @@
 
 - ### [Dependencies](./1_IoC_Container/04_Dependencies.md)
 
-- ### [Bean Scope](./1_IoC_Container/05_Bean_Scope,md)
+- ### [Bean Scope](./1_IoC_Container/05_Bean_Scope.md)
 
 - ### [Customizing the Nature of a Bean](./1_IoC_Container/06_Customizing_the_Nature_of_a_Bean.md)
 
