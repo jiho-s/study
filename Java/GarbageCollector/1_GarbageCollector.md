@@ -1,6 +1,6 @@
-# Garbage Collector
-
 ## Garbage Collector
+
+### Garbage Collector
 
 GC는 어플리케이션이 동적으로 할당 요청한 메모리를 자동으로 관리한다.
 
