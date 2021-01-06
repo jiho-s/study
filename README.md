@@ -6,11 +6,16 @@
 
 ## 목차
 
-[1.Spring](#1.-Spring)
+1. [Spring](#Spring)
+2. [Java](#java)
 
-## 1. [Spring](./Spring)
+## [Spring](./Spring)
 
 - [Spring Framework](./Spring/SpringFramework)
   - [Over View](./Spring/SpringFramework/OverView.md)
   - [Core Technologies](./Spring/SpringFramework/CoreTechnologies)
+
+## [Java](./Java)
+
+- [Garbage Collector](./Java/GarbageCollector)
 
