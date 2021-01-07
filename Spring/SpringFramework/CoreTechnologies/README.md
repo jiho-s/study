@@ -26,3 +26,5 @@
 
 - ### [Annotation-based Container Configuration](./1_IoC_Container/09_Annotation-based_Container_Configuration.md)
 
+- ### [Classpath Scanning and Managed Components](./1_IoC_Container/10_ClasspathScanningAndManagedComponents.md)
+
