@@ -1,4 +1,4 @@
-# Annotation-based Container Configuration
+## Annotation-based Container Configuration
 
 XML 기반 설정의 대안으로 annotation 기반 설정이 있으며, annotation 기반 설정은 괄호로 선언하는 대신 바이트코드 메타데이터를 이용해 구성 요소를 연결한다.
 
@@ -21,7 +21,7 @@ XML 기반 구성에서 `context`를 이용해 전체 빈에 적용 시킬 수 �
 </beans>
 ```
 
-## `@Required`
+### `@Required`
 
 `@Required` annotation은 빈 프로퍼티 setter 메소드에 적용이 가능하다
 
@@ -43,7 +43,7 @@ public class SimpleMovieLister {
 
 > `@Required` annotation은 Spring Framework 5.1에서 deprecated되었다.
 
-## `@Autowired`
+### `@Autowired`
 
 > JSR 330의 `@Inject` annotation을 `@Autowired` 대신에 사용 할 수 있다.
 
@@ -187,7 +187,7 @@ public class MovieRecommender {
 
 > `@Autowired`, `@Inject`, `@Value`, `@Resource` annotation은 Spring의 `BeanPostProcessor` 구현체에 의해 처리된다. 따라서 custom `BeanPostProcessor`나 `BeanFactoryPostProcessor`의 경우에는 `@Bean`을 이용해 등록하거나 XML 구성을 통해 등록해야 한다.
 
-## `@Primary`로 우선권 부여
+### `@Primary`로 우선권 부여
 
 같은 타입의 빈이 여러게인 경우 `@Primary`로 설정된 빈이 있으면 해당 빈이 의존성 주입 된다.
 
@@ -245,7 +245,7 @@ XML로 다음과 같이 표현 할 수 있다.
 </beans>
 ```
 
-## `@Qualifier를 사용하여 특정 빈 지정
+### `@Qualifier`를 사용하여 특정 빈 지정
 
 `@Qulifier`를 사용하여 빈을 특정한 값에 연관시켜 특정 빈을 선택하도록 할 수 있다.
 
@@ -300,13 +300,13 @@ public class MovieRecommender {
 
 > bean name으로 주입 받으려고 하는 경우 `@Qualifier` annotaion이 필요하지 않다. 의존성이 여러게인 상황에서 Spring은 기본적으로 주입 지점 이름(필드명, 등)가 일치하는 것을 의존성 주입 한다.
 
-#### `@Resource`
+##### `@Resource`
 
 bean 이름으로 annotation 기반 주입을 하려는 경우 `@Autowired`을 사용하지 말고, JSR-250에 선언된 `@Resource` annotation을 사용해야한다. `@Resource` annotation는 빈의 타입은 보지 않고 이름으로만 빈을 주입한다. `@Autowired`의 경우 먼저 타입일치하는 것을 확인하고 `Spring`의 `qualifier` 값을 사용해 주입을한다.
 
 `@Autowired`의 경우 필드, 생성자, 여러 인수를 가진 메소드에 사용할 수 있지만, `@Resource`는 필드에만 사용 할 수 있다.
 
-#### Custom `qualifier` 
+##### Custom `qualifier` 
 
 ```java
 @Target({ElementType.FIELD, ElementType.PARAMETER})
@@ -365,7 +365,7 @@ XML 설정에서 `qulifier`의 `type` 프로퍼티를 이용해 custom `qualifie
 </beans>
 ```
 
-## `CustomAutowireConfigurer` 사용
+### `CustomAutowireConfigurer` 사용
 
 `CustomAutowireConfigurer`는 `BeanFactoryPostProcessor` 구현체로 custom qualifier annotation을 등록 할 수 있다.
 
@@ -386,7 +386,7 @@ XML 설정에서 `qulifier`의 `type` 프로퍼티를 이용해 custom `qualifie
 - `<beans/>`의 `default-autowire-candidate` 값
 - `@Qualifier` annotation 또는 `CustomAutowireConfigurer`에 등록된 커스텀 qualifier
 
-## `@Resource`
+### `@Resource`
 
 필드 또는 setter 메소드에서 JSR-250의 `@Resource` annotation을 통한 의존성 주입을 지원한다. 
 
@@ -418,7 +418,7 @@ public class SimpleMovieLister {
 }
 ```
 
-## `@Value`
+### `@Value`
 
 `@Value`는 외부 속성을 주입하는데 사용된다.
 
@@ -468,7 +468,7 @@ public class MovieRecommender {
 }
 ```
 
-## `@PostConstruct`와 `@PreDestroy`
+### `@PostConstruct`와 `@PreDestroy`
 
 `CommonAnnotationBeanPostProcessor`는 `@Resource` 뿐 아니라, `@PostCOnstruct`, `@PreDestroy` 도 지원한다.
 
