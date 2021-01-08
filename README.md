@@ -10,11 +10,11 @@
 2. [Java](#java)
 3. [Algorithm](#algorithm)
 
-## [Spring](./Spring)
+## [Spring](./SpringReference)
 
-- [Spring Framework](./Spring/SpringFramework)
-  - [Over View](./Spring/SpringFramework/OverView.md)
-  - [Core Technologies](./Spring/SpringFramework/CoreTechnologies)
+- [Spring Framework](./SpringReference/SpringFramework)
+  - [Over View](./SpringReference/SpringFramework/OverView.md)
+  - [Core Technologies](./SpringReference/SpringFramework/CoreTechnologies)
 
 ## [Java](./Java)
 
