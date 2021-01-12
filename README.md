@@ -6,16 +6,26 @@
 
 ## 목차
 
-1. [Spring](#Spring)
-2. [Java](#java)
-3. [Algorithm](#algorithm)
+1. [Spring Reference](#spring-reference)
+2. [Spring Lean](#spring-lean)
+3. [Java](#java)
+4. [Algorithm](#algorithm)
 
 ## [Spring Reference](./SpringReference)
+
+> 스프링 레퍼런스 정리
 
 - [Spring Framework](./SpringReference/SpringFramework)
   - [Over View](./SpringReference/SpringFramework/OverView.md)
   - [Core Technologies](./SpringReference/SpringFramework/CoreTechnologies)
     - [IoC Container](./SpringReference/SpringFramework/CoreTechnologies/1_IoC_Container)
+
+## [Spring Lean](./SpringLean)
+
+> 스프링 강의 정리
+
+- [예제로 배우는 스프링 입문](./SpringLean/SpringByExample)
+- [스프링 프레임워크 핵심기술](./SpringLean/SpringCore)
 
 ## [Java](./Java)
 
