@@ -20,7 +20,7 @@
 > [강의 링크](https://www.inflearn.com/course/spring-framework_core/dashboard)
 
 - [IoC 컨테이너](./SpringCore/IoCContainer.md)
-- [Resource / Validation / SpEL]()
+- [Resource / Validation / SpEL](./SpringCore/ResourceValidationSpEL.md)
 
-- [스프링 AOP]()
+- [스프링 AOP](./SpringCore/SpringAOPNullSafety.md)
 
