@@ -30,3 +30,5 @@
 
 - [Using JSR 330 Standard Annotations](./1_IoC_Container/11_UsingJSR330StandardAnnotations)
 
+- [Java-based Container Configuration](./1_IoC_Container/12_Java-basedContainerConfiguration)
+
