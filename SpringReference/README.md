@@ -17,7 +17,5 @@
 
 
 - [Core Technologies](./SpringFramework/CoreTechnologies)
-
-
-    - [IoC Container](./SpringFramework/CoreTechnologies/1_IoC_Container)
+  - [IoC Container](./SpringFramework/CoreTechnologies/1_IoC_Container)
 
