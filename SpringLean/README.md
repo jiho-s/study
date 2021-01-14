@@ -6,7 +6,7 @@
 
 1. [예제로 배우는 스프링 입문](#예제로-배우는-스프링-입문)
 2. [스프링 프레임워크 핵심기술](#스프링-프레임워크-핵심기술)
-3. [스프링 MVC]()
+3. [스프링 웹 MVC](#스프링-웹-mvc)
 4. [스프링 데이터 JPA]()
 
 ## [예제로 배우는 스프링 입문](./SpringByExample)
@@ -24,3 +24,8 @@
 
 - [스프링 AOP](./SpringCore/SpringAOPNullSafety.md)
 
+## [스프링 웹 MVC](./SpringWebMVC)
+
+> [강의 링크](https://www.inflearn.com/course/웹-mvc/dashboard)
+
+- [스프링 웹 MVC 소개](./SpringWebMVC/01_OverView.md)
