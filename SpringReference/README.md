@@ -12,12 +12,10 @@
 
 ## 1. Spring Framework
 
-- ###  OverView
-
-  - [Over View](./SpringFramework/OverView.md)
-
-
-- ### [Core Technologies](./SpringFramework/CoreTechnologies)
+- OverView
+- [Over View](./SpringFramework/OverView.md)
 
 
+- [Core Technologies](./SpringFramework/CoreTechnologies)
   - [IoC Container](./SpringFramework/CoreTechnologies/1_IoC_Container)
+
