@@ -34,3 +34,7 @@
 
 - [Envivonment Abstraction](./1_IoC_Container/13_EnvironmentAbstraction.md)
 
+- [Registering a `LoadTimeWeaver`](./1_IoC_Container/14_RegisteringLoadTimeWeaver.md)
+
+- [Additional Capabilities of the `ApplicationContext`](./1_IoC_Container15_AdditionalCapabilitiesApplicationContext.md)
+
