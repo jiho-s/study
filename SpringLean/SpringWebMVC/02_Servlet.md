@@ -6,6 +6,7 @@
 2. [서블릿 어플리케이션 개발](#서블릿-어플리케이션-개발)
 3. [서블릿 리스너](#서블릿-리스너)
 4. [서블릿 필터](#서블릿-필터)
+5. [자바코드로 서블릿 등록](#자바코드로-서블릿-등록)
 
 ### 서블릿 소개
 
@@ -263,3 +264,49 @@
   종료시에는 서블릿 종료, 필터 종료, 리스너 종료 순서대로 종료하는 것을 확인 할 수 있다.
 
   ![02_Servlet_11](./Asset/02_Servlet_11.png)
+
+### 자바코드로 서블릿 등록
+
+- web.xml 대신 java class로 설정하기
+
+  WebApplication 클래스를 WebApplicationInitializer를 구현하여 만든다 구현할때 onStartup이라는 메소드를 구현하게 되는데 web.xml 설정파일 처럼 servlet, servletMapping, listener, Filter 등을 등록할 수 있다.
+
+  ```java
+  public class WebApplication implements WebApplicationInitializer {
+      @Override
+      public void onStartup(ServletContext servletContext) throws ServletException {
+  
+      }
+  }
+  ```
+
+  다음으로 IoC 컨테이너인 ApplicationContext를 등록한다. 그리고 web.xml에서처럼 Web.config를 등록하여 해당 패키지를 ComponentScan하게 한다
+
+  ```java
+  public class WebApplication implements WebApplicationInitializer {
+      @Override
+      public void onStartup(ServletContext servletContext) throws ServletException {
+          AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+          context.register(WebConfig.class);
+          context.refresh();
+  
+      }
+  }
+  ```
+
+  DispatcherServlet을 ApplicationContext를 매개변수로 하여 생성한다. 그리고 ServletContext의 addServlet() 메소드를 통해 등록한다 그리고 addServlet()의 반환되는 ServletResistration.Dynamic객체를 이용해 DisptcherServlet에 mapping 될 url을 지정한다
+
+  ```java
+  public class WebApplication implements WebApplicationInitializer {
+      @Override
+      public void onStartup(ServletContext servletContext) throws ServletException {
+          AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+          context.register(WebConfig.class);
+          context.refresh();
+  
+          DispatcherServlet dispatcherServlet = new DispatcherServlet(context);
+          ServletRegistration.Dynamic app = servletContext.addServlet("app", dispatcherServlet);
+          app.addMapping("/app/*");
+      }
+  }
+  ```
