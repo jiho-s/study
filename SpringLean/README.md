@@ -34,4 +34,5 @@
 - [DispatcherServlet](./SpringWebMVC/04_DispatcherServlet.md)
 - MVC Config
   - [스프링 MVC 구성요소 등록](./SpringWebMVC/05_MVCConfig_EnableMVCConfig.md)
-  - [Formatter](./SpringWebMVC/./06_MVCConfig_Formatter.md)
+  - [Formatter](./SpringWebMVC/06_MVCConfig_Formatter.md)
+  - [HandlerInterceptor](./SpringWebMVC/07_HandlerInterceptor.md)
