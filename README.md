@@ -53,6 +53,7 @@
     - [스프링 MVC 구성요소 등록](./SpringLean/SpringWebMVC/05_MVCConfig_EnableMVCConfig.md)
     - [Formatter](./SpringLean/SpringWebMVC/06_MVCConfig_Formatter.md)
     - [HandlerInterceptor](./SpringLean/SpringWebMVC/07_HandlerInterceptor.md)
+    - [ResourceHandler](./SpringLean/SpringWebMVC/08_ResourceHandler.md)
 
 ## [Java](./Java)
 
