@@ -36,4 +36,7 @@
   - [스프링 MVC 구성요소 등록](./SpringWebMVC/05_MVCConfig_EnableMVCConfig.md)
   - [Formatter](./SpringWebMVC/06_MVCConfig_Formatter.md)
   - [HandlerInterceptor](./SpringWebMVC/07_HandlerInterceptor.md)
-  - [ResourceHandler](./SpringWebMVC/08_ResourceHandler_01.md)
+  - [ResourceHandler](./SpringWebMVC/08_ResourceHandler.md)
+  - [HTTP Message Converter](./SpringWebMVC/09_HTTPMessageConverter.md)
+  - [그 밖의 WebMvcConfigurer 설정](./SpringWebMVC/10_ETC_WebMvcConfigure.md)
+
