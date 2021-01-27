@@ -41,4 +41,6 @@
 - [Formatter](./06_MVCConfig_Formatter.md)
 - [HandlerInterceptor](./07_HandlerInterceptor.md)
 - [ResourceHandler](./08_ResourceHandler.md)
+- [HTTP Message Converter](./09_HTTPMessageConverter.md)
+- [그 밖의 WebMvcConfigurer 설정](./10_ETC_WebMvcConfigure.md)
 
