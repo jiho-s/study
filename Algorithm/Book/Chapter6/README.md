@@ -280,3 +280,77 @@ H*W 크기의 게임판이 있다. 게임판은 검은 칸과 흰칸으로 구�
 1514
 ```
 
+#### 풀이
+
+주어진 게임판에서 흰 칸의 수가 3의 배수가 아닐 경우 무조건 답이 없으니 이 부분을 따로 처리 해야한다.
+
+##### 중복으로 세는 문제
+
+블록을 놓는 순서는 이 문제에서 중요하지 않은데, 같은 배치도 블록을 놓는 순서에 따라서 여러번 세기 때문이다. 특정한 순서대로 답을 생성하도록 강제할 필요가 있다.
+
+##### 구현
+
+```java
+class Solution {
+    boolean [][] table;
+    int maxX;
+    int maxY;
+    public static final int [][][] types = {
+            {{0,0}, {1,0}, {0,1}},
+            {{0,0},{0,1},{1,1}},
+            {{0,0}, {1,0}, {1,1}},
+            {{0,0}, {1,0}, {1,-1}}
+    };
+    public int solution(boolean [][] table, int h, int w) {
+        this.table = table;
+        this.maxX = h-1;
+        this.maxY = w-1;
+        return cover();
+    }
+
+    private boolean canSet(int x, int y, int typeNum) {
+        return Arrays.stream(types[typeNum]).noneMatch(type -> {
+            int nextX = x + type[0];
+            int nextY = y + type[1];
+            if (nextX > maxX || nextY > maxY || nextX < 0 || nextY < 0) {
+                return true;
+            }else return !table[nextX][nextY];
+        });
+    }
+    private void set(int x, int y, int typeNum, boolean toSet) {
+        Arrays.stream(types[typeNum]).forEach(type -> {
+            int nextX = x + type[0];
+            int nextY = y + type[1];
+            table[nextX][nextY] = toSet;
+        });
+    }
+
+
+    private int cover() {
+        int x = -1;
+        int y = -1;
+
+        loop: for (int i = 0; i <= maxX; i++) {
+            for (int j = 0; j <= maxY; j++) {
+                if (table[i][j]) {
+                    x = i;
+                    y = j;
+                    break loop;
+                }
+            }
+        }
+
+        if (x == -1) return 1;
+        int result = 0;
+        for (int i = 0; i < 4; i++) {
+            if (canSet(x, y, i)) {
+                set(x, y, i, false);
+                result += cover();
+                set(x, y, i, true);
+            }
+        }
+        return result;
+    }
+}
+```
+
