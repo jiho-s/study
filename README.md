@@ -64,4 +64,8 @@
 ## [Algorithm](./Algorithm)
 
 - [알고리즘 문제 해결 전략](./Algorithm/Book)
+  - [문제 해결 개관](./Algorithm/Book/Chapter2)
+  - [코딩과 디버깅에 관하여](./Algorithm/Book/Chapter3)
+  - [알고리즘의 시간 복잡도 분석](./Algorithm/Book/Chapter4)
+  - [무식하게 풀기](./Algorithm/Book/Chapter6)
 
