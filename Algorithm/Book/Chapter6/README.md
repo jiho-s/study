@@ -5,6 +5,7 @@
 1. [도입](#도입)
 2. [재귀 호출과 완전탐색](#재귀-호출과-완전탐색)
 3. [소풍](#소풍)
+4. [게임판 덮기](#게임판-덮기)
 
 ### 도입
 
@@ -229,3 +230,127 @@ public static int countPairing(ArrayList<Integer>[] table, boolean [] mark, int 
         return result;
     }
 ```
+
+### 게임판 덮기
+
+#### 문제
+
+H*W 크기의 게임판이 있다. 게임판은 검은 칸과 흰칸으로 구성된 격자 모양을 하고 있는데 이 중 모든 흰 칸을 세칸짜리 L자 모양의 블록으로 덮고 싶다. 이때 블록들은 자유롭게 회전해서 놓을 수 있지만, 서로 겹치거나, 검은칸을 덮거나, 게임판 밖으로 나가서는 안된다. 게임판이 주어질 떄 이를 덮는 방법의 수를 계산하는 프로그램을 작성해라
+
+##### 시간 및 메모리 제한
+
+프로그램은 2초 안에 실행되어야 하며, 64MB 이하의 메모리를 사용해야만 한다.
+
+##### 입력
+
+입력의 첫줄에는 테스트 케이스의 수가 주어진다. 각 테스트 케이스의 첫 줄에는 두 개의 정수 H,W가 주어진다. 다음 H 줄에 각 W 글자로 게임판의 모양이 주어진다. #은 검은칸 .은 흰칸을 나타낸다. 입력에 주어지는 게임판에 있는 흰 칸의 수는 50을 넘지 않는다.
+
+##### 출력
+
+한줄에 하나씩 흰 칸을 모두 덮는 방법의 수를 출력한다.
+
+##### 예제 입력
+
+```
+3
+3 7
+#.....#
+#.....#
+##...##
+3 7
+#.....#
+#.....#
+##..###
+8 10
+##########
+#........#
+#........#
+#........#
+#........#
+#........#
+#........#
+##########
+```
+
+##### 예제 출력
+
+```
+0
+2
+1514
+```
+
+#### 풀이
+
+주어진 게임판에서 흰 칸의 수가 3의 배수가 아닐 경우 무조건 답이 없으니 이 부분을 따로 처리 해야한다.
+
+##### 중복으로 세는 문제
+
+블록을 놓는 순서는 이 문제에서 중요하지 않은데, 같은 배치도 블록을 놓는 순서에 따라서 여러번 세기 때문이다. 특정한 순서대로 답을 생성하도록 강제할 필요가 있다.
+
+##### 구현
+
+```java
+class Solution {
+    boolean [][] table;
+    int maxX;
+    int maxY;
+    public static final int [][][] types = {
+            {{0,0}, {1,0}, {0,1}},
+            {{0,0},{0,1},{1,1}},
+            {{0,0}, {1,0}, {1,1}},
+            {{0,0}, {1,0}, {1,-1}}
+    };
+    public int solution(boolean [][] table, int h, int w) {
+        this.table = table;
+        this.maxX = h-1;
+        this.maxY = w-1;
+        return cover();
+    }
+
+    private boolean canSet(int x, int y, int typeNum) {
+        return Arrays.stream(types[typeNum]).noneMatch(type -> {
+            int nextX = x + type[0];
+            int nextY = y + type[1];
+            if (nextX > maxX || nextY > maxY || nextX < 0 || nextY < 0) {
+                return true;
+            }else return !table[nextX][nextY];
+        });
+    }
+    private void set(int x, int y, int typeNum, boolean toSet) {
+        Arrays.stream(types[typeNum]).forEach(type -> {
+            int nextX = x + type[0];
+            int nextY = y + type[1];
+            table[nextX][nextY] = toSet;
+        });
+    }
+
+
+    private int cover() {
+        int x = -1;
+        int y = -1;
+
+        loop: for (int i = 0; i <= maxX; i++) {
+            for (int j = 0; j <= maxY; j++) {
+                if (table[i][j]) {
+                    x = i;
+                    y = j;
+                    break loop;
+                }
+            }
+        }
+
+        if (x == -1) return 1;
+        int result = 0;
+        for (int i = 0; i < 4; i++) {
+            if (canSet(x, y, i)) {
+                set(x, y, i, false);
+                result += cover();
+                set(x, y, i, true);
+            }
+        }
+        return result;
+    }
+}
+```
+
