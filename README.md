@@ -54,6 +54,8 @@
     - [Formatter](./SpringLean/SpringWebMVC/06_MVCConfig_Formatter.md)
     - [HandlerInterceptor](./SpringLean/SpringWebMVC/07_HandlerInterceptor.md)
     - [ResourceHandler](./SpringLean/SpringWebMVC/08_ResourceHandler.md)
+    - [HTTP Message Converter](./SpringLean/SpringWebMVC/09_HTTPMessageConverter.md)
+    - [그밖의 WebMvcConfigurer 설정](./SpringLean/SpringWebMVC/10_ETC_WebMvcConfigure.md)
 
 ## [Java](./Java)
 
