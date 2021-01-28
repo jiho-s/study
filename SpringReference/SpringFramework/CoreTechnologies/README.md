@@ -5,6 +5,7 @@
 ## 목차
 
 1. [IoC Container](#1.-ioc-container)
+2. [Resources](#resources)
 
 ## [IoC Container](./1_IoC_Container)
 
@@ -37,4 +38,12 @@
 - [Registering a `LoadTimeWeaver`](./1_IoC_Container/14_RegisteringLoadTimeWeaver.md)
 
 - [Additional Capabilities of the `ApplicationContext`](./1_IoC_Container15_AdditionalCapabilitiesApplicationContext.md)
+
+## [Resources](./2_Resources)
+
+- [Resource Interface](./2_Resources/01_ResourceInterface.md)
+
+- [Built-in Resource Implementations](./2_Resources/02_Built-inResourceImplementations)
+
+- [ResourceLoader](./2_Resources/03_ResourceLoader.md)
 
