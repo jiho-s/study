@@ -40,3 +40,5 @@
   - [HTTP Message Converter](./SpringWebMVC/09_HTTPMessageConverter.md)
   - [그 밖의 WebMvcConfigurer 설정](./SpringWebMVC/10_ETC_WebMvcConfigure.md)
 
+- HTTP 요청 맵핑하기
+  - [스프링에서 HTTP 요청 맵핑하기](./SpringWebMVC/11_RequestMapping_RequestMapping.md)

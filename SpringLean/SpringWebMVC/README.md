@@ -7,7 +7,7 @@
 3. [스프링 IoC 컨테이너 연동](#스프링-ioc-컨테이너-연동)
 4. [DispatcherServlet](#DispatcherServlet)
 5. [MVC Config](#mvc-config)
-6. 
+6. [HTTP 요청 맵핑하기](#http-요청-맵핑하기)
 
 ## [스프링 MVC 소개](./01_OverView.md)
 
@@ -44,3 +44,6 @@
 - [HTTP Message Converter](./09_HTTPMessageConverter.md)
 - [그 밖의 WebMvcConfigurer 설정](./10_ETC_WebMvcConfigure.md)
 
+## HTTP 요청 맵핑하기
+
+- [스프링에서 HTTP 요청 맵핑하기](./11_RequestMapping_RequestMapping.md)
