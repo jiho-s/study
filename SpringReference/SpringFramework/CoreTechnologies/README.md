@@ -5,6 +5,7 @@
 ## 목차
 
 1. [IoC Container](#1.-ioc-container)
+2. [Resources](#resources)
 
 ## [IoC Container](./1_IoC_Container)
 
@@ -38,3 +39,8 @@
 
 - [Additional Capabilities of the `ApplicationContext`](./1_IoC_Container15_AdditionalCapabilitiesApplicationContext.md)
 
+## [Resources](./2_Resources)
+
+- [Resource Interface](./2_Resources/01_ResourceInterface.md)
+
+- [Built-in Resource Implementations](./2_Resources/02_Built-inResourceImplementations)
