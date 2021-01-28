@@ -44,3 +44,6 @@
 - [Resource Interface](./2_Resources/01_ResourceInterface.md)
 
 - [Built-in Resource Implementations](./2_Resources/02_Built-inResourceImplementations)
+
+- [ResourceLoader](./2_Resources/03_ResourceLoader.md)
+
