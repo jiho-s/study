@@ -42,3 +42,4 @@
 
 - HTTP 요청 맵핑하기
   - [스프링에서 HTTP 요청 맵핑하기](./SpringWebMVC/11_RequestMapping_RequestMapping.md)
+  - [URI 패턴 맵핑](./SpringWebMVC/12_RequestMapping_UriPatterns.md)
