@@ -37,7 +37,6 @@
     - [Resources](./SpringReference/SpringFramework/CoreTechnologies/2_Resources)
       - [Resource Interface](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/01_ResourceInterface.md)
       - [Built-in Resource Implementations](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/02_Built-inResourceImplementations)
-    
       - [ResourceLoader](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/03_ResourceLoader.md)
 
 ## [Spring Lean](./SpringLean)
@@ -63,6 +62,7 @@
     - [그밖의 WebMvcConfigurer 설정](./SpringLean/SpringWebMVC/10_ETC_WebMvcConfigure.md)
   - HTTP 요청 맵핑하기
     - [스프링에서 HTTP 요청 맵핑하기](./SpringLean/SpringWebMVC/11_RequestMapping_RequestMapping.md)
+    - [URI 패턴 맵핑](./SpringLean/SpringWebMVC/12_RequestMapping_UriPatterns.md)
 
 ## [Java](./Java)
 
