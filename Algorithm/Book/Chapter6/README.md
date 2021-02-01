@@ -6,6 +6,7 @@
 2. [재귀 호출과 완전탐색](#재귀-호출과-완전탐색)
 3. [소풍](#소풍)
 4. [게임판 덮기](#게임판-덮기)
+5. [최적화 문제](#최적화-문제)
 
 ### 도입
 
@@ -352,5 +353,45 @@ class Solution {
         return result;
     }
 }
+```
+
+### 최적화 문제
+
+문제의 답이 하나가 아니라 여러 개이고, 그 중에서 어떤 기준에 따라 가장 좋은 답을 찾아 내는 문제들을 통칭해 최적화 문제라고 부른다.
+
+최적화 문제를 해결하는 방법을 여러 가지 다루고 있는데 그중 가장 기초적인 것이 완전 탐색이다. 가능한 답을 모두 생성해보고 그중 가장 좋은 것을 찾아내면 된다.
+
+#### 예제: 여행하는 외판원 문제
+
+가장 유명한 최적화 문제 중 하나로 여행하는 외판원 문제가 있다. 어떤나라에 n개의 큰 도시가 있다.고 한다. 한 영업 사원이 한 도시에서 출발해 다른 도시들을 전부 한 번씩 방문한 뒤 시작 도시로 돌아오라고 한다. 각 도시들은 모두 직선 도로로 연결되어 있다. 이때 가능한 모든 경로 중 가장 짧은 경로를 어떻게 찾을 수 있을까?
+
+##### 재귀 호출을 통한 답안 생성
+
+이 문제의 답은 재귀 호출을 이용해 간단하게 만들 수 있다. n개의 조각으로 나눠 앞에서부터 도시를 하나씩 추가해 경로를 만든다.
+
+```java
+    int n;
+    double table[][];
+
+    double shortestPath(List<Integer> path, boolean [] visited, double currentLength) {
+        if (path.size() == n) {
+            return currentLength + table[path.get(0)][path.get(path.size() - 1)];
+        }
+
+        double answer = Double.MAX_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            if (visited[i])
+                continue;
+            int here = path.get(path.size() -1);
+            path.add(i);
+            visited[i] = true;
+            double cnad = shortestPath(path, visited, currentLength + table[here][i]);
+            answer = min(answer, cnad);
+            visited[i]  = false;
+            path.remove(path.size()-1);
+        }
+        return answer;
+    }
 ```
 
