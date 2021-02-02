@@ -38,6 +38,7 @@
       - [Resource Interface](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/01_ResourceInterface.md)
       - [Built-in Resource Implementations](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/02_Built-inResourceImplementations)
       - [ResourceLoader](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/03_ResourceLoader.md)
+      - [ResourceLoaderAware Interface](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/04_ResourceLoaderAware.md)
 
 ## [Spring Lean](./SpringLean)
 
