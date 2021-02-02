@@ -44,4 +44,5 @@
   - [스프링에서 HTTP 요청 맵핑하기](./SpringWebMVC/11_RequestMapping_RequestMapping.md)
   - [URI 패턴 맵핑](./SpringWebMVC/12_RequestMapping_UriPatterns.md)
   - [컨텐츠 타입 맵핑](./SpringWebMVC/13_RequestMapping_ConsumableMediaTypes.md)
+  - [헤더와 파라미터 맵핑](./SpringWebMVC/14_Parameters_Headers.md)
 
