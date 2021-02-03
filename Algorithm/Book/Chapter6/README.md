@@ -6,6 +6,9 @@
 2. [재귀 호출과 완전탐색](#재귀-호출과-완전탐색)
 3. [소풍](#소풍)
 4. [게임판 덮기](#게임판-덮기)
+5. [최적화 문제](#최적화-문제)
+6. [시계 맞추기](#시계-맞추기)
+7. [많이 등장하는 완전 탐색 유형](#많이-등장하는-완전-탐색-유형)
 
 ### 도입
 
@@ -354,3 +357,127 @@ class Solution {
 }
 ```
 
+### 최적화 문제
+
+문제의 답이 하나가 아니라 여러 개이고, 그 중에서 어떤 기준에 따라 가장 좋은 답을 찾아 내는 문제들을 통칭해 최적화 문제라고 부른다.
+
+최적화 문제를 해결하는 방법을 여러 가지 다루고 있는데 그중 가장 기초적인 것이 완전 탐색이다. 가능한 답을 모두 생성해보고 그중 가장 좋은 것을 찾아내면 된다.
+
+#### 예제: 여행하는 외판원 문제
+
+가장 유명한 최적화 문제 중 하나로 여행하는 외판원 문제가 있다. 어떤나라에 n개의 큰 도시가 있다.고 한다. 한 영업 사원이 한 도시에서 출발해 다른 도시들을 전부 한 번씩 방문한 뒤 시작 도시로 돌아오라고 한다. 각 도시들은 모두 직선 도로로 연결되어 있다. 이때 가능한 모든 경로 중 가장 짧은 경로를 어떻게 찾을 수 있을까?
+
+##### 재귀 호출을 통한 답안 생성
+
+이 문제의 답은 재귀 호출을 이용해 간단하게 만들 수 있다. n개의 조각으로 나눠 앞에서부터 도시를 하나씩 추가해 경로를 만든다.
+
+```java
+    int n;
+    double table[][];
+
+    double shortestPath(List<Integer> path, boolean [] visited, double currentLength) {
+        if (path.size() == n) {
+            return currentLength + table[path.get(0)][path.get(path.size() - 1)];
+        }
+
+        double answer = Double.MAX_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            if (visited[i])
+                continue;
+            int here = path.get(path.size() -1);
+            path.add(i);
+            visited[i] = true;
+            double cnad = shortestPath(path, visited, currentLength + table[here][i]);
+            answer = min(answer, cnad);
+            visited[i]  = false;
+            path.remove(path.size()-1);
+        }
+        return answer;
+    }
+```
+
+### 시계 맞추기
+
+#### 문제
+
+4*4개의 격자 형태로 배치된 16개의 시계가 있다. 이시계들은 모두 12시 3시 6시 혹은 9시를 가리키고 있는데 이 시계들이 모두 12시를 가리키도록 바꾸고 싶다. 시계의 시간을 조작하는 유일한 방법은 열개의 스위치들을 조작하는것으로 각 스위치들은 모두 적게는 3개에서 많게는 5개의 시계에 연결되어 있다. 한 스위치를 누를 때마다 해당 스위치와 연결된 시계들의 시간은 3시간씩 앞으로 움직인다. 스위치와 그들이 연결된 시계들의 목록은 다음과 같다
+
+| 스위치 번호 | 연결된 시계들 | 스위치 번호 | 연결된 시계들 |
+| ----------- | ------------- | ----------- | ------------- |
+| 0           | 0,1,2         | 5           | 0,2,14,15     |
+| 1           | 3,7,9,11      | 6           | 3,14,15       |
+| 2           | 4,10,14,15    | 7           | 4,5,7,14,15   |
+| 3           | 0,4,5,6,7     | 8           | 1,2,3,4,5     |
+| 4           | 6,7,8,10,12   | 9           | 3,4,5,9,13    |
+
+##### 입력
+
+첫줄에 테스트 케이스의 개수가 주어진다. 각 테스트 케이스는 한줄에 16개의 정수로 주어지며 각 정수는 0번부터 15번까지 각 시계가 가리키고 있는 시간을 12,3,6,9 중 하나로 표현한다
+
+##### 출력
+
+각 테스트 케이스 당 정수 하나를 한 줄에 출력한다. 이 정수는 시계들을 모두 12시로 돌려놓기 위해 스위치를 눌러야 할 최수 횟수 이여야 하고 만약 이것이 불가능할 경우 -1을 출력해야 한다.
+
+#### 풀이
+
+##### 문제 변형하기
+
+스위치를 누르는 순서는 중요하지 않다. 어떤 스위치건 4번을 누르면 하나도 누르지 않은 것과 동일하다.
+
+##### 완전 탐색 구현하기
+
+```java
+    int switchNum;
+    final String [] table = {
+            "xxx.............",
+            "...x...x.x.x....",
+            "x...xxxx........",
+            "......xxx.x.x...",
+            "x.x...........xx",
+            "...x..........xx",
+            "....xx.x......xx",
+            ".xxxxx..........",
+            "...xxx...x...x.."
+    };
+
+    boolean isOk(List<Integer> clocks) {
+        return clocks.stream().noneMatch(clock -> clock!=12);
+    }
+
+    void pushSwitch(List<Integer> clocks, int currentSwitch) {
+        for (int i = 0; i < table.length; i++) {
+            if (table[i].charAt(i) == 'x') {
+                Integer temp = clocks.get(i);
+                temp += 3;
+                clocks.set(i, temp == 15 ? 0 : temp);
+            }
+        }
+    }
+    int solution(List<Integer> clocks, int currentSwitch) {
+        if (currentSwitch == table.length) {
+            return isOk(clocks) ? 0 : Integer.MAX_VALUE;
+        }
+
+        int answer = Integer.MAX_VALUE;
+        for (int cnt = 0; cnt < 4; cnt++) {
+            answer = min(answer, cnt + solution(clocks, currentSwitch+1));
+            pushSwitch(clocks, currentSwitch);
+        }
+        return answer;
+    }
+```
+
+### 많이 등장하는 완전 탐색 유형
+
+#### 모든 순열 만들기
+
+서로 다른 N개의 원소를 일렬로 줄 세운 것을 순열(permutation)이라고 부른다.
+
+#### 모든 조합 만들기
+
+서로 다른 N개의 원소 중에서 R개를 순서 없이 골라낸 것을 조합(combination)이라고 부른다.
+
+#### 2<sup>n</sup>가지 경우의 수 만들기
+
+모든 조합을 생성해 내는 것
