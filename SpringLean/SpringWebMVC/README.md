@@ -50,4 +50,5 @@
 - [URI 패턴 맵핑](./12_RequestMapping_UriPatterns.md)
 - [컨텐츠 타입 맵핑](./13_RequestMapping_ConsumableMediaTypes.md)
 - [헤더와 파라미터 매핑](./14_Parameters_Headers.md)
+- [HEAD와 OPTION요청 처리](./15_HTTP_HEAD_OPTIONS.md)
 
