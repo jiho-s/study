@@ -66,6 +66,8 @@
     - [URI 패턴 맵핑](./SpringLean/SpringWebMVC/12_RequestMapping_UriPatterns.md)
     - [컨텐츠 타입 맵핑](./SpringLean/SpringWebMVC/13_RequestMapping_ConsumableMediaTypes.md)
     - [헤더와 파라미터 맵핑](./SpringLean/SpringWebMVC/14_Parameters_Headers.md)
+    - [HEAD와 OPTION 요청처리](./SpringLean/SpringWebMVC/15_HTTP_HEAD_OPTIONS.md)
+    - [커스텀 annotation](./SpringLean/SpringWebMVC/16_RequestMapping_CustomAnnotations.md)
 
 ## [Java](./Java)
 
