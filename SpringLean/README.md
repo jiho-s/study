@@ -46,4 +46,5 @@
   - [컨텐츠 타입 맵핑](./SpringWebMVC/13_RequestMapping_ConsumableMediaTypes.md)
   - [헤더와 파라미터 맵핑](./SpringWebMVC/14_Parameters_Headers.md)
   - [HEAD와 OPTION 요청 처리](./SpringWebMVC/15_HTTP_HEAD_OPTIONS.md)
+  - [커스텀 annotation](./SpringWebMVC/16_RequestMapping_CustomAnnotations.md)
 
