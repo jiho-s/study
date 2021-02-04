@@ -1,4 +1,4 @@
-## HTTP 요청 맵핑하기: 커스텀 annotation
+## 커스텀 annotation
 
 @RequestMapping annotation을 메타 annotation으로 사용하여 @GetMapping 같은 커스텀한 annotaion을 만들 수 있다
 
