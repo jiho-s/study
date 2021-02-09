@@ -19,7 +19,7 @@
 
 ## [it 취업을 위한 알고리즘 문제풀이](./Solve)
 
-> [강의 링크](01_IncreaseCodeImplementation.md)
+> [강의 링크](https://www.inflearn.com/course/알고리즘/dashboard)
 
-- [코드 구현력 기르기](https://www.inflearn.com/course/알고리즘/dashboard)
+- [코드 구현력 기르기](./Solve/01_IncreaseCodeImplementation.md)
 
