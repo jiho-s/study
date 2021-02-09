@@ -17,6 +17,11 @@
 13. [가장 많이 사용된 자릿수](#가장-많이-사용된-자릿수)
 14. [뒤집은 소수](#뒤집은-소수)
 15. [소수의 개수](#소수의-개수)
+16. [Anagram](#anagram)
+17. [선생님 퀴즈](#선생님-퀴즈)
+18. [층간소음](#층간소음)
+19. [분노 유발자](#분노-유발자)
+20. [가위 바위 보](#가위-바위-보)
 
 ### 1부터 N까지 M배수 합
 
@@ -386,3 +391,138 @@ public static String solution15(int n) {
     return String.valueOf(count); 
 }
 ```
+
+### Anagram
+
+#### 문제
+
+Anagram이란 두 문자열이 알파벳의 나열 순서를 다르지만 그 구성이 일치하면 두 단어는 아 나그램이라고 합니다.
+ 예를 들면 AbaAeCe 와 baeeACA 는 알파벳을 나열 순서는 다르지만 그 구성을 살펴보면 A(2), a(1), b(1), C(1), e(2)로 알파벳과 그 개수가 모두 일치합니다. 즉 어느 한 단어를 재 배열하면 상대편 단어가 될 수 있는 것을 아나그램이라 합니다.
+
+길이가 같은 두 개의 단어가 주어지면 두 단어가 아나그램인지 판별하는 프로그램을 작성하세 요. 아나그램 판별시 대소문자가 구분됩니다.
+
+#### 풀이
+
+```java
+public static String solution16(String s1, String s2) {
+    char[] a = s1.toCharArray();
+    char[] b = s2.toCharArray();
+    sort(a);
+    sort(b);
+    boolean result = IntStream.range(0, a.length).noneMatch(i -> {
+        return a[i] != b[i];
+    });
+    return result ? "YES" : "NO";
+}
+```
+
+### 선생님 퀴즈
+
+#### 문제
+
+현수네 반은 학생이 N명 있습니다. 수업도중 선생님이 잠깐 자리를 비워야 하는데 그 동안 학 생들이 떠들거나 놀지 않도록 각 학생들에게 퀴즈를 냈습니다.
+ 선생님은 각 학생들에게 숫자가 적힌 카드를 줬습니다. 각 학생들은 1부터 자기 카드에 적힌 숫자까지의 합을 구하는 퀴즈입니다.
+
+선생님이 돌아와서 각 학생들의 답이 맞았는지 확인을 하려고 하는데 너무 힘들어서 여러분에 게 자동으로 채점을 하는 프로그램을 부탁했습니다. 여러분이 선생님을 도와주세요.
+
+#### 풀이
+
+```java
+public static String solution17(List<Integer> q, List<Integer> answer) {
+    return IntStream.range(0, q.size()).mapToObj(i -> {
+        Integer currentQ = q.get(i);
+        Integer currentAnswer = answer.get(i);
+        if ((currentQ + 1) * currentQ / 2 == currentAnswer) {
+            return "YES";
+        }
+        return "No";
+    }).collect(Collectors.joining(" "));
+}
+```
+
+### 층간소음
+
+#### 문제
+
+T편한 세상 아파트는 층간소음 발생 시 윗집의 발뺌을 방지하기 위해 애초 아파트를 지을 때 바닥에 진동센서를 설치했습니다. 이 센서는 각 세대의 층간 진동소음 측정치를 초단위로 아 파트 관리실에 실시간으로 전송합니다. 그리고 한 세대의 측정치가 M값을 넘으면 세대호수와 작은 경보음이 관리실 모니터에서 울립니다. 한 세대의 N초 동안의 실시간 측정치가 주어지면 최대 연속으로 경보음이 울린 시간을 구하세요. 경보음이 없으면 -1를 출력합니다.
+
+#### 풀이
+
+```java
+public static String solution18(int bound, List<Integer> sounds) {
+    var lambdaContext = new Object() {
+        Integer startTime = -1;
+        Integer max = -1;
+    };
+    IntStream.range(0, sounds.size()).forEach(i -> {
+        if (sounds.get(i) <= bound) {
+            if (lambdaContext.startTime != -1) {
+                lambdaContext.max = max(i - lambdaContext.startTime, lambdaContext.max);
+                lambdaContext.startTime = -1;
+            }
+            return;
+        }
+        if (lambdaContext.startTime == -1) {
+            lambdaContext.startTime = i;
+        }
+    });
+    return String.valueOf(lambdaContext.max);
+}
+```
+
+### 분노 유발자
+
+#### 문제
+
+오늘은 수능이 끝난 다음날로 교장선생님은 1, 2학년 재학생들에게 강당에 모여 어벤져스 영 화를 보여준다고 하여 학생들이 강당에 모였습니다.
+ 강당의 좌석은 영화관처럼 계단형이 아니라 평평한 바닥에 의자만 배치하고 학생들이 앉습니 다. 그런데 만약 앞자리에 앉은 키가 큰 학생이 앉으면 그 학생보다 앉은키가 작은 뒷자리 학 생은 스크린이 보이지 않습니다. 한 줄에 앉은키 정보가 주어지면 뒷사람 모두의 시야를 가려 영화 시청이 불가능하게 하는 분노유발자가 그 줄에 몇 명이 있는지 구하는 프로그램을 작성 하세요.
+
+#### 풀이
+
+```java
+public static String solution19(List<Integer> list) {
+    Stack<Integer> stack = new Stack<>();
+    list.forEach(num -> {
+        while (!stack.isEmpty() && stack.peek() < num) {
+            stack.pop();
+        }
+        stack.push(num);
+    });
+    return String.valueOf(stack.size() - 1);
+}
+```
+
+### 가위 바위 보
+
+#### 문제
+
+A, B 두 사람이 가위바위보 게임을 합니다. 총 N번의 게임을 하여 A가 이기면 A를 출력하고, B가 이기면 B를 출력합니다. 비길 경우에는 D를 출력합니다.
+ 가위, 바위, 보의 정보는 1:가위, 2:바위, 3:보로 정하겠습니다.
+ 예를 들어 N=5이면
+
+|   회수   |  1   |  2   |  3   |  4   |  5   |
+| :------: | :--: | :--: | :--: | :--: | :--: |
+| A의 정보 |  2   |  3   |  3   |  1   |  3   |
+| B의 정보 |  1   |  1   |  2   |  2   |  3   |
+|   승자   |  A   |  B   |  A   |  B   |  D   |
+
+두 사람의 각 회의 가위, 바위, 보 정보가 주어지면 각 회를 누가 이겼는지 출력하는 프로그램 을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution20(List<Integer> a, List<Integer> b) {
+    return IntStream.range(0, a.size()).mapToObj(i -> {
+        Integer currentA = a.get(i);
+        Integer currentB = b.get(i);
+        if (currentA.equals(currentB)) {
+            return "D";
+        } else if ((currentA + 1) % 3 == currentB) {
+            return "B";
+        } else {
+            return "A";
+        }
+    }).collect(Collectors.joining(" "));
+}
+```
+
