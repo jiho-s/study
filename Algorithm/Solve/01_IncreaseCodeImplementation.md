@@ -22,6 +22,8 @@
 18. [층간소음](#층간소음)
 19. [분노 유발자](#분노-유발자)
 20. [가위 바위 보](#가위-바위-보)
+21. [카드게임](#카드게임)
+22. [온도의 최대값](#온도의-최대값)
 
 ### 1부터 N까지 M배수 합
 
@@ -526,3 +528,128 @@ public static String solution20(List<Integer> a, List<Integer> b) {
 }
 ```
 
+### 카드게임
+
+#### 문제
+
+0부터 9까지의 숫자가 표시된 카드를 가지고 두 사람 A와 B가 게임을 한다. A와 B에게는 각 각 0에서 9까지의 숫자가 하나씩 표시된 10장의 카드뭉치가 주어진다. 두 사람은 카드를 임의의  순서로 섞은 후 숫자가 보이지 않게 일렬로 늘어놓고 게임을 시작한다. 단, 게임 도중 카드의  순서를 바꿀 수는 없다.
+
+A와 B 각각이 늘어놓은 카드를 뒤집어서 표시된 숫자를 확인하는 것을 한 라운드라고 한 다. 게임은 첫 번째 놓인 카드부터 시작하여 순서대로 10번의 라운드로 진행된다. 각 라운드에 서는 공개된 숫자가 더 큰 사람이 승자가 된다. 승자에게는 승점 3점이 주어지고 패자에게는 승점이 주어지지 않는다. 만약 공개된 두 숫자가 같아서 비기게 되면, A, B 모두에게 승점 1 점이 주어진다.
+
+10번의 라운드가 모두 진행된 후, 총 승점이 큰 사람이 게임의 승자가 된다. 만약, A와 B 의 총 승점이 같은 경우에는, 제일 마지막에 이긴 사람을 게임의 승자로 정한다. 그래도 승부 가 나지 않는 경우는 모든 라운드에서 비기는 경우뿐이고 이 경우에 두 사람은 비겼다고 한 다.
+
+예를 들어, 다음 표에서 3번째 줄은 각 라운드의 승자를 표시하고 있다. 표에서 D는 무승 부를 나타낸다. 이 경우에 A의 총 승점은 16점이고, B는 13점이어서, A가 게임의 승자가 된 다.
+
+| 라운드 | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   |
+| ------ | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| A      | 4    | 5    | 6    | 7    | 0    | 1    | 2    | 3    | 9    | 8    |
+| B      | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 0    |
+| 승     | A    | A    | A    | A    | B    | B    | B    | B    | D    | A    |
+
+A와 B가 늘어놓은 카드의 숫자가 순서대로 주어질 때, 게임의 승자가 A인지 B인지, 또는 비겼 는지 결정하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+//자바 stream
+public static String solution21(List<Integer> a, List<Integer> b) {
+    var streamValue = new Object() {
+        int scoreA;
+        int scoreB;
+        Boolean lastWinner = null;
+    };
+    IntStream.range(0, a.size()).forEach(i -> {
+        int currentA = a.get(i);
+        int currentB = b.get(i);
+        if (currentA == currentB) {
+            streamValue.scoreA++;
+            streamValue.scoreB++;
+        } else if (currentA > currentB) {
+            streamValue.lastWinner = true;
+            streamValue.scoreA += 3;
+        } else {
+            streamValue.lastWinner = false;
+            streamValue.scoreB += 3;
+        }
+    });
+    String winner;
+    if (streamValue.scoreA > streamValue.scoreB) {
+        winner = "A";
+    } else if (streamValue.scoreA < streamValue.scoreB) {
+        winner = "B";
+    } else {
+        if (streamValue.lastWinner == null) {
+            winner = "D";
+        } else {
+            winner = streamValue.lastWinner ? "A" : "B";
+        }
+    }
+    return streamValue.scoreA + " " + streamValue.scoreB + "\n" + winner;
+}
+```
+
+```kotlin
+fun solution21(a: IntArray, b: IntArray): String {
+        val (scoreA, scoreB, lastWinner) =  (a zip b).fold(Triple(0, 0,  "D")) { (scoreA, scoreB, lastWinner), (currentA, currentB) ->
+            val compare = currentA.compareTo(currentB)
+            when {
+                compare == 0 -> {
+                    Triple(scoreA + 1, scoreB + 1, lastWinner)
+                }
+                compare > 0 -> {
+                    Triple(scoreA + 3, scoreB, "A")
+                }
+                else -> {
+                    Triple(scoreA, scoreB + 3, "B")
+                }
+            }
+        }
+        val compare = scoreA.compareTo(scoreB)
+        val winner = when {
+            compare.equals(0) -> lastWinner
+            compare > 0 -> "A"
+            else -> "B"
+        }
+        return """
+            $scoreA $scoreB
+            $winner
+        """.trimIndent()
+    }
+}
+```
+
+### 온도의 최대값
+
+#### 문제
+
+매일 아침 9시에 학교에서 측정한 온도가 어떤 정수의 수열로 주어졌을 때, 연속적인 며칠 동안의 온도의 합이 가장 큰 값을 알아보고자 한다. 매일 측정한 온도가 정수의 수열로 주어졌을 때, 연속적인 며칠 동안의 온도의 합이 가장 큰 값을 계산하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+public static String solution22(List<Integer> tem, int numOfDay) {
+    var streamValue = new Object() {
+        int result = Integer.MIN_VALUE;
+    };
+    streamValue.result = IntStream.range(0, numOfDay).map(tem::get).sum();
+    int lastSum = IntStream.range(numOfDay, tem.size()).reduce(streamValue.result, (result, i) -> {
+        int index = i - numOfDay;
+        int currentSum = result - tem.get(i - numOfDay) + tem.get(i);
+        streamValue.result = max(currentSum, streamValue.result);
+        return currentSum;
+    });
+    return String.valueOf(max(streamValue.result, lastSum));
+}
+```
+
+```kotlin
+fun solution22(tem: IntArray, sumOfDay: Int): String {
+    var max = (0 until sumOfDay).map { tem[it] }.sum()
+    val lastSum = (sumOfDay until tem.size).fold(max) { result, i ->
+        val nextSum = result + tem[i] - tem[i - sumOfDay]
+        max = max(nextSum, max)
+        nextSum
+    }
+    return max(max, lastSum).toString()
+}
+```
