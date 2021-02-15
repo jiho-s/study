@@ -28,6 +28,10 @@
 24. [Jolly Jumpers](#jolly-jumpers)
 25. [석차 구하기](#석차-구하기)
 26. [마라톤](#마라톤)
+27. [N!의 표현법](#N!의-표현법)
+28. [N!에서 0의 개수](#N!에서-0의-개수)
+29. [3의 개수는(small)](#3의 개수는 small)
+30. [3의 개수는(large)](#3의 개수는-large)
 
 ### 1부터 N까지 M배수 합
 
@@ -746,6 +750,153 @@ public static String solution26(List<Integer> runners) {
         long count = runners.stream().limit(i).filter(runner -> runner >= runners.get(i)).count();
         return String.valueOf(count + 1);
     }).collect(Collectors.joining(" "));
+}
+```
+
+### N!의 표현법
+
+#### 문재
+
+임의의 N에 대하여 N!은 1부터 N까지의 곱을 의미한다. 이는 N이 커짐에 따라 급격하게 커진 다. 이러한 큰 수를 표현하는 방법으로 소수들의 곱으로 표현하는 방법이 있다. 먼저 소수는 2, 3, 5, 7, 11, 13... 순으로 증가함을 알아야 한다. 예를 들면 825는 (0 1 2 0 1)로 표현이 가능한데, 이는 2는 없고 3은 1번, 5는 2번, 7은 없고, 11은 1번의 곱이라는 의미이다. 101보 다 작은 임의의 N에 대하여 N 팩토리얼을 이와 같은 표기법으로 변환하는 프로그램을 작성해 보자. 출력은 아래 예제와 같이 하도록 한다.
+
+#### 풀이
+
+```java
+public static String solution27(int n) {
+    int [] table = new int[n+1];
+    IntStream.rangeClosed(2,n).forEach(i -> {
+        int current = i;
+        for (int j = 2; j <= i; j++) {
+            if (current == 1) {
+                break;
+            }
+            while (current % j == 0) {
+                current /= j;
+                table[j]++;
+            }
+        }
+    });
+    return IntStream.rangeClosed(0,n).filter(i -> table[i] != 0).mapToObj(i -> String.valueOf(table[i])).collect(Collectors.joining(" "));
+}
+```
+
+### N!에서 0의 개수
+
+#### 문제
+
+자연수 N이 입력되면 N! 값에서 일의 자리부터 연속적으로 ‘0’이 몇 개 있는지 구하는 프로그 램을 작성하세요. 만약 5! = 5×4×3×2×1 = 120으로 일의자리부터 연속적된 ‘0’의 개수는 1입니다. 만약 12! = 479001600으로 일의자리부터 연속적된 ‘0’의 개수는 2입니다.
+
+#### 풀이
+
+```java
+    public static String solution28(int n) {
+        var lambdaContext = new Object() {
+            int numberOf2 = 0;
+            int numberOf5 = 0;
+        };
+        IntStream.rangeClosed(2, n).forEach(i -> {
+            int current = i;
+            for (int j = 2, range = max(5, i); j <= range; j++) {
+                if (current == 1) {
+                    break;
+                }
+                while (current % j == 0) {
+                    current /= j;
+                    if (2 == j) {
+                        lambdaContext.numberOf2++;
+                    }else if (5 == j) {
+                        lambdaContext.numberOf5++;
+                    }
+                }
+            }
+
+        });
+        return String.valueOf(min(lambdaContext.numberOf2, lambdaContext.numberOf5));
+    }
+```
+
+### 3의 개수는 small
+
+#### 문제
+
+자연수 N이 입력되면 1부터 N까지의 자연수를 종이에 적을 때 각 숫자 중 3의 개수가 몇 개 있는지 구하려고 합니다.예를 들어 1부터 15까지는 1, 2, **3**, 4, 5, 6, 7, 8, 9, 1, 0, 1, 1, 1, 2, 1, **3**, 1, 4, 1, 5으로 3의 개수는 2개입니다.
+
+자연수 N이 입력되면 1부터 N까지 숫자를 적을 때, 3의 개수가 몇 개인지 구하여 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution29(int n) {
+    int answer = IntStream.rangeClosed(1, n).reduce(0, (result, currentNumber) -> {
+        int count = IntStream.iterate(currentNumber, j -> j > 0, j -> j / 10).reduce(0, (tempResult, j) -> {
+            int num = j % 10;
+            if (num == 3) {
+                return tempResult + 1;
+            }
+            return tempResult;
+        });
+        return result + count;
+    });
+    return String.valueOf(answer);
+}
+```
+
+### 3의 개수는 large
+
+#### 문제
+
+자연수 N이 입력되면 1부터 N까지의 자연수를 종이에 적을 때 각 숫자 중 3의 개수가 몇 개 있는지 구하려고 합니다.예를 들어 1부터 15까지는 1, 2, **3**, 4, 5, 6, 7, 8, 9, 1, 0, 1, 1, 1, 2, 1, **3**, 1, 4, 1, 5으로 3의 개수는 2개입니다.
+
+자연수 N이 입력되면 1부터 N까지 숫자를 적을 때, 3의 개수가 몇 개인지 구하여 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution30(int n) {
+    int answer = 0;
+    for (int k = 1, left = 1, right = 0, current = 0; left != 0; k *= 10) {
+        left = n/(k*10);
+        right = n % k;
+        current = (n / k) % 10;
+        if (current > 3) {
+            answer += (left + 1) * k;
+        } else if (current == 3) {
+            answer += left*k+right+1;
+        } else {
+            answer +=left*k;
+        }
+    }
+    return String.valueOf(answer);
+}
+```
+
+### 탄화수소 질량
+
+#### 문제
+
+탄소(C)와 수소(H)로만 이루어진 화합물을 탄화수소라고 합니다.
+
+탄소(C) 한 개의 질량은 12g, 수소(H) 한 개의 질량은 1g입니다. 에틸렌(C2H4)의 질량은 12*2+1*4=28g입니다.메탄(CH4)의 질량은 12*1+1*4=16g입니다.
+
+ 탄화수소식이 주어지면 해당 화합물의 질량을 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution31(String s) {
+    final int cWeight = 12;
+    final int hWeight = 1;
+    int cCount = 0;
+    int hCount = 0;
+    if (s.charAt(1) == 'H') {
+        cCount = 1;
+        hCount = Character.getNumericValue(s.charAt(2));
+    } else {
+        cCount = Character.getNumericValue(s.charAt(1));
+        hCount = Character.getNumericValue(s.charAt(3));
+    }
+    int result = cWeight*cCount + hWeight*hCount;
+    return String.valueOf(result);
 }
 ```
 
