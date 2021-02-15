@@ -24,6 +24,14 @@
 20. [가위 바위 보](#가위-바위-보)
 21. [카드게임](#카드게임)
 22. [온도의 최대값](#온도의-최대값)
+23. [연속 부분 증가 수열](#연속-부분-증가-수열)
+24. [Jolly Jumpers](#jolly-jumpers)
+25. [석차 구하기](#석차-구하기)
+26. [마라톤](#마라톤)
+27. [N!의 표현법](#N!의-표현법)
+28. [N!에서 0의 개수](#N!에서-0의-개수)
+29. [3의 개수는(small)](#3의 개수는 small)
+30. [3의 개수는(large)](#3의 개수는-large)
 
 ### 1부터 N까지 M배수 합
 
@@ -653,3 +661,242 @@ fun solution22(tem: IntArray, sumOfDay: Int): String {
     return max(max, lastSum).toString()
 }
 ```
+
+### 연속 부분 증가 수열
+
+#### 문제
+
+N개의 숫자가 나열된 수열이 주어집니다. 이 수열 중 연속적으로 증가하는 부분 수열을 최대 길이를 구하여 출력하는 프로그램을 작성하세요.
+
+ 만약 N=9이고 5 7 3 3 12 12 13 10 11 이면 “3 3 12 12 13”부분이 최대 길이 증가수열이므로 그 길이인 5을 출력합니다. 값이 같을 때는 증가하는 걸로 생각합니다.
+
+#### 풀이
+
+```java
+public static String solution23(List<Integer> numbers) {
+    var streamValue = new Object(){
+        int maxCount = 0;
+        int currentCount = 1;
+    };
+    numbers.stream().reduce((preNum, number) -> {
+        if (number >= preNum) {
+            streamValue.currentCount++;
+        } else {
+            streamValue.maxCount = max(streamValue.currentCount, streamValue.maxCount);
+            streamValue.currentCount = 1;
+        }
+        return number;
+    });
+    return String.valueOf(max(streamValue.currentCount, streamValue.maxCount));
+}
+```
+
+### Jolly Jumpers
+
+#### 문제
+
+N개의 정수로 이루어진 수열에 대해 서로 인접해 있는 두 수의 차가 1에서 N-1까지의 값을 모두 가지면 그 수열을 유쾌한 점퍼(jolly jumper)라고 부른다. 예를 들어 다음과 같은 수열에 서 1 4 2 3 앞 뒤에 있는 숫자 차의 절대 값이 각각 3 ,2, 1이므로 이 수열은 유쾌한 점퍼가 된다. 어떤 수열이 유쾌한 점퍼인지 판단할 수 있는 프로그램을 작성하라.
+
+#### 풀이
+
+```java
+public static String solution24(List<Integer> numbers) {
+    int len = numbers.size();
+    return IntStream.range(1, len).noneMatch(i -> {
+        int temp = numbers.get(i) - numbers.get(i-1);
+        return temp > len || temp < -len;
+    }) ? "YES" : "NO";
+}
+```
+
+### 석차 구하기
+
+#### 문제
+
+N명의 학생의 수학점수가 입력되면 각 학생의 석차를 입력된 순서대로 출력하는 프로그램을 작성하세요. 같은 점수가 입력될 경우 높은 석차로 동일 처리한다. 즉 가장 높은 점수가 92점인데 92 점이 3명 존재하면 1등이 3명이고 그 다음 학생은 4등이 된다. 점수는 100점 만점이다.
+
+#### 풀이
+
+```java
+public static String solution25(List<Integer> scores) {
+    Map<Integer, Integer> map = new HashMap<>();
+    List<Integer> sorted = scores.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    map.put(sorted.get(0), 1);
+    IntStream.range(1, sorted.size()).forEach(i -> {
+        if (sorted.get(i - 1).equals(sorted.get(i))) {
+            return;
+        }
+        map.put(sorted.get(i), i+1);
+    });
+    return scores.stream().map(score -> String.valueOf(map.get(score))).collect(Collectors.joining(" "));
+}
+```
+
+### 마라톤
+
+#### 문제
+
+KSEA 장거리 달리기 대회가 진행되어 모든 선수가 반환점을 넘었다. 각 선수의 입장에서 자 기보다 앞에 달리고 있는 선수들 중 평소 실력이 자기보다 좋은 선수를 남은 거리 동안 앞지 르는 것은 불가능하다. 반대로, 평소 실력이 자기보다 좋지 않은 선수가 앞에 달리고 있으면 남은 거리 동안 앞지르는 것이 가능하다. 이러한 가정 하에서 각 선수는 자신이 앞으로 얻을 수 있는 최선의 등수를 알 수 있다.
+
+각 선수의 평소 실력은 정수로 주어지는데 더 큰 값이 더 좋은 실력을 의미한다. 현재 달리고 있는 선수를 앞에서 부터 표시했을 때 평소 실력이 각각 2, 8, 10, 7, 1, 9, 4, 15라고 하면 각 선수가 얻을 수 있는 최선의 등수는 (같은 순서로) 각각 1, 1, 1, 3, 5, 2, 5, 1이 된다. 예 를 들어, 4번째로 달리고 있는 평소 실력이 7인 선수는 그 앞에서 달리고 있는 선수들 중 평 소 실력이 2인 선수만 앞지르는 것이 가능하고 평소실력이 8과 10인 선수들은 앞지르는 것이 불가능하므로, 최선의 등수는 3등이 된다.
+
+선수들의 평소 실력을 현재 달리고 있는 순서대로 입력 받아서 각 선수의 최선의 등수를 계산 하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+public static String solution26(List<Integer> runners) {
+    return IntStream.range(0, runners.size()).mapToObj(i -> {
+        long count = runners.stream().limit(i).filter(runner -> runner >= runners.get(i)).count();
+        return String.valueOf(count + 1);
+    }).collect(Collectors.joining(" "));
+}
+```
+
+### N!의 표현법
+
+#### 문재
+
+임의의 N에 대하여 N!은 1부터 N까지의 곱을 의미한다. 이는 N이 커짐에 따라 급격하게 커진 다. 이러한 큰 수를 표현하는 방법으로 소수들의 곱으로 표현하는 방법이 있다. 먼저 소수는 2, 3, 5, 7, 11, 13... 순으로 증가함을 알아야 한다. 예를 들면 825는 (0 1 2 0 1)로 표현이 가능한데, 이는 2는 없고 3은 1번, 5는 2번, 7은 없고, 11은 1번의 곱이라는 의미이다. 101보 다 작은 임의의 N에 대하여 N 팩토리얼을 이와 같은 표기법으로 변환하는 프로그램을 작성해 보자. 출력은 아래 예제와 같이 하도록 한다.
+
+#### 풀이
+
+```java
+public static String solution27(int n) {
+    int [] table = new int[n+1];
+    IntStream.rangeClosed(2,n).forEach(i -> {
+        int current = i;
+        for (int j = 2; j <= i; j++) {
+            if (current == 1) {
+                break;
+            }
+            while (current % j == 0) {
+                current /= j;
+                table[j]++;
+            }
+        }
+    });
+    return IntStream.rangeClosed(0,n).filter(i -> table[i] != 0).mapToObj(i -> String.valueOf(table[i])).collect(Collectors.joining(" "));
+}
+```
+
+### N!에서 0의 개수
+
+#### 문제
+
+자연수 N이 입력되면 N! 값에서 일의 자리부터 연속적으로 ‘0’이 몇 개 있는지 구하는 프로그 램을 작성하세요. 만약 5! = 5×4×3×2×1 = 120으로 일의자리부터 연속적된 ‘0’의 개수는 1입니다. 만약 12! = 479001600으로 일의자리부터 연속적된 ‘0’의 개수는 2입니다.
+
+#### 풀이
+
+```java
+    public static String solution28(int n) {
+        var lambdaContext = new Object() {
+            int numberOf2 = 0;
+            int numberOf5 = 0;
+        };
+        IntStream.rangeClosed(2, n).forEach(i -> {
+            int current = i;
+            for (int j = 2, range = max(5, i); j <= range; j++) {
+                if (current == 1) {
+                    break;
+                }
+                while (current % j == 0) {
+                    current /= j;
+                    if (2 == j) {
+                        lambdaContext.numberOf2++;
+                    }else if (5 == j) {
+                        lambdaContext.numberOf5++;
+                    }
+                }
+            }
+
+        });
+        return String.valueOf(min(lambdaContext.numberOf2, lambdaContext.numberOf5));
+    }
+```
+
+### 3의 개수는 small
+
+#### 문제
+
+자연수 N이 입력되면 1부터 N까지의 자연수를 종이에 적을 때 각 숫자 중 3의 개수가 몇 개 있는지 구하려고 합니다.예를 들어 1부터 15까지는 1, 2, **3**, 4, 5, 6, 7, 8, 9, 1, 0, 1, 1, 1, 2, 1, **3**, 1, 4, 1, 5으로 3의 개수는 2개입니다.
+
+자연수 N이 입력되면 1부터 N까지 숫자를 적을 때, 3의 개수가 몇 개인지 구하여 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution29(int n) {
+    int answer = IntStream.rangeClosed(1, n).reduce(0, (result, currentNumber) -> {
+        int count = IntStream.iterate(currentNumber, j -> j > 0, j -> j / 10).reduce(0, (tempResult, j) -> {
+            int num = j % 10;
+            if (num == 3) {
+                return tempResult + 1;
+            }
+            return tempResult;
+        });
+        return result + count;
+    });
+    return String.valueOf(answer);
+}
+```
+
+### 3의 개수는 large
+
+#### 문제
+
+자연수 N이 입력되면 1부터 N까지의 자연수를 종이에 적을 때 각 숫자 중 3의 개수가 몇 개 있는지 구하려고 합니다.예를 들어 1부터 15까지는 1, 2, **3**, 4, 5, 6, 7, 8, 9, 1, 0, 1, 1, 1, 2, 1, **3**, 1, 4, 1, 5으로 3의 개수는 2개입니다.
+
+자연수 N이 입력되면 1부터 N까지 숫자를 적을 때, 3의 개수가 몇 개인지 구하여 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution30(int n) {
+    int answer = 0;
+    for (int k = 1, left = 1, right = 0, current = 0; left != 0; k *= 10) {
+        left = n/(k*10);
+        right = n % k;
+        current = (n / k) % 10;
+        if (current > 3) {
+            answer += (left + 1) * k;
+        } else if (current == 3) {
+            answer += left*k+right+1;
+        } else {
+            answer +=left*k;
+        }
+    }
+    return String.valueOf(answer);
+}
+```
+
+### 탄화수소 질량
+
+#### 문제
+
+탄소(C)와 수소(H)로만 이루어진 화합물을 탄화수소라고 합니다.
+
+탄소(C) 한 개의 질량은 12g, 수소(H) 한 개의 질량은 1g입니다. 에틸렌(C2H4)의 질량은 12*2+1*4=28g입니다.메탄(CH4)의 질량은 12*1+1*4=16g입니다.
+
+ 탄화수소식이 주어지면 해당 화합물의 질량을 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution31(String s) {
+    final int cWeight = 12;
+    final int hWeight = 1;
+    int cCount = 0;
+    int hCount = 0;
+    if (s.charAt(1) == 'H') {
+        cCount = 1;
+        hCount = Character.getNumericValue(s.charAt(2));
+    } else {
+        cCount = Character.getNumericValue(s.charAt(1));
+        hCount = Character.getNumericValue(s.charAt(3));
+    }
+    int result = cWeight*cCount + hWeight*hCount;
+    return String.valueOf(result);
+}
+```
+
