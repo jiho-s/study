@@ -22,4 +22,5 @@
 > [강의 링크](https://www.inflearn.com/course/알고리즘/dashboard)
 
 - [코드 구현력 기르기](./Solve/01_IncreaseCodeImplementation.md)
+- [정렬, 이분탐색, 스택](./Solve/2_SortBinarySearchStack.md)
 
