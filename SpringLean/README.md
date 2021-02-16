@@ -52,4 +52,4 @@
   - [핸들러 메소드 아규먼트](./SpringWebMVC/17_HandlerMethods_MethodArguments.md)
   - [핸들러 메소드 리턴](./SpringWebMVC/18_HandlerMethods_ReturnValues.md)
   - [URI 패턴 맵핑](./SpringWebMVC/19_HandlerMethods_UriPatternsMapping.md)
-
+  - [요청 매개변수](./SpringWebMVC/20_HandlerMethods_RequestParams.md)
