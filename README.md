@@ -74,6 +74,7 @@
     - [URI 패턴 맵핑](./SpringLean/SpringWebMVC/19_HandlerMethods_UriPatternsMapping.md)
     - [요청 매개변수](./SpringLean/SpringWebMVC/20_HandlerMethods_RequestParams.md)
     - [ModelAttribute](./SpringLean/SpringWebMVC/21_HandlerMethods_ModelAttribute.md)
+    - [@Validated](./SpringLean/SpringWebMVC/22_HandlerMethods_Validate.md)
 
 ## [Java](./Java)
 
