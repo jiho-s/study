@@ -8,8 +8,10 @@
 36. 
 37. [Least Recently Used](#least-recently-used)
 38. [Inversion Sequence](#inversion-sequence)
-39. [두 배열 합치기](#두-배열-합치기)
+39. 
 40. [교집합](#교집합)
+41. [연속된 자연수의 합](#연속된-자연수의-합)
+42. [이분검색](#이분검색)
 
 ### 3등의 성적은?
 
@@ -94,6 +96,121 @@ public static String solution37(int n, List<Integer> jobs) {
 
 ### Inversion Sequence
 
-### 두 배열 합치기
+#### 문제
+
+1부터 n까지의 수를 한 번씩만 사용하여 이루어진 수열이 있을 때, 1부터 n까지 각각의 수 앞에 놓여 있는 자신보다 큰 수들의 개수를 수열로 표현한 것을 Inversion Sequence라 한다.
+
+예를 들어 다음과 같은 수열의 경우 48625137
+
+1앞에 놓인 1보다 큰 수는 4, 8, 6, 2, 5. 이렇게 5개이고, 2앞에 놓인 2보다 큰 수는 4, 8, 6. 이렇게 3개,
+ 3앞에 놓인 3보다 큰 수는 4, 8, 6, 5 이렇게 4개......
+
+따라서4 8 6 2 5 1 3 7의inversionsequence는53402110이된다.
+ n과 1부터 n까지의 수를 사용하여 이루어진 수열의 inversion sequence가 주어졌을 때, 원래 의 수열을 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution38(List<Integer> list) {
+    int [] answer = new int[list.size()];
+    IntStream.range(0, list.size()).forEach(num -> {
+        int index = list.get(num);
+        for (int i = 0; i <= index; i++) {
+            if (answer[i] != 0) {
+                index++;
+            }
+        }
+        answer[index] = num + 1;
+    });
+    return Arrays.stream(answer).mapToObj(String::valueOf).collect(Collectors.joining(" "));
+}
+```
 
 ### 교집합
+
+#### 문제
+
+두 집합 A, B가 주어지면 두 집합의 교집합을 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution40(List<Integer> a, List<Integer> b) {
+    a = a.stream().sorted(Comparator.comparing(Integer::valueOf)).collect(Collectors.toList());
+    b = b.stream().sorted(Comparator.comparing(Integer::valueOf)).collect(Collectors.toList());
+    List<Integer> result = new ArrayList<>();
+    for (int i = 0, j = 0, alen = a.size(), blen = b.size(); i < alen && j < blen;) {
+        if (a.get(i).equals(b.get(j))) {
+            result.add(a.get(i));
+            i++;
+            j++;
+        } else if (a.get(i) > b.get(i)) {
+            j++;
+        } else {
+            i++;
+        }
+    }
+    return result.stream().map(String::valueOf).collect(Collectors.joining(" "));
+}
+```
+
+### 연속된 자연수의 합
+
+#### 문제
+
+입력으로 양의 정수 N이 입력되면 2개 이상의 연속된 자연수의 합으로 정수 N을 표현하는 방 법의 가짓수를 출력하는 프로그램을 작성하세요.
+ 만약 N=15이면
+$$
+7+8=15\\
+4+5+6=15\\
+1+2+3+4+5=15
+$$
+
+ 와 같이 총 3가지의 경우가 존재한다.
+
+#### 풀이
+
+```java
+public static String solution41(int number) {
+    int n = number;
+    StringBuilder stringBuilder = new StringBuilder();
+    int b = 1, result = 0;
+    n -= b;
+    while (n > 0) {
+        b += 1;
+        n -= b;
+        if (n % b == 0) {
+            result++;
+            int div = n /b;
+            String collect = IntStream.range(0, b).mapToObj(i -> String.valueOf(i + div + 1)).collect(Collectors.joining(" + "));
+            stringBuilder.append(collect).append(" = ").append(number).append("\n");
+        }
+    }
+    return stringBuilder.append(result).toString();
+}
+```
+
+### 이분검색
+
+#### 문제
+
+임의의 N개의 숫자가 입력으로 주어집니다. N개의 수를 오름차순으로 정렬한 다음 N개의 수 중 한 개의 수인 M이 주어지면 이분검색으로 M이 정렬된 상태에서 몇 번째에 있는지 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public static String solution42(int n, List<Integer> list) {
+    list = list.stream().sorted().collect(Collectors.toList());
+    for (int start = 0, end = list.size(); start <= end;) {
+        int mid = (start + end) / 2;
+        if (list.get(mid).equals(n)) {
+            return String.valueOf(mid);
+        } else if (list.get(mid) > mid) {
+            start = mid + 1;
+        } else  {
+            end = mid;
+        }
+    }
+    return "";
+}
+```
