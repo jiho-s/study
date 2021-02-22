@@ -14,6 +14,9 @@
 42. [이분검색](#이분검색)
 43. [뮤직비디오](#뮤직비디오)
 44. [마구간 정하기](#마구간 정하기)
+45. [공주 구하기](#공주-구하기)
+46. [멀티태스킹](#멀티태스킹)
+47. [봉우리](#봉우리)
 
 ### 3등의 성적은?
 
@@ -298,5 +301,106 @@ public String solution44(List<Integer> list, int numOfHorses) {
         }
     }
     return String.valueOf(answer);
+}
+```
+
+### 공주 구하기
+
+#### 문제
+
+정보 왕국의 이웃 나라 외동딸 공주가 숲속의 괴물에게 잡혀갔습니다.
+ 정보 왕국에는 왕자가 N명이 있는데 서로 공주를 구하러 가겠다고 합니다. 정보왕국의 왕은 다음과 같은 방법으로 공주를 구하러 갈 왕자를 결정하기로 했습니다.
+ 왕은 왕자들을 나이 순으로 1번부터 N번까지 차례로 번호를 매긴다. 그리고 1번 왕자부터 N 번 왕자까지 순서대로 시계 방향으로 돌아가며 동그랗게 앉게 한다. 그리고 1번 왕자부터 시 계방향으로 돌아가며 1부터 시작하여 번호를 외치게 한다. 한 왕자가 K(특정숫자)를 외치면 그 왕자는 공주를 구하러 가는데서 제외되고 원 밖으로 나오게 된다. 그리고 다음 왕자부터 다시 1부터 시작하여 번호를 외친다.
+ 이렇게 해서 마지막까지 남은 왕자가 공주를 구하러 갈 수 있다.
+
+예를 들어 총 8명의 왕자가 있고, 3을 외친 왕자가 제외된다고 하자. 처음에는 3번 왕자가 3 을 외쳐 제외된다. 이어 6, 1, 5, 2, 8, 4번 왕자가 차례대로 제외되고 마지막까지 남게 된 7 번 왕자에게 공주를 구하러갑니다.
+ N과 K가 주어질 때 공주를 구하러 갈 왕자의 번호를 출력하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+public String solution45(int num, int seq) {
+    LinkedList<Integer> collect = IntStream.rangeClosed(1, num)
+            .sorted().boxed()
+            .collect(Collectors.toCollection(LinkedList::new));
+    int index = 0;
+    while (collect.size() != 1) {
+        for (int i = 0; i < seq - 1; i++) {
+            index++;
+        }
+        index %= collect.size();
+        collect.remove(index);
+    }
+    return collect.getFirst().toString();
+}
+```
+
+### 멀티태스킹
+
+#### 문제
+
+현수의 컴퓨터는 멀티태스킹이 가능하다. 처리해야 할 작업이 N개 들어오면 현수의 컴퓨터는
+
+작업을 1부터 N까지의 번호를 부여하고 처리를 다음과 같이 한다.
+
+1) 컴퓨터는 1번 작업부터 순서대로 1초씩 작업을 한다. 즉 각 작업을 1초만 작업하고 다음 작업을 하는 식이다.
+ 2) 마지막 번호의 작업을 1초 했으면 다시 1번 작업으로 가서 다시 1초씩 후속 처리를 한다. 3) 처리가 끝난 작업은 작업 스케쥴에서 사라지고 새로운 작업은 들어오지 않는다.
+
+그런데 현수의 컴퓨터가 일을 시작한 지 K초 후에 정전이 되어 컴퓨터가 일시적으로 멈추었 다. 전기가 들어오고 나서 현수의 컴퓨터가 몇 번 작업부터 다시 시작해야 하는지 알아내는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution46(List<Integer> jobs, int outTime) {
+    ArrayList<Integer> list = new ArrayList<>(jobs);
+    int len = list.size();
+    int i1 = IntStream.range(0, outTime).reduce((index, i) -> {
+        int next = index;
+        int current = 0;
+        while ((current = list.get(next)) == 0) {
+            next = (next + 1) % len;
+        }
+        current--;
+        list.set(next, current);
+        return next;
+    }).orElse(-1);
+    return String.valueOf(i1 + 1);
+}
+```
+
+### 봉우리
+
+#### 문제
+
+지도 정보가 N*N 격자판에 주어집니다. 각 격자에는 그 지역의 높이가 쓰여있습니다. 각 격자 판의 숫자 중 자신의 상하좌우 숫자보다 큰 숫자는 봉우리 지역입니다. 봉우리 지역이 몇 개 있는 지 알아내는 프로그램을 작성하세요.
+ 격자의 가장자리는 0으로 초기화 되었다고 가정한다.
+
+만약 N=5 이고, 격자판의 숫자가 다음과 같다면 봉우리의 개수는 10개입니다.
+
+#### 풀이
+
+```java
+public String solution47(int [][] input) {
+    ArrayList<ArrayList<Integer>> table = new ArrayList<>();
+    table.add(new ArrayList<>());
+    IntStream.range(0,input.length+2).forEach(i ->table.get(0).add(0));
+    IntStream.range(0,input.length).forEach(i -> {
+        table.add(new ArrayList<>());
+        table.get(i+1).add(0);
+        IntStream.range(0, input[i].length).forEach(j -> {
+            table.get(i+1).add(input[i][j]);
+        });
+        table.get(i+1).add(0);
+    });
+    IntStream.range(0, input.length+2).forEach(i -> table.get(input.length+1).add(0));
+    List<List<Integer>> offsets = List.of(List.of(0, 1), List.of(0, -1), List.of(1, 0), List.of(-1, 0));
+    long sum = IntStream.range(1, table.size()).mapToLong(i -> {
+        return IntStream.range(1, table.get(i).size()).filter(j -> {
+            return offsets.stream().noneMatch(offset -> {
+                return table.get(i + offset.get(0)).get(j + offset.get(1)) > table.get(i).get(j);
+            });
+        }).count();
+    }).sum();
+    return String.valueOf(sum);
 }
 ```
