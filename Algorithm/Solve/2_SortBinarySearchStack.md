@@ -17,6 +17,10 @@
 45. [공주 구하기](#공주-구하기)
 46. [멀티태스킹](#멀티태스킹)
 47. [봉우리](#봉우리)
+48. [각 행의 평균과 가장 가까운 값](#각-행의-평균과-가장-가까운-값)
+49. [블록의 최대값](#블록의 최대값)
+50. [영지 선택 (small)](#영지-선택-small)
+51. [영지 선택(large)](#영지-선택-large)
 
 ### 3등의 성적은?
 
@@ -402,5 +406,85 @@ public String solution47(int [][] input) {
         }).count();
     }).sum();
     return String.valueOf(sum);
+}
+```
+
+### 각 행의 평균과 가장 가까운 값
+
+#### 문제
+
+ 9×9 격자판에 쓰여진 81개의 자연수가 주어질 때, 각 행의 평균을 구하고, 그 평균과 가장 가까운 값을 출력하는 프로그램을 작성하세요. 평균은 소수점 첫 째 자리에서 반 올림합니다. 평균과 가까운 값이 두 개이면 그 중 큰 값을 출력하세요.
+
+#### 풀이
+
+```java
+public String solution48(List<List<Integer>> input) {
+    StringBuilder stringBuilder = new StringBuilder();
+    input.stream().forEach(line -> {
+        int avg = line.stream().mapToInt(Integer::intValue).sum() / line.size();
+        int diff = Integer.MAX_VALUE;
+        Integer num = line.stream().min((a, b) -> {
+            return abs(avg - a) - abs(avg - b);
+        }).orElse(-1);
+        stringBuilder.append(avg).append(" ").append(num).append("\n");
+    });
+    return stringBuilder.toString();
+}
+```
+
+### 블록의 최대값
+
+#### 문제
+
+현수는 블록놀이를 좋아합니다. 현수에게 정면에서 본 단면과 오른쪽 측면에서 본 단면을 주 고 최대 블록개수를 사용하여 정면과 오른쪽 측면에서 본 모습으로 블록을 쌓으라 했습니다. 현수가 블록을 쌓는데 사용해야 할 최대 개수를 출력하는 프로그램을 작성하세요.
+
+첫 줄에 블록의 크기 N(3<=N<=10)이 주어집니다. 블록이 크기는 정사각형 N*N입니다. 두 번째 줄에 N개의 정면에서의 높이 정보가 왼쪽 정보부터 주어집니다.
+ 세 번째 줄에 N개의 오른쪽 측면 높이 정보가 앞쪽부터 주어집니다.
+ 블록의 높이는 10 미만입니다.
+
+#### 풀이
+
+```java
+public String solution49(List<List<Integer>> input) {
+    int len = input.size();
+    int result = IntStream.range(0, len).map(i -> {
+        return IntStream.range(0, len).map(j -> {
+            return min(input.get(0).get(j), input.get(1).get(len - 1 - i));
+        }).sum();
+    }).sum();
+    return String.valueOf(result);
+}
+```
+
+### 영지 선택 Small
+
+#### 문제
+
+세종대왕은 현수에게 현수가 다스릴 수 있는 영지를 하사하기로 했다. 전체 땅은 사각형으로 표 시된다. 그 사각형의 땅 중에서 세종대왕이 현수가 다스릴 수 있는 땅의 크기(세로의 길이와 가 로의 길이)를 정해주면 전체 땅 중에서 그 크기의 땅의 위치를 현수가 정하면 되는 것이다. 전체 땅은 사각형의 모양의 격자로 되어 있으며, 그 사각형 땅 안에는 많은 오렌지 나무가 심 겨져 있다. 현수는 오렌지를 무척 좋아하여 오렌지 나무가 가장 많이 포함되는 지역을 선택하 고 싶어 한다. 현수가 얻을 수 있는 영지의 오렌지 나무 최대 개수를 출력하는 프로그램을 작 성하세요. 다음과 같은 땅의 정보가 주어지고, 현수가 하사받을 크기가, 가로 2, 세로 3의 크 기이면 가장 많은 오렌지 나무가 있는 영지는 총 오렌지 나무의 개수가 16인 3행 4열부터 시 작하는 구역이다.
+
+#### 풀이
+
+### 영지 선택 large
+
+#### 문제
+
+세종대왕은 현수에게 현수가 다스릴 수 있는 영지를 하사하기로 했다. 전체 땅은 사각형으로 표 시된다. 그 사각형의 땅 중에서 세종대왕이 현수가 다스릴 수 있는 땅의 크기(세로의 길이와 가 로의 길이)를 정해주면 전체 땅 중에서 그 크기의 땅의 위치를 현수가 정하면 되는 것이다. 전체 땅은 사각형의 모양의 격자로 되어 있으며, 그 사각형 땅 안에는 많은 오렌지 나무가 심 겨져 있다. 현수는 오렌지를 무척 좋아하여 오렌지 나무가 가장 많이 포함되는 지역을 선택하 고 싶어 한다. 현수가 얻을 수 있는 영지의 오렌지 나무 최대 개수를 출력하는 프로그램을 작 성하세요. 다음과 같은 땅의 정보가 주어지고, 현수가 하사받을 크기가, 가로 2, 세로 3의 크 기이면 가장 많은 오렌지 나무가 있는 영지는 총 오렌지 나무의 개수가 16인 3행 4열부터 시 작하는 구역이다.
+
+#### 풀이
+
+```java
+public String solution51(List<List<Integer>> input, int n, int m) {
+    int [][] sum = new int[input.size()+2][input.get(0).size()+2];
+    IntStream.rangeClosed(1,input.size()).forEach(i -> {
+        IntStream.rangeClosed(1, input.get(0).size()).forEach(j -> {
+            sum[i][j] = sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1] + input.get(i).get(j);
+        });
+    });
+    int result = IntStream.rangeClosed(n, input.size()).map(i -> {
+        return IntStream.range(m, input.get(0).size()).map(j -> {
+            return sum[i][j] - sum[i - n][j] - sum[i][j - m] + sum[i - n][j - m];
+        }).max().orElse(0);
+    }).max().orElse(0);
+    return String.valueOf(result);
 }
 ```
