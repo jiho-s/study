@@ -75,6 +75,7 @@
     - [요청 매개변수](./SpringLean/SpringWebMVC/20_HandlerMethods_RequestParams.md)
     - [ModelAttribute](./SpringLean/SpringWebMVC/21_HandlerMethods_ModelAttribute.md)
     - [@Validated](./SpringLean/SpringWebMVC/22_HandlerMethods_Validate.md)
+    - [폼 서브밋 에러처리](./SpringLean/SpringWebMVC/23_HandlerMethods_FormSubmitError)
 
 ## [Java](./Java)
 
