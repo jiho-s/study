@@ -56,3 +56,4 @@
   - [ModelAttribute](./SpringWebMVC/21_HandlerMethods_ModelAttribute.md)
   - [@Validated](./SpringWebMVC/22_HandlerMethods_Validate.md)
   - [폼 서브밋 에러처리](./SpringWebMVC/23_HandlerMethods_FormSubmitError.md)
+  - [@SessionAtributes & MultiFormSubmit](./SpringWebMVC/24_HandlerMethods_SessionAtrributes.md)
