@@ -21,6 +21,10 @@
 49. [블록의 최대값](#블록의 최대값)
 50. [영지 선택 (small)](#영지-선택-small)
 51. [영지 선택(large)](#영지-선택-large)
+52. [Ugly Number](#ugly-number)
+53. [K진수 출력](#k진수-출력)
+54. [올바른 괄호](#올바른-괄호)
+55. [기차운행](#기차운행)
 
 ### 3등의 성적은?
 
@@ -486,5 +490,126 @@ public String solution51(List<List<Integer>> input, int n, int m) {
         }).max().orElse(0);
     }).max().orElse(0);
     return String.valueOf(result);
+}
+```
+
+### Ugly Number
+
+#### 문제
+
+어떤 수를 소인수분해 했을 때 그 소인수가 2 또는 3 또는 5로만 이루어진 수를 Ugly Number라고 부릅니다. Ugly Number를 차례대로 적어보면
+ 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, .......입니다. 숫자 1은 Ugly Number의 첫 번째 수로 합 니다. 자연수 N이 주어지면 Ugly Number를 차례로 적을 때 N번째 Ugly Number를 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution52(int number) {
+    int [] table = new int[number+1];
+    table[1] = 1;
+    var ref = new Object() {
+        int index2 = 1;
+        int index3 = 1;
+        int index5 = 1;
+    };
+    IntStream.rangeClosed(2, number).forEach(i -> {
+        int min = min(table[ref.index2] * 2, min(table[ref.index3] * 3, table[ref.index5] * 5));
+        if (min == table[ref.index2] * 2) {
+            ref.index2++;
+        }
+        if (min == table[ref.index3] * 3) {
+            ref.index3++;
+        }
+        if (min == table[ref.index5] * 5){
+            ref.index5++;
+        }
+        table[i] = min;
+    });
+    return String.valueOf(table[number]);
+}
+```
+
+### K진수 출력
+
+#### 문제
+
+10진수 N이 입력되면 K진수로 변환하여 출력하는 프로그램을 작성하세요. 스택 자료구조를 사용하시기 바랍니다.
+
+#### 풀이
+
+```java
+public String solution53(int number, int div) {
+     final char [] table = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    Deque<Integer> stack = new ArrayDeque<>();
+    while (number != 0) {
+        stack.push(number % div);
+        number /= div;
+    }
+    return stack.stream().map(num -> {
+        return String.valueOf(table[num]);
+    }).collect(Collectors.joining());
+}
+```
+
+### 올바른 괄호
+
+#### 문제
+
+괄호가 입력되면 올바른 괄호이면 “YES", 올바르지 않으면 ”NO"를 출력합니다.
+
+(())() 이것은 괄호의 쌍이 올바르게 위치하는 거지만, (()()))은 올바른 괄호가 아니다.
+
+#### 풀이
+
+```java
+public String solution54(String s) {
+    Stack<Character> stack = new Stack<>();
+    boolean result = s.chars().noneMatch(c -> {
+        if (c == '(') {
+            stack.push('(');
+            return false;
+        } else {
+            if (stack.isEmpty())
+                return true;
+            else stack.pop();
+            return false;
+        }
+    });
+    result = result && stack.isEmpty();
+    return result ? "YES" : "NO";
+}
+```
+
+### 기차운행
+
+#### 문제
+
+A도시에서 출발한 기차는 B도시로 도착한다. 그런데 도로 중간에 T자형 교차로가 있어 출발한기차의 도착 순서를 조정할 수 있다.
+
+교차로에서는 다음과 같은 두 개의 작업을 합니다.
+ P(push)작업 : A도시에서 오는 기차를 교차로에 넣는다.
+ O(out)작업 : 교차로에 들어온 가장 최근 기차를 B도시로 보낸다.
+ 만약 2 1 3 기차 번호 순으로 A도시에서 출발하더라도 B도시에는 T교차로를 이용하여 1 2 3 순으로 도착하게 할 수 있습니다.
+ 그 작업 P, P, O, O, P, O순으로 작업을 하면 B도시에 1, 2, 3 순으로 도착합니다.
+ 1부터 N까지 번호를 가진 기차가 A도시에서 어떤 순으로 출발하든, B도시에 번호순으로 도착 하도록 하는 교차로 작업을 출력합니다. 모든 기차는 교차로에 들어가야만 B도시로 갈 수 있 습니다. 번호순서대로 도착이 불가능하면 impossible 이라고 출력합니다.
+
+#### 풀이
+
+```java
+public String solution55(List<Integer> trains) {
+    Stack<Integer> stack = new Stack<>();
+    StringBuilder stringBuilder = new StringBuilder();
+    int number = 1;
+    boolean equals = trains.stream().reduce(1, (result, train) -> {
+        int next = result;
+        stack.push(train);
+        stringBuilder.append("P");
+        while (!stack.isEmpty() && stack.peek().equals(next)) {
+            stack.pop();
+            stringBuilder.append("O");
+            next++;
+        }
+        return next;
+    }).equals(trains.size() + 1);
+    return equals ? stringBuilder.toString() : "impossible";
 }
 ```
