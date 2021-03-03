@@ -7,6 +7,11 @@
 58. [이진트리 깊이우선탐색](#이진트리-깊이우선탐색)
 59. [부분집합(DFS)](#부분집합)
 60. [합이 같은 부분집합(DFS)](#합이-같은-부분집합)
+61. [특정 수 만들기(DFS)](#특정-수-만들기)
+62.  
+63. 
+64. [경로 탐색(DFS)](#경로-탐색)
+65. [미로탐색(DFS)](#미로탐색)
 
 ### 재귀함수 분석
 
@@ -130,5 +135,131 @@ private boolean solution60_recursive(List<Integer> list, int index, int sum, int
         return false;
     }
     return solution60_recursive(list, index+1, sum, want) || solution60_recursive(list, index +1, sum + list.get(index), want);
+}
+```
+
+### 특정 수 만들기
+
+#### 문제
+
+N개의 원소로 구성된 자연수 집합이 주어지면, 집합의 원소와 ‘+’, ‘-’ 연산을 사용하여 특정 수인 M을 만드는 경우가 몇 가지 있는지 출력하는 프로그램을 작성하세요. 각 원소는 연산에 한 번만 사용합니다.
+ 예를 들어 {2, 4, 6, 8}이 입력되고, M=12이면
+$$
+2+4+6=12\\
+ 4+8=12\\
+ 6+8-2=12\\
+ 2-4+6+8=12
+$$
+
+ 로 총 4가지의 경우가 있습니다. 만들어지는 경우가 존재하지 않으면 -1를 출력한다.
+
+#### 풀이
+
+```java
+public String solution61(int num, List<Integer> list) {
+    int answer = solution61_recursive(num, list, 0, 0);
+    return answer != 0 ? String.valueOf(answer) : "-1";
+}
+private int solution61_recursive(int num, List<Integer> list, int index, int sum) {
+    int result = 0;
+    if (list.size() == index) {
+        if (sum == num) {
+            result++;
+        }
+        return result;
+    }
+    result += solution61_recursive(num, list, index + 1, sum + list.get(index));
+    result += solution61_recursive(num, list, index + 1, sum - list.get(index));
+    result += solution61_recursive(num, list, index + 1, sum);
+    return result;
+}
+```
+
+### 경로 탐색
+
+#### 문제
+
+방향그래프가 주어지면 1번 정점에서 N번 정점으로 가는 모든 경로의 가지 수를 출력하는 프로그램을 작성하세요
+
+#### 풀이
+
+```java
+public String solution64(List<List<Integer>> table) {
+    boolean [] mark = new boolean[table.size()];
+    mark[0] = true;
+    int answer = solution64Recursive(table, mark, 0);
+    return String.valueOf(answer);
+}
+
+private int solution64Recursive(List<List<Integer>> table, boolean [] mark, int current) {
+    int result = 0;
+    if (current == mark.length - 1) {
+        return 1;
+    }
+    result += table.get(current).stream().filter(next -> !mark[next]).mapToInt(next -> {
+        mark[next] = true;
+        int i = solution64Recursive(table, mark, next);
+        mark[next] = false;
+        return i;
+    }).sum();
+    return result;
+};
+```
+
+### 미로탐색
+
+#### 문제
+
+7*7 격자판 미로를 탈출하는 경로의 가지수를 출력하는 프로그램을 작성하세요. 출발점은 격 자의 (1, 1) 좌표이고, 탈출 도착점은 (7, 7)좌표이다. 격자판의 1은 벽이고, 0은 통로이다.
+
+#### 풀이
+
+```java
+public String solution65(int [][] table) {
+    int answer = solution65Recursive(table, new Coordinate(0,0), new Coordinate(table.length-1, table.length-1));
+    return String.valueOf(answer);
+}
+
+private int solution65Recursive(int [][] table, Coordinate current, Coordinate target) {
+    if (current.x < 0 || current.x >= table.length || current.y < 0 || current.y >= table.length) {
+        return 0;
+    }
+    int result = 0;
+    if (current.equals(target)) {
+        return 1;
+    }
+    result += Coordinate.offsets.stream().mapToInt(offset -> {
+        return solution65Recursive(table, current.next(offset), target);
+    }).sum();
+    return result;
+}
+
+static class Coordinate {
+    final int x;
+    final int y;
+
+    public static List<Coordinate> offsets = List.of(new Coordinate(1, 0), new Coordinate(-1, 0), new Coordinate(0,1), new Coordinate(0,-1));
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    public Coordinate next(Coordinate offset) {
+        return new Coordinate(this.x + offset.x, this.y + offset.y);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }
 ```
