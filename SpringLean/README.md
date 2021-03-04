@@ -59,3 +59,4 @@
   - [@SessionAttributes & MultiFormSubmit](./SpringWebMVC/24_HandlerMethods_SessionAttributes.md)
   - [@SessionAttribute](./SpringWebMVC/25_HandlerMethods_SessionAttribute.md)
   - [RedirectAttributes](./SpringWebMVC/26_HandlerMethods_RedirectAttributes.md)
+  - [FlashAttributes](./SpringWebMVC/27_HandlerMethods_FlashAttributes.md)

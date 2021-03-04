@@ -65,4 +65,5 @@
 - [@SessionAttributes & MultiFormSubmit](./24_HandlerMethods_SessionAttributes.md)
 - [@SessionAttribute](./25_HandlerMethods_SessionAttribute.md)
 - [RedirectAttributes](./26_HandlerMethods_RedirectAttributes.md)
+- [FlashAttributes](./27_HandlerMethods_FlashAttributes.md)
 
