@@ -12,6 +12,11 @@
 63. 
 64. [경로 탐색(DFS)](#경로-탐색)
 65. [미로탐색(DFS)](#미로탐색)
+66.  
+67. [최소비용(DFS)](#최소비용)
+68.  
+69. [이진트리 넓이우선탐색(BFS)](#이진트리-넓이우선탐색)
+70. [그래프 최단거리(BFS)](#그래프 최단거리)
 
 ### 재귀함수 분석
 
@@ -263,3 +268,75 @@ static class Coordinate {
     }
 }
 ```
+
+### 최소비용
+
+#### 문제
+
+가중치 방향그래프가 주어지면 1번 정점에서 N번 정점으로 가는 최소비용을 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution67(List<List<Integer>> table) {
+    boolean [] mark = new boolean[table.size()];
+    mark[0] = true;
+    int answer = solution67_recursive(table, mark, 0, 0, mark.length - 1);
+    return String.valueOf(answer);
+}
+
+private int solution67_recursive(List<List<Integer>> table, boolean [] mark, int current, int sum, int target) {
+    if (current == target) {
+        return sum;
+    }
+    return IntStream.range(0, table.get(current).size())
+            .filter(i -> !table.get(current).get(i).equals(0) && !mark[i])
+            .map(next -> {
+                Integer weight = table.get(current).get(next);
+                mark[next] = true;
+                int result = solution67_recursive(table, mark, next, sum + weight, target);
+                mark[next] = false;
+                return result;
+            }).min().orElse(Integer.MAX_VALUE);
+
+}
+```
+
+### 이진트리 넓이우선탐색
+
+#### 문제
+
+아래 그림과 같은 이진트리를 넓이우선탐색해 보세요. 간선 정보 6개를 입력받아 처리해보세요.
+
+#### 풀이
+
+```java
+public String solution69(List<Integer> [] edges, int n) {
+    Queue<Integer> queue = new LinkedList<>();
+    List<Integer> result = new ArrayList<>();
+    queue.add(0);
+    boolean [] mark = new boolean[7];
+    mark[0] = true;
+    result.add(0);
+    while (!queue.isEmpty()) {
+        Integer current = queue.poll();
+        edges[current].stream()
+                .filter(next -> !mark[next])
+                .forEach(next -> {
+                    mark[next] = true;
+                    queue.add(next);
+                    result.add(next);
+                });
+    }
+    return result.stream().map(String::valueOf).collect(Collectors.joining(" "));
+}
+```
+
+### 그래프 최단거리
+
+#### 문제
+
+1번 정점에서 각 정점으로 가는 최소 이동 간선수를 출력하세요.
+
+#### 풀이
+
