@@ -17,6 +17,11 @@
 68.  
 69. [이진트리 넓이우선탐색(BFS)](#이진트리-넓이우선탐색)
 70. [그래프 최단거리(BFS)](#그래프 최단거리)
+71. [송아지 찾기(BFS)](#송아지-찾기)
+72. [공주 구하기](#공주-구하기)
+73. [최대 힙(우선순위 큐)](#최대-힙)
+74. [최소 힙(우선순위 큐)](#최소-힙)
+75. [최대 수입 스케줄(우선순위 큐)](#최대-수입-스케줄)
 
 ### 재귀함수 분석
 
@@ -340,3 +345,194 @@ public String solution69(List<Integer> [] edges, int n) {
 
 #### 풀이
 
+```java
+public String solution70(List<Integer> [] table) {
+    int [] distances = new int[table.length];
+    Queue<Integer> queue = new LinkedList<>();
+    queue.add(0);
+    while (!queue.isEmpty()) {
+        Integer current = queue.poll();
+        table[current].stream().filter(next ->  next != 0 && distances[next] == 0).forEach(next -> {
+            distances[next] = distances[current] + 1;
+          	queue.add(next);
+        });
+    }
+    return IntStream.range(1,table.length)
+            .mapToObj(i -> String.valueOf(distances[i]))
+            .collect(Collectors.joining(" "));
+}
+```
+
+### 송아지 찾기
+
+#### 문제
+
+현수는 송아지를 잃어버렸다. 다행히 송아지에는 위치추적기가 달려 있다. 현수의 위치와 송아 지의 위치가 직선상의 좌표 점으로 주어지면 현수는 현재 위치에서 송아지의 위치까지 다음과 같은 방법으로 이동한다
+
+ 현수는 스카이 콩콩을 타고 가는데 한 번의 점프로 앞으로 1, 뒤로 1, 앞으로 5를 이동할 수 있다. 최소 몇 번의 점프로 현수가 송아지의 위치까지 갈 수 있는지 구하는 프로그램을 작성 하세요.
+
+#### 풀이
+
+```java
+public String solution71(int start, int end) {
+    List<Integer> offsets = List.of(1, -1, 5);
+    int [] table = new int[end + 5];
+    Queue<Integer> queue = new LinkedList<>();
+    queue.add(start);
+    while (!queue.isEmpty()) {
+        Integer current = queue.poll();
+        offsets.stream()
+                .map(offset -> current + offset)
+                .filter(next -> next != start && table[next] == 0)
+                .filter(next -> next > 0 && next < end + 5)
+                .forEach(next -> {
+                    table[next] = table[current] + 1;
+                    queue.add(next);
+                });
+    }
+    return String.valueOf(table[end]);
+}
+```
+
+### 공주 구하기
+
+#### 문제
+
+정보 왕국의 이웃 나라 외동딸 공주가 숲속의 괴물에게 잡혀갔습니다. 정보 왕국에는 왕자가 N명이 있는데 서로 공주를 구하러 가겠다고 합니다. 정보왕국의 왕은 다음과 같은 방법으로 공주를 구하러 갈 왕자를 결정하기로 했습니다.
+
+ 왕은 왕자들을 나이 순으로 1번부터 N번까지 차례로 번호를 매긴다. 그리고 1번 왕자부터 N 번 왕자까지 순서대로 시계 방향으로 돌아가며 동그랗게 앉게 한다. 그리고 1번 왕자부터 시 계방향으로 돌아가며 1부터 시작하여 번호를 외치게 한다. 한 왕자가 K(특정숫자)를 외치면 그 왕자는 공주를 구하러 가는데서 제외되고 원 밖으로 나오게 된다. 그리고 다음 왕자부터 다시 1부터 시작하여 번호를 외친다.
+
+ 이렇게 해서 마지막까지 남은 왕자가 공주를 구하러 갈 수 있다.
+
+#### 풀이
+
+```java
+public String solution72(int n, int k) {
+    LinkedList<Integer> list = new LinkedList<>();
+    IntStream.rangeClosed(1, n).forEach(list::add);
+    while (list.size() != 1) {
+        IntStream.range(0, k).forEach(i -> list.add(list.removeFirst()));
+        list.removeFirst();
+    }
+    return list.getFirst().toString();
+}
+```
+
+### 최대 힙
+
+#### 문제
+
+최대힙 자료를 이용하여 다음과 같은 연산을 하는 프로그램을 작성하세요.
+
+1. 자연수가 입력되면 최대힙에 입력한다.
+2. 숫자 0 이 입력되면 최대힙에서 최댓값을 꺼내어 출력한다.(출력할 자료가 없으면 -1를 출력한다.)
+3. -1이 입력되면 프로그램 종료한다.
+
+#### 풀이
+
+```java
+public String solution73(List<Integer> commands) {
+    PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.reverseOrder());
+    List<Integer> result = new ArrayList<>();
+    for (Integer commend : commands) {
+        if (commend.equals(-1)) {
+            break;
+        } else if (commend.equals(0)) {
+            if (priorityQueue.isEmpty()) {
+                result.add(-1);
+            } else {
+                result.add(priorityQueue.poll());
+            }
+        } else {
+            priorityQueue.add(commend);
+        }
+    }
+    return result.stream().map(String::valueOf).collect(Collectors.joining(" "));
+}
+```
+
+### 최소 힙
+
+#### 문제
+
+최소힙 자료를 이용하여 다음과 같은 연산을 하는 프로그램을 작성하세요.
+
+1. 자연수가 입력되면 최대힙에 입력한다.
+2. 숫자 0 이 입력되면 최소힙에서 최소값을 꺼내어 출력한다.(출력할 자료가 없으면 -1를 출력한다.)
+3. -1이 입력되면 프로그램 종료한다.
+
+#### 풀이
+
+```java
+public String solution73(List<Integer> commands) {
+    PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+    List<Integer> result = new ArrayList<>();
+    for (Integer commend : commands) {
+        if (commend.equals(-1)) {
+            break;
+        } else if (commend.equals(0)) {
+            if (priorityQueue.isEmpty()) {
+                result.add(-1);
+            } else {
+                result.add(priorityQueue.poll());
+            }
+        } else {
+            priorityQueue.add(commend);
+        }
+    }
+    return result.stream().map(String::valueOf).collect(Collectors.joining(" "));
+}
+```
+
+### 최대 수입 스케줄
+
+#### 문제
+
+현수는 유명한 강연자이다. N개이 기업에서 강연 요청을 해왔다. 각 기업은 D일 안에 와서 강 연을 해 주면 M만큼의 강연료를 주기로 했다.
+
+ 각 기업이 요청한 D와 M를 바탕으로 가장 많을 돈을 벌 수 있도록 강연 스케쥴을 짜야 한다. 단 강연의 특성상 현수는 하루에 하나의 기업에서만 강연을 할 수 있다.
+
+#### 풀이
+
+```java
+public String solution75(List<List<Integer>> list) {
+    var ref = new Object() {
+        int max = 0;
+    };
+    LinkedList<Pair> collect = list.stream().map(i -> {
+        if (ref.max < i.get(1)) {
+            ref.max = i.get(1);
+        }
+        return new Pair(i);
+    }).sorted(Comparator.comparing(Pair::getMoney)
+            .thenComparing(Pair::getTime)
+            .reversed()).collect(Collectors.toCollection(LinkedList::new));
+    int sum = IntStream.iterate(ref.max, i -> i > 0, i -> --i).map(i -> {
+        Pair pair = collect.removeFirst();
+        if (pair.time < i) {
+            return 0;
+        }
+        return pair.getMoney();
+    }).sum();
+
+    return String.valueOf(sum);
+}
+
+static class Pair {
+    int money;
+    int time;
+
+    public Pair(List<Integer> list) {
+        this.money = list.get(0);
+        this.time = list.get(1);
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public int getTime() {
+        return time;
+    }
+}
+```
