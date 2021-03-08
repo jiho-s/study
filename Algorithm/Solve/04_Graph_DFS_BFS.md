@@ -6,7 +6,12 @@
 77. [친구인가?(Union&Find)](#친구인가?)
 78. [원더랜드(Kruskal Union&Find 활용)](#원더랜드-kruskal)
 79. [원더랜드(Prim priority_queue활용)](#원더랜드-prim)
-80. [다익스트라 알고르즘](#다익스트라-알고리즘)
+80. [다익스트라 알고리즘](#다익스트라-알고리즘)
+81. [벨만 포드 알고리즘](#벨만-포드-알고리즘)
+82. [순열구하기(DFS)](#순열구하기)
+83. [복면산](#복면산)
+84. [휴가](#휴가)
+85. [수식만들기(DFS)](#수식만들기)
 
 ### 이항계수
 
@@ -216,5 +221,228 @@ public String solution80(List<List<Integer>> table, int n) {
         Integer distance = distances.get(i);
         return distance == Integer.MAX_VALUE ? "impossible" : i " : "+ String.valueOf(distance));
     }).collect(Collectors.joining("\n"));
+}
+```
+
+### 벨만 포드 알고리즘
+
+#### 문제
+
+N개의 도시가 주어지고, 각 도시들을 연결하는 도로와 해당 도로를 통행하는 비용이 주어질 때 한 도시에서 다른 도시로 이동하는데 쓰이는 비용의 최소값을 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution81(int [][] list, int n, int target) {
+    List<Edge> collect = Arrays.stream(list).map(Edge::new).collect(Collectors.toList());
+    List<Integer> table = new ArrayList<>();
+    IntStream.rangeClosed(0, n).forEach(i -> table.add(Integer.MAX_VALUE));
+    table.set(1, 0);
+    IntStream.range(1, n).forEach(i -> {
+        collect.forEach(edge -> {
+            if (table.get(edge.end) != Integer.MAX_VALUE && table.get(edge.end) > table.get(edge.start) + edge.cost) {
+                table.set(edge.end, table.get(edge.start) + edge.cost);
+            }
+        });
+    });
+    boolean noneMatch = collect.stream()
+            .noneMatch(edge -> (table.get(edge.end) != Integer.MAX_VALUE && table.get(edge.end) > table.get(edge.start) + edge.cost));
+    if (noneMatch) {
+        return String.valueOf(-1);
+    }
+    return String.valueOf(table.get(target));
+}
+
+static class Edge {
+    int start;
+    int end;
+    int cost;
+
+    public Edge(int [] list) {
+        this.start = list[0];
+        this.end = list[1];
+        this.cost = list[2];
+    }
+
+
+}
+```
+
+### 순열구하기
+
+#### 문제
+
+자연수 N과 R이 주어지면 서로 다른 N개의 자연수 중 R개를 뽑아 일렬로 나열하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution82(int n, int r, List<Integer> numbers) {
+    boolean [] mark = new boolean[n];
+    StringBuilder stringBuilder = new StringBuilder();
+    int answer = solution82Recursive(mark, numbers, r, new LinkedList<>(), stringBuilder);
+    stringBuilder.append(answer);
+    return stringBuilder.toString();
+
+}
+
+private int solution82Recursive(boolean[] mark, List<Integer> numbers, int r, LinkedList<Integer> list, StringBuilder stringBuilder) {
+    if (r == list.size()) {
+        String collect = list.stream().map(String::valueOf).collect(Collectors.joining(" "));
+        stringBuilder.append(collect).append("\n");
+        return 1;
+    }
+    return IntStream.range(0, numbers.size()).filter(i -> !mark[i]).map(i -> {
+        mark[i] = true;
+        list.add(numbers.get(i));
+        int result = solution82Recursive(mark, numbers, r, list, stringBuilder);
+        list.removeLast();
+        mark[i] = false;
+        return result;
+    }).sum();
+}
+```
+
+### 복면산
+
+#### 문제
+
+SEND+MORE=MONEY 라는 유명한 복면산이 있습니다. 이 복면산을 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution83() {
+    boolean [] marks = new boolean[10];
+    MyList myList = new MyList();
+    StringBuilder stringBuilder = new StringBuilder();
+    solution83Recursive(marks, myList, stringBuilder);
+    return stringBuilder.toString();
+}
+
+private void solution83Recursive(boolean [] marks, MyList myList, StringBuilder stringBuilder) {
+    if (myList.a.size() == 8) {
+        if (!(myList.a.get(2) == 0 || myList.a.get(6) == 0)) {
+            if (myList.isTrue()) {
+                stringBuilder.append(myList.send()).append("+").append(myList.more()).append("=").append(myList.money()).append("\n");
+            }
+        }
+        return;
+    }
+    IntStream.range(0, marks.length).filter(i -> !marks[i]).forEach(i -> {
+        marks[i] = true;
+        myList.a.add(i);
+        solution83Recursive(marks, myList, stringBuilder);
+        marks[i] = false;
+        myList.a.removeLast();
+
+    });
+}
+
+static class MyList {
+    LinkedList<Integer> a = new LinkedList<Integer>();
+
+    boolean isTrue() {
+        return send() + more() == money();
+    }
+    int send() {
+        return a.get(6) *1000+ a.get(1) *100+ a.get(3) *10+ a.get(0);
+    }
+    int more() {
+        return a.get(2) *1000+ a.get(4) *100+ a.get(5) *10+ a.get(1);
+    }
+    int money() {
+        return a.get(2) *10000+ a.get(4) *1000+ a.get(3) *100+ a.get(1) *10+ a.get(7);
+    }
+}
+```
+
+### 휴가
+
+#### 문제
+
+카운셀러로 일하고 있는 현수는 오늘부터 N+1일째 되는 날 휴가를 가기 위해서, 남은 N일 동 안 최대한 많은 상담을 해서 휴가비를 넉넉히 만들어 휴가를 떠나려 한다.
+
+ 현수가 다니는 회사에 하루에 하나씩 서로 다른 사람의 상담이 예약되어 있다.
+
+각각의 상담은 상담을 완료하는데 걸리는 날수 T와 상담을 했을 때 받을 수 있는 금액 P로 이 루어져 있다.
+
+현수가 휴가를 가기 위해 얻을 수 있는 최대 수익을 구하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+public String solution84(List<List<Integer>> list) {
+    int answer = solution84Recursive(list, 0, 0, 0);
+    return String.valueOf(answer);
+}
+
+public int solution84Recursive(List<List<Integer>> list, int remain, int current, int sum) {
+    if (current == list.size()) {
+        return sum;
+    }
+    int result = 0;
+    if (remain == 0) {
+        int a = solution84Recursive(list, list.get(current).get(0) - 1, current + 1, sum + list.get(current).get(1));
+        int b = solution84Recursive(list, 0, current + 1, sum);
+        result = max(a,b);
+    }else {
+        result = solution84Recursive(list, remain - 1, current + 1, sum);
+    }
+    return result;
+}
+```
+
+### 수식만들기
+
+#### 문제
+
+길이가 N인 자연수로 이루어진 수열이 주어집니다. 수열의 각 항 사이에 끼워넣을 N-1개의 연산자가 주어집니다. 연산자는 덧셈(+), 뺄셈(-), 곱셈(×), 나눗셈(÷)으로만 이루어져 있습니 다.
+ 수열의 순서는 그대로 유지한 채 각 항사이에 N-1개의 연산자를 적절히 배치하면 다양한 수 식이 나옵니다.
+
+ 예를 들면수열이 1 2 3 4 5이고 덧셈(+) 1개, 뺄셈(-) 1개, 곱셈(×) 1개, 나눗셈(÷) 1개인 일 때
+ 만들 수 있는 수식은 많은 경우가 존재한다.
+ 그 중 1+2*3-4/5와 같이 수식을 만들었다면 수식을 계산하는 결과는 연산자 우선순위를 따지 지 않고 맨 앞쪽 연산자부터 차례로 계산한다. 수식을 계산한 결과는 1이다.
+ N길이의 수열과 N-1개의 연산자가 주어지면 만들 수 있는 수식들 중에서 연산한 결과가 최대 인것과 최소인것을 출력하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+int max = Integer.MIN_VALUE;
+int min = Integer.MAX_VALUE;
+public String solution85(List<Integer> list, List<Integer> operators) {
+    solution85Recursive(list, operators, 1, list.get(0));
+    return max + "\n" + min;
+}
+
+public void solution85Recursive(List<Integer> list, List<Integer> operators, int current, int sum) {
+    if (current == list.size()) {
+       if (max < sum) {
+           max = sum;
+       } else if (min > sum) {
+           min = sum;
+       }
+       return;
+    }
+    if (operators.get(0) > 0) {
+        operators.set(0, operators.get(0) -1);
+        solution85Recursive(list, operators, current + 1, sum + list.get(current));
+        operators.set(0, operators.get(0) + 1);
+    }
+    if (operators.get(1) > 0) {
+        operators.set(1, operators.get(1) -1);
+        solution85Recursive(list, operators, current + 1, sum - list.get(current));
+        operators.set(1, operators.get(1) + 1);
+    }
+    if (operators.get(2) > 0) {
+        operators.set(2, operators.get(2) -1);
+        solution85Recursive(list, operators, current + 1, sum * list.get(current));
+        operators.set(2, operators.get(2) + 1);
+    }
+    if (operators.get(3) > 0) {
+        operators.set(3, operators.get(3) -1);
+        solution85Recursive(list, operators, current + 1, sum / list.get(current));
+        operators.set(3, operators.get(3) + 1);
+    }
 }
 ```
