@@ -66,4 +66,5 @@
 - [@SessionAttribute](./25_HandlerMethods_SessionAttribute.md)
 - [RedirectAttributes](./26_HandlerMethods_RedirectAttributes.md)
 - [FlashAttributes](./27_HandlerMethods_FlashAttributes.md)
+- [MultipartFile](./28_HandlerMethods_MultipartFile.md)
 
