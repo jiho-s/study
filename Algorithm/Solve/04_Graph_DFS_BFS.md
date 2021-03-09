@@ -12,6 +12,11 @@
 83. [복면산](#복면산)
 84. [휴가](#휴가)
 85. [수식만들기(DFS)](#수식만들기)
+86. [피자 배달 거리(DFS)](#피자-배달-거리)
+87. [섬나라 아일랜드(BFS)](#섬나라 아일랜드)
+88. [미로의 최단거리 통로(BFS)](#미로의-최단거리-통로)
+89. [토마토(BFS)](#토마토)
+90. [라이언 킹 심바(BFS)](#라이언-킹-심바)
 
 ### 이항계수
 
@@ -443,6 +448,404 @@ public void solution85Recursive(List<Integer> list, List<Integer> operators, int
         operators.set(3, operators.get(3) -1);
         solution85Recursive(list, operators, current + 1, sum / list.get(current));
         operators.set(3, operators.get(3) + 1);
+    }
+}
+```
+
+### 피자 배달 거리
+
+#### 문제
+
+N×N 크기의 도시지도가 있습니다. 도시지도는 1×1크기의 격자칸으로 이루어져 있습니다. 각 격자칸에는 0은 빈칸, 1은 집, 2는 피자집으로 표현됩니다. 각 격자칸은 좌표(행번호, 열 번호) 로 표현됩니다. 행번호는 1번부터 N번까지이고, 열 번호도 1부터 N까지입니다.
+
+ 도시에는 각 집마다 “피자배달거리”가 았는데 각 집의 피자배달거리는 해당 집과 도시의 존재 하는 피자집들과의 거리 중 최소값을 해당 집의 “피자배달거리”라고 한다.
+
+집과 피자집의 피자배달거리는 |x1-x2|+|y1-y2| 이다.
+
+최근 도시가 불경기에 접어들어 우후죽순 생겼던 피자집들이 파산하고 있습니다. 도시 시장은 도시에 있는 피자집 중 M개만 살리고 나머지는 보조금을 주고 폐업시키려고 합니다.
+ 시장은 살리고자 하는 피자집 M개를 선택하는 기준으로 도시의 피자배달거리가 최소가 되는 M개의 피자집을 선택하려고 합니다.
+
+도시의 피자 배달 거리는 각 집들의 피자 배달 거리를 합한 것을 말합니다.
+
+#### 풀이
+
+```java
+public String solution86(int [][] table, int m) {
+    List<Coordinate> homes = new ArrayList<>();
+    List<Coordinate> pizzas = new ArrayList<>();
+    int [] selects = new int[m];
+    IntStream.range(0, table.length).forEach(i -> {
+        IntStream.range(0, table.length).forEach(j -> {
+            if (table[i][j] == 1) {
+                homes.add(new Coordinate(i, j));
+            } else if (table[i][j] == 2) {
+                pizzas.add(new Coordinate(i,j));
+            }
+        });
+    });
+    int result = solution86Recursive(homes, pizzas, selects, 0, 0);
+    return String.valueOf(result);
+}
+
+private int solution86Recursive(List<Coordinate> homes, List<Coordinate> pizzas, int [] selects, int current, int count) {
+    if (current > pizzas.size()) {
+        return Integer.MAX_VALUE;
+    } else if (count == selects.length) {
+        return homes.stream().mapToInt(home -> {
+            return Arrays.stream(selects).map(select -> {
+                return home.getDistance(pizzas.get(select));
+            }).min().orElse(Integer.MAX_VALUE);
+        }).sum();
+    }
+    selects[count] = current;
+    int a = solution86Recursive(homes, pizzas, selects, current + 1, count + 1);
+    int b = solution86Recursive(homes, pizzas, selects, current + 1, count);
+    return min(a, b);
+}
+static class Coordinate {
+    int x;
+    int y;
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getDistance(Coordinate coordinate) {
+        return abs(this.x - coordinate.x) + abs(this.y - coordinate.y);
+    }
+}
+```
+
+### 섬나라 아일랜드
+
+#### 문제
+
+섬나라 아일랜드의 지도가 격자판의 정보로 주어집니다. 각 섬은 1로 표시되어 상하좌우와 대 각선으로 연결되어 있으며, 0은 바다입니다. 섬나라 아일랜드에 몇 개의 섬이 있는지 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution87(int [][] table) {
+    Queue<Coordinate> queue = new LinkedList<>();
+    long sum = IntStream.range(0, table.length).mapToLong(i -> {
+        return IntStream.range(0, table.length).filter(j -> {
+            if (table[i][j] == 0) {
+                return false;
+            }
+            queue.add(new Coordinate(i, j));
+            table[i][j] = 0;
+            while (!queue.isEmpty()) {
+                Coordinate current = queue.poll();
+                Coordinate.offsets.stream().map(offset -> offset.next(current)).forEach(next -> {
+                    if (next.x >= table.length || next.x < 0 || next.y >= table.length || next.y < 0) {
+                        return;
+                    } else if (table[next.x][next.y] != 1) {
+                        return;
+                    }
+                    table[next.x][next.y] = 0;
+                    queue.add(next);
+                });
+            }
+            return true;
+        }).count();
+    }).sum();
+    return String.valueOf(sum);
+}
+
+static class Coordinate {
+    static final List<Coordinate> offsets = List.of(new Coordinate(1,0),
+            new Coordinate(-1, 0),
+            new Coordinate(0 ,1),
+            new Coordinate(0, -1),
+            new Coordinate(1,1),
+            new Coordinate(1, -1),
+            new Coordinate(-1, 1),
+            new Coordinate(-1, -1)
+    );
+    int x;
+    int y;
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Coordinate next(Coordinate coordinate) {
+        return new Coordinate(this.x + coordinate.x, this.y + coordinate.y);
+    }
+}
+```
+
+### 미로의 최단거리 통로
+
+#### 문제
+
+7*7 격자판 미로를 탈출하는 최단경로의 경로수를 출력하는 프로그램을 작성하세요. 
+
+ 경로수는 출발점에서 도착점까지 가는데 이동한 횟수를 의미한다. 출발점은 격자의 (1, 1) 좌표이고, 탈 출 도착점은 (7, 7)좌표이다. 격자판의 1은 벽이고, 0은 도로이다.
+
+ 격자판의 움직임은 상하좌우로만 움직인다. 
+
+#### 풀이
+
+```java
+public String solution88(int [][] table) {
+    boolean marks [][] = new boolean[table.length][table.length];
+    Coordinate target = new Coordinate(table.length - 1, table.length - 1);
+    Queue<Coordinate> queue = new LinkedList<>();
+    marks[0][0] = true;
+    queue.add(new Coordinate(0,0));
+    while (!queue.isEmpty()) {
+        Coordinate current = queue.poll();
+        if (current.equals(target)) {
+            return String.valueOf(current.cost);
+        }
+        Coordinate.offsets.stream().map(offset -> {
+            return offset.next(current);
+        }).filter(next -> {
+            return next.x >= 0 && next.x <= target.x && next.y >= 0 && next.y <= target.y && !marks[next.x][next.y];
+        }).forEach(next -> {
+            marks[next.x][next.y] = true;
+            queue.add(next);
+        });
+    }
+    return String.valueOf(-1);
+}
+
+static class Coordinate {
+    int x;
+    int y;
+    int cost;
+
+    static final List<Coordinate> offsets = List.of(new Coordinate(1,0, 1),
+            new Coordinate(-1, 0, 1),
+            new Coordinate(0 ,1, 1),
+            new Coordinate(0 , -1, 1)
+    );
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.cost = 0;
+    }
+
+    public Coordinate(int x, int y, int cost) {
+        this.x = x;
+        this.y = y;
+        this.cost = cost;
+    }
+
+    public Coordinate next(Coordinate coordinate) {
+        return new Coordinate(this.x + coordinate.x, this.y + coordinate.y, this.cost + coordinate.cost);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+}
+```
+
+### 토마토
+
+#### 문제
+
+현수의 토마토 농장에서는 토마토를 보관하는 큰 창고를 가지고 있다. 토마토는 아래의 그림과 같이 격자 모양 상자의 칸에 하나씩 넣어서 창고에 보관한다.
+
+창고에 보관되는 토마토들 중에는 잘 익은 것도 있지만, 아직 익지 않은 토마토들도 있을 수 있다. 보관 후 하루가 지나면, 익은 토마토들의 인접한 곳에 있는 익지 않은 토마토들은 익은 토마토의 영향을 받아 익게 된다. 하나의 토마토의 인접한 곳은 왼쪽, 오른쪽, 앞, 뒤 네 방향 에 있는 토마토를 의미한다. 대각선 방향에 있는 토마토들에게는 영향을 주지 못하며, 토마토 가 혼자 저절로 익는 경우는 없다고 가정한다. 현수는 창고에 보관된 토마토들이 며칠이 지나 면 다 익게 되는지, 그 최소 일수를 알고 싶어 한다.
+
+토마토를 창고에 보관하는 격자모양의 상자들의 크기와 익은 토마토들과 익지 않은 토마토들 의 정보가 주어졌을 때, 며칠이 지나면 토마토들이 모두 익는지, 그 최소 일수를 구하는 프로 그램을 작성하라. 단, 상자의 일부 칸에는 토마토가 들어있지 않을 수도 있다.
+
+ 첫 줄에는 상자의 크기를 나타내는 두 정수 M, N이 주어진다. M은 상자의 가로 칸의 수, N 은 상자의 세로 칸의 수를 나타낸다. 단, 2 ≤ M, N ≤ 1,000 이다.
+
+ 둘째 줄부터는 하나의 상자에 저장된 토마토들의 정보가 주어진다. 즉, 둘째 줄부터 N개의 줄 에는 상자에 담긴 토마토의 정보가 주어진다. 하나의 줄에는 상자 가로줄에 들어있는 토마토 의 상태가 M개의 정수로 주어진다. 정수 1은 익은 토마토, 정수 0은 익지 않은 토마토, 정수 -1은 토마토가 들어있지 않은 칸을 나타낸다.
+
+#### 풀이
+
+```java
+public String solution89(int [][] table, int m, int n) {
+    Queue<Coordinate> queue = new LinkedList<>();
+    int [][] days = new int[n][m];
+    IntStream.range(0, n).forEach(i -> {
+        IntStream.range(0, m).forEach(j -> {
+            if (table[i][j] == 1) {
+                queue.add(new Coordinate(i, j));
+                days[i][j] = 0;
+            } else {
+                days[i][j] = -1;
+            }
+        });
+    });
+
+    while (!queue.isEmpty()) {
+        Coordinate current = queue.poll();
+        Coordinate.offsets.stream()
+                .map(offset -> offset.next(current))
+                .forEach(next -> {
+                    if (next.x >= n || next.x < 0 || next.y >= m || next.y < 0 ) {
+                        return;
+                    } else if (table[next.x][next.y] != 0) {
+                        return;
+                    }
+                    days[next.x][next.y] = days[current.x][current.y] + 1;
+                    queue.add(next);
+                    table[next.x][next.y] = 1;
+                });
+    }
+    boolean haveRaw = Arrays.stream(table).noneMatch(row -> {
+        return Arrays.stream(row).anyMatch(num -> num == 0);
+    });
+    if (!haveRaw) {
+        return String.valueOf(-1);
+    }
+    long max = Arrays.stream(days).mapToLong(row -> {
+        return Arrays.stream(row).max().orElse(0);
+    }).max().orElse(0);
+    return String.valueOf(max);
+}
+
+static class Coordinate {
+    int x;
+    int y;
+    static final List<Coordinate> offsets = List.of(new Coordinate(1,0),
+            new Coordinate(-1, 0),
+            new Coordinate(0 ,1),
+            new Coordinate(0 , -1)
+    );
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Coordinate next (Coordinate coordinate) {
+        return new Coordinate(this.x + coordinate.x, this.y + coordinate.y);
+    }
+}
+```
+
+### 라이언 킹 심바
+
+#### 문제
+
+N×N 크기의 정글에 토끼 M마리와 어린 사자 심바가 있다. 정글은 1×1 크기의 격자로 이루 어져 있다. 각 격자칸에는 토끼 1한마리가 있거나 또는 없을 수 있다. 어린 사자 심바는 주어 진 정글에서 토끼를 잡아먹고 덩치를 키워 삼촌 스카에게 복수를 하러 갈 예정이다.
+ 어린 사자 심바와 토끼는 모두 몸 크기를 가지고 있고, 이 크기는 자연수이다. 가장 처음에 어 린 사자 심바의 크기는 2이고, 심바는 1초에 인접한 상하좌우 격자칸으로 이동할 수 있다. 어린 사자 심바는 자신보다 크기가 큰 토끼가 있는 칸은 지나갈 수 없고, 나머지 칸은 모두 지 나갈 수 있다. 심바는 자신보다 크기가 작은 토끼만 잡아먹을 수 있다. 크기가 같은 토끼는 먹 을 수는 없지만, 그 토끼가 있는 칸은 지날 수 있다.
+
+어린 사자 심바가 토끼를 잡아먹기 위한 이동규칙은 다음과 같다.
+
+1. 더 이상 먹을 수 있는 토끼가 정글에 없다면 이제 심바는 삼촌 스카에게 복수하러 갈 수 있다.
+2. 먹을 수 있는 토끼가 딱 한마리라면, 그 토끼를 먹으러 간다.
+3. 먹을 수 있는 토끼가 2마리 이상이면, 거리가 가장 가까운 토끼를 먹으러 간다.
+   - 거리는 심바가 있는 칸에서 먹으려고 하는 토끼가 있는 칸으로 이동할 때, 지나야하는 칸 의 개수의 최소값이다.
+   - 가장 가까운 토끼가 많으면, 그 중 가장 위쪽에 있는 토끼, 그러한 토끼가 여러 마리라 면, 가장 왼쪽에 있는 토끼를 잡아먹는다.
+
+심바가 격자칸 하나를 이동하는데 1초 걸리고, 토끼를 먹는데 걸리는 시간은 없다고 가정한다. 심바가 해당 격자칸의 토끼를 먹으면, 그 칸은 빈 칸이 된다.
+
+심바는 자신의 몸 크기와 같은 마리수 만큼 잡아먹으면 몸의 크기가 1증가한다.
+ 만약 심바의 몸크기가 5라면 자신보다 작은 토끼 5마리를 잡아먹으면 심바의 몸 크기는 6으로 변한다.
+
+정글의 상태가 주어졌을 때, 심바가 몇 초 동안 토끼를 잡아먹고 삼촌 스카에게 복수를 하러 갈 수 있는지 구하는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+static List<int[]> offsets = List.of(new int[]{1, 0}, new int[]{-1, 0}, new int[]{0, -1}, new int[]{0, 1});
+public String solution90(int [][] table) {
+    Lion lion = new Lion();
+    PriorityQueue<State> priorityQueue = new PriorityQueue<>();
+    boolean [][] marks = new boolean[table.length][table.length];
+    int answer = 0;
+    IntStream.range(0, table.length).forEach(i -> {
+        IntStream.range(0, table.length).forEach(j -> {
+            if (table[i][j] == 9) {
+                lion.x = i;
+                lion.y = j;
+                table[i][j] = 0;
+            }
+        });
+    });
+    priorityQueue.add(new State(lion.x, lion.y, 0));
+    while (!priorityQueue.isEmpty()) {
+        State current = priorityQueue.poll();
+        if (table[current.x][current.y] != 0 && table[current.x][current.y] < lion.size) {
+            lion.plusSize();
+            table[current.x][current.y] = 0;
+            lion.x = current.x;
+            lion.y = current.y;
+            answer = current.distance;
+            IntStream.range(0, marks.length).forEach(i -> {
+                IntStream.range(0, marks.length).forEach(j -> {
+                    marks[i][j] = false;
+                });
+            });
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.poll();
+            }
+
+        }
+        offsets.stream()
+                .map(offset -> new State(offset[0] + current.x, offset[1] + current.y, current.distance + 1))
+                .filter(next -> {
+                    if (next.x >= table.length || next.x < 0 || next.y >= table.length || next.y < 0) {
+                        return false;
+                    } else return !marks[next.x][next.y] && lion.size >= table[next.x][next.y];
+                }).forEach(next -> {
+                    priorityQueue.add(next);
+                    marks[next.x][next.y] = true;
+        });
+    }
+    return String.valueOf(answer);
+}
+static class Lion {
+    int x;
+    int y;
+    int size = 2;
+    int ate = 0;
+
+    public Lion() {
+        this.x = 0;
+        this.y = 0;
+    }
+
+    public void plusSize() {
+        this.ate++;
+        this.size += ate / size;
+        this.ate = ate % size;
+    }
+}
+
+static class State implements Comparable<State> {
+    int x;
+    int y;
+    int distance;
+
+    public State(int x, int y, int distance) {
+        this.x = x;
+        this.y = y;
+        this.distance = distance;
+    }
+
+
+    @Override
+    public int compareTo(State o) {
+        if (this.distance == o.distance) {
+            if (this.y == o.y) {
+                return this.x - o.x;
+            } else {
+                return this.y - o.y;
+            }
+        } else {
+            return this.distance - o.distance;
+        }
     }
 }
 ```
