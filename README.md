@@ -80,6 +80,7 @@
     - [@SessionAttribute](./SpringLean/SpringWebMVC/25_HandlerMethods_SessionAttribute.md)
     - [RedirectAttributes](./SpringLean/SpringWebMVC/26_HandlerMethods_RedirectAttributes.md)
     - [FlashAttributes](./SpringLean/SpringWebMVC/27_HandlerMethods_FlashAttributes.md)
+    - [MultipartFile](./SpringLean/SpringWebMVC/28_HandlerMethods_MultipartFile.md)
 
 ## [Java](./Java)
 
