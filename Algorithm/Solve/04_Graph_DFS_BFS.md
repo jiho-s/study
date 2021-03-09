@@ -756,3 +756,96 @@ N×N 크기의 정글에 토끼 M마리와 어린 사자 심바가 있다. 정�
 정글의 상태가 주어졌을 때, 심바가 몇 초 동안 토끼를 잡아먹고 삼촌 스카에게 복수를 하러 갈 수 있는지 구하는 프로그램을 작성하시오.
 
 #### 풀이
+
+```java
+static List<int[]> offsets = List.of(new int[]{1, 0}, new int[]{-1, 0}, new int[]{0, -1}, new int[]{0, 1});
+public String solution90(int [][] table) {
+    Lion lion = new Lion();
+    PriorityQueue<State> priorityQueue = new PriorityQueue<>();
+    boolean [][] marks = new boolean[table.length][table.length];
+    int answer = 0;
+    IntStream.range(0, table.length).forEach(i -> {
+        IntStream.range(0, table.length).forEach(j -> {
+            if (table[i][j] == 9) {
+                lion.x = i;
+                lion.y = j;
+                table[i][j] = 0;
+            }
+        });
+    });
+    priorityQueue.add(new State(lion.x, lion.y, 0));
+    while (!priorityQueue.isEmpty()) {
+        State current = priorityQueue.poll();
+        if (table[current.x][current.y] != 0 && table[current.x][current.y] < lion.size) {
+            lion.plusSize();
+            table[current.x][current.y] = 0;
+            lion.x = current.x;
+            lion.y = current.y;
+            answer = current.distance;
+            IntStream.range(0, marks.length).forEach(i -> {
+                IntStream.range(0, marks.length).forEach(j -> {
+                    marks[i][j] = false;
+                });
+            });
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.poll();
+            }
+
+        }
+        offsets.stream()
+                .map(offset -> new State(offset[0] + current.x, offset[1] + current.y, current.distance + 1))
+                .filter(next -> {
+                    if (next.x >= table.length || next.x < 0 || next.y >= table.length || next.y < 0) {
+                        return false;
+                    } else return !marks[next.x][next.y] && lion.size >= table[next.x][next.y];
+                }).forEach(next -> {
+                    priorityQueue.add(next);
+                    marks[next.x][next.y] = true;
+        });
+    }
+    return String.valueOf(answer);
+}
+static class Lion {
+    int x;
+    int y;
+    int size = 2;
+    int ate = 0;
+
+    public Lion() {
+        this.x = 0;
+        this.y = 0;
+    }
+
+    public void plusSize() {
+        this.ate++;
+        this.size += ate / size;
+        this.ate = ate % size;
+    }
+}
+
+static class State implements Comparable<State> {
+    int x;
+    int y;
+    int distance;
+
+    public State(int x, int y, int distance) {
+        this.x = x;
+        this.y = y;
+        this.distance = distance;
+    }
+
+
+    @Override
+    public int compareTo(State o) {
+        if (this.distance == o.distance) {
+            if (this.y == o.y) {
+                return this.x - o.x;
+            } else {
+                return this.y - o.y;
+            }
+        } else {
+            return this.distance - o.distance;
+        }
+    }
+}
+```
