@@ -93,6 +93,7 @@
   - [Garbage-First Garbage Collector](./Java/GarbageCollector/6_GarbageFirstGarbageCollector.md)
 - [Stream](./Java/Stream)
   - [Stream](./Java/Stream/01_Stream.md)
+- [Lambda](./Java/Lambda/01_Lambda.md)
 
 ## [Algorithm](./Algorithm)
 
