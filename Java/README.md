@@ -7,6 +7,7 @@
 ## 목차
 
 1. [Garbage Collector](#garbage-collector)
+2. [Stream](#stream)
 
 ## [Garbage Collector](./GarbageCollector)
 
@@ -17,3 +18,6 @@
 - [Concurrent Mark Sweep(CMS) Collector](./GarbageCollector/5_ConcurrentMarkSweepCollector.md)
 - [Garbage-First Garbage Collector](./GarbageCollector/6_GarbageFirstGarbageCollector.md)
 
+## [Stream](./Stream)
+
+- [Stream](./Stream/01_stream.md)
