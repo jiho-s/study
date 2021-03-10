@@ -1,5 +1,7 @@
 ## Stream
 
+> [참고자료](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
+
 ### `java.util.stream` 
 
 `map-reduce` 변환 같은 요소의 스트림에 함수형 프로그래밍 작업을 지원하는 클래스이다.

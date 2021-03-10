@@ -22,3 +22,6 @@
 
 - [Stream](./Stream/01_Stream.md)
 
+## [Lambda](./Lambda)
+
+- [Lambda](./Lambda/01_Lambda.md)
