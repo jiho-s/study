@@ -81,6 +81,7 @@
     - [RedirectAttributes](./SpringLean/SpringWebMVC/26_HandlerMethods_RedirectAttributes.md)
     - [FlashAttributes](./SpringLean/SpringWebMVC/27_HandlerMethods_FlashAttributes.md)
     - [MultipartFile](./SpringLean/SpringWebMVC/28_HandlerMethods_MultipartFile.md)
+    - [ResponseEntity](./SpringLean/SpringWebMVC/29_HandlerMethods_ResponseEntity.md)
 
 ## [Java](./Java)
 
