@@ -61,3 +61,4 @@
   - [RedirectAttributes](./SpringWebMVC/26_HandlerMethods_RedirectAttributes.md)
   - [FlashAttributes](./SpringWebMVC/27_HandlerMethods_FlashAttributes.md)
   - [MultipartFile](./SpringWebMVC/28_HandlerMethods_MultipartFile.md)
+  - [ResponseEntity](./SpringWebMVC/29_HandlerMethods_ResponseEntity.md)
