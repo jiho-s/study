@@ -107,6 +107,6 @@
 - [it 취업을 위한 알고리즘 문제풀이](./Algorithm/Solve)
   - [코드 구현력 기르기](./Algorithm/Solve/01_IncreaseCodeImplementation.md)
   - [정렬, 이분탐색, 스택](./Algorithm/Solve/02_SortBinarySearchStack.md)
-  - [재귀, DFS, BFS](./Algorithm/Solve/03_ Recursion_DFS_BFS.md)
+  - [재귀, DFS, BFS](./Algorithm/Solve/03_Recursion_DFS_BFS.md)
   - [그래프, DFS, BFS 관련 보충문제](./Algorithm/Solve/04_Graph_DFS_BFS.md)
   - [동적 계획법](./Algorithm/Solve/05_DynamicProgramming.md)
