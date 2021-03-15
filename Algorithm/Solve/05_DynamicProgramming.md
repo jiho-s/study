@@ -12,6 +12,10 @@
 8. [알리바바와 40인의 도둑(Top-Down)](#알리바바와-40인의-도둑-top-down)
 9. [가방문제(냅색 알고리즘)](#가방문제-냅색-알고리즘)
 10. [동전교환](#동전교환)
+11. [최대점수 구하기(냅색 알고리즘)](#최대점수-구하기)
+12. [플로이드 워샬 알고리즘](#플로이드-워샬-알고리즘)
+13. [회장뽑기(플로이드-워샬-응용)](#회장뽑기)
+14. [위상정렬(그래프 정렬)](#위상정렬)
 
 ### 네트워크 선 자르기 Bottom-Up
 
@@ -308,5 +312,174 @@ public String solution10(int remain, int [] coins) {
         });
     });
     return String.valueOf(table.get(remain));
+}
+```
+
+### 최대점수 구하기
+
+#### 문제
+
+이번 정보올림피아드대회에서 좋은 성적을 내기 위하여 현수는 선생님이 주신 N개의 문제를 풀려고 합니다. 각 문제는 그것을 풀었을 때 얻는 점수와 푸는데 걸리는 시간이 주어지게 됩 니다. 제한시간 M안에 N개의 문제 중 최대점수를 얻을 수 있도록 해야 합니다. (해당문제는 해당시간이 걸리면 푸는 걸로 간주한다, 한 유형당 한개만 풀 수 있습니다.)
+
+#### 풀이
+
+```java
+public String solution11(int [][] list, int maxTime) {
+    List<Integer> table = IntStream.rangeClosed(0, maxTime).mapToObj(i -> 0).collect(Collectors.toList());
+    List<Integer> result = new ArrayList<>();
+    Arrays.stream(list).forEach(row -> {
+        int score = row[0];
+        int time = row[1];
+        IntStream.rangeClosed(time, maxTime).forEach(currentTime -> {
+            table.set(currentTime, max(table.get(currentTime - time) + score, table.get(currentTime)));
+        });
+    });
+    return String.valueOf(table.get(maxTime));
+}
+```
+
+### 플로이드 워샬 알고리즘
+
+#### 문제
+
+N개의 도시가 주어지고, 각 도시들을 연결하는 도로와 해당 도로를 통행하는 비용이 주어질 때 모든 도시에서 모든 도시로 이동하는데 쓰이는 비용의 최소값을 구하는 프로그램을 작성하세요.
+
+#### 풀이
+
+```java
+public String solution12(int [][] list, int cityNumber) {
+    List<List<Integer>> table = IntStream.rangeClosed(0, cityNumber).mapToObj(i -> {
+        return IntStream.rangeClosed(0, cityNumber).mapToObj(j -> {
+            if (i != j) {
+                return 100;
+            }
+            return 0;
+        }).collect(Collectors.toList());
+    }).collect(Collectors.toList());
+
+    Arrays.stream(list).forEach(row -> {
+        int start = row[0];
+        int end = row[1];
+        int cost = row[2];
+        table.get(start).set(end, cost);
+    });
+
+    IntStream.rangeClosed(1, cityNumber).forEach(k -> {
+        IntStream.rangeClosed(1, cityNumber).forEach(i -> {
+            IntStream.rangeClosed(1, cityNumber).forEach(j -> {
+                Integer current = table.get(i).get(j);
+                if (current > table.get(i).get(k) + table.get(k).get(j)) {
+                    table.get(i).set(j, table.get(i).get(k) + table.get(k).get(j));
+                }
+            });
+        });
+    });
+    StringBuilder stringBuilder = new StringBuilder();
+    IntStream.rangeClosed(1, cityNumber).forEach(i -> {
+        String collect = IntStream.rangeClosed(1, cityNumber).mapToObj(j -> {
+            Integer currentCost = table.get(i).get(j);
+            if (currentCost == 100) {
+                return "M";
+            }
+            return String.valueOf(currentCost);
+        }).collect(Collectors.joining(" "));
+        stringBuilder.append(collect).append("\n");
+    });
+    return stringBuilder.toString();
+}
+```
+
+### 회장뽑기
+
+#### 문제
+
+월드컵축구의 응원을 위한 모임에서 회장을 선출하려고 한다. 이 모임은 만들어진지 얼마 되지 않았기 때문에 회원사이에 서로 모르는 사람도 있지만, 몇 사람을 통하면 서로 모두 알 수 있 다.
+ 각 회원은 다른 회원들과 가까운 정도에 따라 점수를 받게 된다.
+
+예를 들어 어느 회원이 다른 모든 회원과 친구이면, 이 회원의 점수는 1점이다. 어느 회원의 점수가 2점이면, 다른 모든 회원이 친구이거나, 친구의 친구임을 말한다. 또한, 어느 회원의 점수가 3점이면, 다른 모든 회원이 친구이거나, 친구의 친구이거나, 친국의 친구의 친구임을 말한다.4점, 5점등은 같은 방법으로 정해진다.
+
+각 회원의 점수를 정할 때 주의할 점은 어떤 두 회원이 친구 사이이면서 동시에 친구의 친구 사이이면, 이 두 사람은 친구사이라고 본다. 회장은 회원들 중에서 점수가 가장 작은 사람이 된다.
+ 회장의 점수와 회장이 될 수 있는 모든 사람을 찾는 프로그램을 작성하시오.
+
+#### 풀이
+
+```java
+public String solution13(int [][] list, int num) {
+    int [][] table = new int[num+1][num+1];
+    IntStream.rangeClosed(1, num).forEach(i -> {
+        IntStream.rangeClosed(1, num).forEach(j -> {
+            if (i == j) {
+                table[i][j] = 0;
+            } else {
+                table[i][j] = 100;
+            }
+        });
+    });
+    Arrays.stream(list).forEach(row -> {
+        int start = row[0];
+        int end = row[1];
+        table[start][end] = 1;
+        table[end][start] = 1;
+    });
+    IntStream.rangeClosed(1, num).forEach(k -> {
+        IntStream.rangeClosed(1, num).forEach(i -> {
+            IntStream.rangeClosed(1, num).forEach(j -> {
+                table[i][j] = min(table[i][j], table[i][k] + table[k][j]);
+            });
+        });
+    });
+    var ref = new Object() {
+        int min = Integer.MAX_VALUE;
+    };
+    List<Integer> collect = IntStream.rangeClosed(1, num).mapToObj(i -> {
+        int sum = Arrays.stream(table[i]).sum();
+        if (sum < ref.min) {
+            ref.min = sum;
+        }
+        return sum;
+    }).collect(Collectors.toList());
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(ref.min).append("\n");
+    String collect1 = collect.stream().filter(i -> i.equals(ref.min)).map(String::valueOf).collect(Collectors.joining(" "));
+    stringBuilder.append(collect1);
+    return stringBuilder.toString();
+}
+```
+
+### 위상 정렬
+
+#### 문제
+
+위상정렬은 어떤 일을 하는 순서를 찾는 알고리즘입니다.
+ 각각의 일의 선후관계가 복잡하게 얽혀있을 때 각각 일의 선후관계를 유지하면서 전체 일의 순서를 짜는 알고리즘입니다.
+
+#### 풀이
+
+```java
+public String solution14(int [][] list, int num) {
+    boolean [][] table = new boolean[num+1][num+1];
+    ArrayList<Integer> result = new ArrayList<>();
+    int [] counts = new int[num+1];
+    Arrays.stream(list).forEach(row -> {
+        int start = row[0];
+        int end = row[1];
+        table[start][end] = true;
+        counts[end]++;
+    });
+    Queue<Integer> queue = new LinkedList<>();
+    IntStream.rangeClosed(1, num).filter(i -> counts[i] == 0).forEach(i -> {
+        queue.add(i);
+    });
+    while (!queue.isEmpty()) {
+        Integer current = queue.poll();
+        result.add(current);
+        IntStream.rangeClosed(1, num).filter(i -> table[current][i]).forEach(i -> {
+            counts[i]--;
+            if (counts[i] == 0) {
+                queue.add(i);
+            }
+        });
+    }
+    return result.stream().map(String::valueOf).collect(Collectors.joining(" "));
 }
 ```
