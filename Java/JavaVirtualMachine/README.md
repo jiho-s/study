@@ -7,8 +7,13 @@
 ## 목차
 
 1. [소개](#소개)
+2. [Java Virtual Machine의 구조](#java-virtual-machine의-구조)
 
 ## 소개
 
 - [소개](./01_Intruduction.md)
+
+## Java Virtual Machine의 구조
+
+- [데이터 타입](./02_StructureOfJVM/01_DataType.md)
 
