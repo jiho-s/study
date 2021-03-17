@@ -8,6 +8,8 @@
 
 1. [Garbage Collector](#garbage-collector)
 2. [Stream](#stream)
+3. [Lambda](#lambda)
+4. [Java Virtual Machine](#java-virtual-machine)
 
 ## [Garbage Collector](./GarbageCollector)
 
@@ -25,3 +27,14 @@
 ## [Lambda](./Lambda)
 
 - [Lambda](./Lambda/01_Lambda.md)
+
+## [Java Virtual Machine](./JavaVirtualMachine)
+
+- [소개](./JavaVirtualMachine/01_Intruduction.md)
+
+- Java Virtual Machine의 구조
+  - [데이터 타입](./JavaVirtualMachine/02_StructureOfJVM/01_DataType.md)
+  - [기본 타입과 값](./JavaVirtualMachine/02_StructureOfJVM/02_Primitive Types and Values.md)
+  - [참조 타입과 값](./JavaVirtualMachine/02_StructureOfJVM/03_ReferenceTypesAndValues.md)
+  - [런타임 데이터 영역](./JavaVirtualMachine/02_StructureOfJVM/04_Run-TimeDataAreas.md)
+
