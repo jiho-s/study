@@ -17,4 +17,5 @@
 
 - [데이터 타입](./02_StructureOfJVM/01_DataType.md)
 - [기본 타입과 값](./02_StructureOfJVM/02_Primitive Types and Values.md)
+- [참조 타입과 값](./02_StructureOfJVM/03_ReferenceTypesAndValues.md)
 
