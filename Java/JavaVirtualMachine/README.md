@@ -16,7 +16,7 @@
 ## Java Virtual Machine의 구조
 
 - [데이터 타입](./02_StructureOfJVM/01_DataType.md)
-- [기본 타입과 값](./02_StructureOfJVM/02_Primitive Types and Values.md)
+- [기본 타입과 값](./02_StructureOfJVM/02_PrimitiveTypesAndValues.md)
 - [참조 타입과 값](./02_StructureOfJVM/03_ReferenceTypesAndValues.md)
 - [런타임 데이터 영역](./02_StructureOfJVM/04_Run-TimeDataAreas.md)
 - [프레임](./02_StructureOfJVM/05_Frams.md)
