@@ -42,5 +42,5 @@
 
 ## [java.lang 패키지](./lang)
 
-- [Wrapper Classes](./lang/01_ WrapperClasses.md)
+- [Wrapper Classes](./lang/01_WrapperClasses.md)
 
