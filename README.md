@@ -106,7 +106,7 @@
     - [참조 타입과 값](./Java/JavaVirtualMachine/02_StructureOfJVM/03_ReferenceTypesAndValues.md)
     - [런타임 데이터 영역](./Java/JavaVirtualMachine/02_StructureOfJVM/04_Run-TimeDataAreas.md)
 - [Java.lang 패키지](./java/lang)
-  - [Wrapper Classes](./java/lang/01_ WrapperClasses.md)
+  - [Wrapper Classes](./java/lang/01_WrapperClasses.md)
 
 ## [Algorithm](./Algorithm)
 
