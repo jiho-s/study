@@ -43,6 +43,8 @@
     - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring)
       - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/01_OverView.md)
       - [AOP Concepts](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/02_AOPConcepts.md)
+      - [Spring AOP Capabilities and Goals](./SpringReference/SpringFramework/CoreTechnologies//5_AspectOrientedProgrammingWithSpring/03_SpringAOPCapabilitiesAndGoals.md)
+      - [AOP proxies](./SpringReference/SpringFramework/CoreTechnologies//5_AspectOrientedProgrammingWithSpring/04_AOPProxies.md)
 
 ## [Spring Lean](./SpringLean)
 
