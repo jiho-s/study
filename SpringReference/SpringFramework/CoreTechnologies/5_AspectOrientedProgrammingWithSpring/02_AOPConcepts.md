@@ -2,6 +2,8 @@
 
 AOP의 개념과 용어를 설명해보자. 이 용어들은 Spring에 제한되지 않는다.
 
+### AOP의 기본 용어
+
 - Aspect
 
   여러 클래스에 걸쳐있는 관심사의 모듈화 Spring AOP에서 Aspect는 일반 클래스 (스키마 기반 접근) 또는 주석이 달린 일반 클래스 `@Aspect`( @AspectJ 스타일 ) 를 사용하여 구현된다
@@ -34,3 +36,26 @@ AOP의 개념과 용어를 설명해보자. 이 용어들은 Spring에 제한되
 
   다른 애플리케이션 타입 또는 객체와 Aspect를 연결하여 Advice된 객체를 만든다. 이는 컴파일 타임 (AspectJ 컴파일러 사용),로드 타임 또는 런타임에 수행 할 수 있다. 다른 Java AOP 프레임 워크와 마찬가지로 Spring AOP는 런타임에 위빙을 수행한다.
 
+#### Spring AOP의 Advice 타입 종류
+
+- Before
+
+  Join point 이전에 실행, 하지만 Join point가 실행되는 것을 막을 수는 없다
+
+- After returning
+
+  Join point가 정상적으로 종료된 후 실행
+
+- After throwing
+
+  예외가 발생되어 메소드가 종료된 경우 실행
+
+- After(finally)
+
+  Join point가 예외가 발생하여 종료되든 정상적으로 종료되든 실행
+
+- Around
+
+  Join point 메소드 호출을 둘러싼 Advice, 메소드 호출 전후에 행동을 지정할수 있으며 Join point로 진행할지 예외혹은 다른 메소드를 호출할지 정할 수 있다.
+
+pointcut과 매칭되는 Joinpoint의 개념은 인터셉션과 구분되는 AOP의 중요한 특징이다. pointcut을 사용하면 객체지향 구조와 독립적으로 advice를 설정할 수 있다.
