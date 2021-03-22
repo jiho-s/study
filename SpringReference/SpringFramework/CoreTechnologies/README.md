@@ -50,5 +50,5 @@
 ## [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring)
 
 - [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring/01_OverView.md)
-
 - [AOP Concepts](./5_AspectOrientedProgrammingWithSpring/02_AOPConcepts.md)
+- [Spring AOP Capabilities and Goals](./5_AspectOrientedProgrammingWithSpring/03_SpringAOPCapabilitiesAndGoals.md)
