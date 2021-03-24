@@ -1,4 +1,4 @@
-## Declaring an Aspect
+### Declaring an Aspect
 
 @AspectJ 지원이 활성화되면 `@Aspect`어노테이션이 포함되있는 애플리케이션 컨텍스트에 정의 된 모든 Bean 이 Spring에서 자동으로 감지되어 Spring AOP를 구성하는데 사용된다.
 
