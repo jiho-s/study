@@ -51,6 +51,7 @@
         - [Enabling @AspectJ Support](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/02_EnablingAspectJSupport.md)
         - [Declaring an Aspect](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/03_DeclaringAnAspect.md)
         - [Declaring a Pointcut](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/04_DeclaringAPointcut.md)
+        - [Declaring Advice](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/05_DeclaringAdvice.md)
 
 ## [Spring Lean](./SpringLean)
 
