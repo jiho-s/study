@@ -58,4 +58,5 @@
   - [Enabling @AspectJ Support](./5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/02_EnablingAspectJSupport.md)
   - [Declaring an Aspect](./5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/03_DeclaringAnAspect.md)
   - [Declaring a Pointcut](./5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/04_DeclaringAPointcut.md)
+  - [Declaring Advice](./5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/05_DeclaringAdvice.md)
 
