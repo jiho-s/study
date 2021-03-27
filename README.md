@@ -146,6 +146,7 @@
   - [Processes](./OperatingSystems/02_ProcessesAndThreads/01_Processes.md)
   - [Threads](./OperatingSystems/02_ProcessesAndThreads/02_Threads.md)
   - [Interprocess Communication](./OperatingSystems/02_ProcessesAndThreads/03_InterprocessCommunication.md)
+  - [Scheduling](./OperatingSystems/02_ProcessesAndThreads/04_Scheduling.md)
 
 ## [Kubernetes](./Kubernetes)
 
