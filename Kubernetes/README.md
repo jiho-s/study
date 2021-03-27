@@ -19,4 +19,4 @@
   - 쿠버네티스 오브젝트로 작업하기
     - [쿠버네티스 오브젝트 이해하기](./01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/01_UnderstandingKubernetesObjects.md)
     - [쿠버네티스 오브젝트 관리](./01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/02_KubernetesObjectManagement.md)
-
+    - [오브젝트 이름과 ID](./01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/03_ObjectNamesAndIDs.md)
