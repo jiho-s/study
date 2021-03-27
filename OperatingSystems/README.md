@@ -16,3 +16,4 @@
 - [Processes](./02_ProcessesAndThreads/01_Processes.md)
 - [Threads](./02_ProcessesAndThreads/02_Threads.md)
 - [Interprocess Communication](./02_ProcessesAndThreads/03_InterprocessCommunication.md)
+- [Scheduling](./02_ProcessesAndThreads/04_Scheduling.md)
