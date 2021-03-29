@@ -55,3 +55,12 @@ Shoretest Job First의 선점 버전, 한 Unit 돌릴때 마다 스케줄링
 
 스케줄링 오버헤드가 크다
 
+### Scheduling in Interactive Systems
+
+#### Round-Robin Scheduling
+
+가장 널리 사용되는 알고리즘, 각각의 프로세스는 **quantum**이라는 시간을 부여 받는다. **quantum**도안만 사용가능하고 이후에는 제일 뒤로 간다.
+
+#### Priority Scheduling
+
+각각의 프로세스는 우선순위를 가지고 우선순위가 높은 프로세스가 실행된다. 이때 각각의 우선순위들의 큐는 Round-Robin으로 관리된다. 또한 starvation을 방지하기 위해 age기법을 적용한다.
