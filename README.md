@@ -158,3 +158,5 @@
       - [쿠버네티스 오브젝트 이해하기](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/01_UnderstandingKubernetesObjects.md)
       - [쿠버네티스 오브젝트 관리](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/02_KubernetesObjectManagement.md)
       - [오브젝트 이름과 ID](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/03_ObjectNamesAndIDs.md)
+      - [네임스페이스](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/04_Namespaces.md)
+      - [레이블과 셀렉터](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/05_LabelsAndSelectors.md)
