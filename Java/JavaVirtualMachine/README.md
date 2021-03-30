@@ -9,6 +9,7 @@
 1. [소개](#소개)
 2. [Java Virtual Machine의 구조](#java-virtual-machine의-구조)
 3. [JVM의 자바 코드 실행 과정](#jvm의-자바-코드-실행-과정)
+4. [로딩, 링킹, 초기화](#로딩,-링킹,-초기화)
 
 ## 소개
 
@@ -25,3 +26,8 @@
 ## JVM의 자바 코드 실행 과정
 
 - [JVM의 자바 코드 실행 과정](./03_ExecuteJavaCode)
+
+## 로딩, 링킹, 초기화
+
+- [소개](./05_LoadingLinkingAndInitializing/01_Overview.md)
+- [런타임 상수 풀](./05_LoadingLinkingAndInitializing/02_TheRun-TimeConstantPool.md)
