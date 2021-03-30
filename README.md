@@ -53,6 +53,7 @@
         - [Declaring an Aspect](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/03_DeclaringAnAspect.md)
         - [Declaring a Pointcut](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/04_DeclaringAPointcut.md)
         - [Declaring Advice](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/05_DeclaringAdvice.md)
+        - [An AOP Example](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/05_AspectJSupport/07_AnAOPExample.md)
 
 ## [Spring Lean](./SpringLean)
 
