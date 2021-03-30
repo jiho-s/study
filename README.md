@@ -118,6 +118,10 @@
     - [참조 타입과 값](./Java/JavaVirtualMachine/02_StructureOfJVM/03_ReferenceTypesAndValues.md)
     - [런타임 데이터 영역](./Java/JavaVirtualMachine/02_StructureOfJVM/04_Run-TimeDataAreas.md)
   - [JVM의 자바 코드 실행 과정](./Java/JavaVirtualMachine/03_ExecuteJavaCode)
+  - 로딩, 링킹, 초기화
+    - [소개](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/01_Overview.md)
+    - [런타임 상수 풀](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/02_TheRun-TimeConstantPool.md)
+    - [자바 가상머신 시작](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/03_JavaVirtualMachineStartup.md)
 - [Java.lang 패키지](./Java/lang)
   - [Wrapper Classes](./Java/lang/01_WrapperClasses.md)
 
