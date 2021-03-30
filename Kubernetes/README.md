@@ -24,4 +24,4 @@
     - [레이블과 셀렉터](./01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/05_LabelsAndSelectors.md)
 
 - 클러스터 아키텍처
-  - [노드]()
+  - [노드](./02_ClusterArchitecture/01_Nodes.md)
