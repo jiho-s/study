@@ -31,3 +31,4 @@
 
 - [소개](./05_LoadingLinkingAndInitializing/01_Overview.md)
 - [런타임 상수 풀](./05_LoadingLinkingAndInitializing/02_TheRun-TimeConstantPool.md)
+- [자바 가상머신 시작](./05_LoadingLinkingAndInitializing/03_JavaVirtualMachineStartup.md)
