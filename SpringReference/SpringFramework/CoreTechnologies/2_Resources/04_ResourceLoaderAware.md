@@ -1,6 +1,6 @@
 ## `ResourceLoaderAware` 인터페이스
 
-`ResourceLoaderAware` 인터페이스는 `ResourceLoader` 참조즐 제공할것 이라 예상되는 컴포넌트를 식별하기위한 콜백 인터페이스이다.
+`ResourceLoaderAware` 인터페이스는 `ResourceLoader` 참조를 제공할것 이라 예상되는 컴포넌트를 식별하기위한 콜백 인터페이스이다.
 
 ```java
 public interface ResourceLoaderAware {
