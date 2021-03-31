@@ -6,7 +6,8 @@
 
 1. [IoC Container](#1.-ioc-container)
 2. [Resources](#resources)
-3. [Aspect Oriented Programming with Spring](#aspect-oriented-programming-with-spring)
+3. [Validation, Data Binding and Type Conversion](#Validation,-Data-Binding-and-Type-Conversion)
+4. [Aspect Oriented Programming with Spring](#aspect-oriented-programming-with-spring)
 
 ## [IoC Container](./1_IoC_Container)
 
@@ -46,6 +47,11 @@
 - [Built-in Resource Implementations](./2_Resources/02_Built-inResourceImplementations)
 - [ResourceLoader](./2_Resources/03_ResourceLoader.md)
 - [ResourceLoaderAware Interface](./2_Resources/04_ResourceLoaderAware.md)
+
+## [Validation, Data Binding and Type Conversion](./3_Validation_DataBinding_TypeConversion)
+
+- [Validation, Data Binding and Type Conversion](./3_Validation_DataBinding_TypeConversion/01_Overview.md)
+- [Validation by Using Spring’s Validator Interface](./3_Validation_DataBinding_TypeConversion/02_ValidationByUsingSpringValidatorInterface.md)
 
 ## [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring)
 
