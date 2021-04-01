@@ -39,7 +39,7 @@
       - [Additional Capabilities of the `ApplicationContext`](./SpringReference/SpringFramework/CoreTechnologies/1_IoC_Container/15_AdditionalCapabilitiesApplicationContext.md)
     - [Resources](./SpringReference/SpringFramework/CoreTechnologies/2_Resources)
       - [Resource Interface](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/01_ResourceInterface.md)
-      - [Built-in Resource Implementations](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/02_Built-inResourceImplementations)
+      - [Built-in Resource Implementations](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/02_Built-inResourceImplementations.md)
       - [ResourceLoader](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/03_ResourceLoader.md)
       - [ResourceLoaderAware Interface](./SpringReference/SpringFramework/CoreTechnologies/2_Resources/04_ResourceLoaderAware.md)
     - [Validation, Data Binding and Type Conversion](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion)
