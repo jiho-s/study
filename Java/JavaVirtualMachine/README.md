@@ -34,3 +34,4 @@
 - [자바 가상머신 시작](./05_LoadingLinkingAndInitializing/03_JavaVirtualMachineStartup.md)
 - [생성과 로딩](./05_LoadingLinkingAndInitializing/04_CreationAndLoading.md)
 - [링킹](./05_LoadingLinkingAndInitializing/05_Linking.md)
+- [초기화](./05_LoadingLinkingAndInitializing/06_Initialization.md)
