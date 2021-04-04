@@ -127,6 +127,9 @@
     - [소개](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/01_Overview.md)
     - [런타임 상수 풀](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/02_TheRun-TimeConstantPool.md)
     - [자바 가상머신 시작](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/03_JavaVirtualMachineStartup.md)
+    - [생성과 로딩](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/04_CreationAndLoading.md)
+    - [링킹](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/05_Linking.md)
+    - [초기화](./Java/JavaVirtualMachine/05_LoadingLinkingAndInitializing/06_Initialization.md)
 - [Java.lang 패키지](./Java/lang)
   - [Wrapper Classes](./Java/lang/01_WrapperClasses.md)
 
