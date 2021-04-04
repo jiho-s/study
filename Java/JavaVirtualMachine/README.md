@@ -25,7 +25,7 @@
 
 ## JVM의 자바 코드 실행 과정
 
-- [JVM의 자바 코드 실행 과정](./03_ExecuteJavaCode)
+- [JVM의 자바 코드 실행 과정](./03_ExecuteJavaCode.md)
 
 ## 로딩, 링킹, 초기화
 
