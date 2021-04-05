@@ -155,3 +155,130 @@ public class SomethingBeanInfo extends SimpleBeanInfo {
 }
 ```
 
+#### Registering Additional Custom `PropertyEditor` Implementations
+
+빈 프로퍼티를 문자열로 설정하는 경우, 스프링 IoC 컨테이너는 이 문자열을 복잡한 프로퍼티 타입으로 변환하는데 표준 자바빈 `PropertyEditor` 구현체를 사용한다. 스프링은 여러가지 커스텀 `PropertyEditor` 구현체(예를 들어 문자열로 된 클래스명을 실제 Class 객체로 변환)를 사전 등록한다. 게다가 자바 표준 자바빈 `PropertyEditor`의 검색 메커니즘은 클래스의 `PropertyEditor`에 적절한 이름을 붙히고 클래스와 같은 패키지 안에 두어 자동으로 찾을 수 있다.
+
+다른 커스텀 `PropertyEditor`를 등록해야 하는 경우 여러 가지 메카니즘을 사용할 수 있다. 보통 편리하지도 않고 추천하지도 않지만 가장 수동적인 접근은 `BeanFactory` 참조를 가지고 있다고 가정하고 `ConfigurableBeanFactory` 인터페이스의 `registerCustomEditor()` 메서드를 사용하는 것이다. 약간 더 편리한 메카니즘은 `CustomEditorConfigurer`라는 전용 빈 팩토리 후처리자를 사용하는 것이다. 빈 팩토리 후처리자를 `BeanFactory` 구현체와 함께 사용할 수 있기는 하지만 `CustomEditorConfigurer`는 중첩 프로퍼티 설정을 가지고 있으므로 비슷한 방법으로 다른 빈에 배포되고 자동으로 찾아서 적용되는 `ApplicationContext`와 함께 사용하기를 추천한다.
+
+모든 빈 팩토리와 어플리케이션 컨텍스트는 프로퍼티 변환을 위해 `BeanWrapper`를 사용하기 위해 자동으로 다수의 내장된 프로퍼티 에디터를 사용한다. `BeanWrapper`가 등록하는 표준 프로퍼티 에디터는 이전 섹션에 나와 있다. 게다가 `ApplicationContexts`는 해당 어플리케이션 컨텍스트 타입에 적절한 방법으로 리소스 검색을 위해 에디터를 덮어쓰거나 추가적으로 다수의 에디터를 추가하기도 한다.
+
+문자열의 프로퍼티 값을 프로퍼티의 실제 복잡한 타입으로 변환하는데 표준 자바빈 `PropertyEditor` 인스턴스를 사용한다. `ApplicationContext`에 추가적인 `PropertyEditor` 인스턴스를 편리하게 추가하기 위해 빈 팩토리 후처리자인 `CustomEditorConfigurer`를 사용한다.
+
+`ExoticType`를 프로퍼티로 설정할 필요가 있는 사용자 클래스 `ExoticType`와 `DependsOnExoticType` 클래스를 고려해 봐라.
+
+```java
+package example;
+
+public class ExoticType {
+
+    private String name;
+
+    public ExoticType(String name) {
+        this.name = name;
+    }
+}
+
+public class DependsOnExoticType {
+
+    private ExoticType type;
+
+    public void setType(ExoticType type) {
+        this.type = type;
+    }
+}
+```
+
+`PropertyEditor`가 뒤에서 실제 `ExoticType` 인스턴스로 변환할 type 프로퍼티를 설정시에 문자열로 할당할 수 있기를 원한다.
+
+```xml
+<bean id="sample" class="example.DependsOnExoticType">
+    <property name="type" value="aNameForExoticType"/>
+</bean>
+```
+
+`PropertyEditor` 구현체는 다음과 같을 것이다.
+
+```java
+// converts string representation to ExoticType object
+package example;
+
+public class ExoticTypeEditor extends PropertyEditorSupport {
+
+    public void setAsText(String text) {
+        setValue(new ExoticType(text.toUpperCase()));
+    }
+}
+```
+
+마지막으로 `ApplicationContext`에 새로운 `PropertyEditor`를 등록하려고 `CustomEditorConfigurer`를 사용하고 필요에 따라 사용할 수 있다.
+
+```xml
+<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+    <property name="customEditors">
+        <map>
+            <entry key="example.ExoticType" value="example.ExoticTypeEditor"/>
+        </map>
+    </property>
+</bean>
+```
+
+##### Using `PropertyEditorRegistrar`
+
+스프링 컨테이너에 프로퍼티 에디터를 등록하는 또다른 메카니즘은 `PropertyEditorRegistrar`를 생성하고 사용하는 것이다. 이 인터페이스는 여러 가지 다른 상황에서 같은 프로퍼티 에디터의 세트를 사용해야할 때 특히 유용하다. 즉 대응되는 registrar를 작성하고 각 상황에서 재사용한다. `PropertyEditorRegistrar` 인스턴스는 스프링의 `BeanWrapper`(와 `DataBinder`), `PropertyEditorRegistry` 인터페이스와 결합해서 동작한다. `PropertyEditorRegistrar` 인스턴스는 `setPropertyEditorRegistrars(..)`라는 프로퍼티를 노출하는 `CustomEditorConfigurer`와 결합해서 사용할 때 특히 편리하다. 이 방법에서 `CustomEditorConfigurer`에 추가된 `PropertyEditorRegistrar`는 쉽게 `DataBinder`와 Spring MVC Controllers와 공유될 수 있다. 게다가 이는 커스텀 에디터에서 동기화를 피한다. `PropertyEditorRegistrar`는 각각의 빈을 생성하는 시도에서 새로운 `PropertyEditor` 인스턴스를 생성할 것이다.
+
+다음 예제는 `PropertyEditorRegistrar` 구현을 만드는 것을 보여준다.
+
+```java
+package com.foo.editors.spring;
+
+public final class CustomPropertyEditorRegistrar implements PropertyEditorRegistrar {
+
+    public void registerCustomEditors(PropertyEditorRegistry registry) {
+
+        // it is expected that new PropertyEditor instances are created
+        registry.registerCustomEditor(ExoticType.class, new ExoticTypeEditor());
+
+        // you could register as many custom property editors as are required here...
+    }
+}
+```
+
+`PropertyEditorRegistrar` 구현체에 예제에서 `org.springframework.beans.support.ResourceEditorRegistrar`를 봐라. `registerCustomEditors(..)` 메서드 구현에서, 각각의 프로퍼티 에디터는 새로 인스턴스를 만든다.
+
+다음 예제는 `CustomEditorConfigurer`를 설정하고 인스턴스를 `PropertyEditorRegistrar`에 주입하는 것을 보여준다.
+
+```xml
+<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+    <property name="propertyEditorRegistrars">
+        <list>
+            <ref bean="customPropertyEditorRegistrar"/>
+        </list>
+    </property>
+</bean>
+
+<bean id="customPropertyEditorRegistrar"
+    class="com.foo.editors.spring.CustomPropertyEditorRegistrar"/>
+```
+
+마지막으로 (이번 챕터의 주제에서 약간 벗어나서 Spring의 MVC 웹 프레임워크를 사용하는 경우) 데이터 바인딩 `Controllers` (SimpleFormController 같은)와 함께 `PropertyEditorRegistrars`를 사용한다면 아주 편리하다. 다음은 `initBinder(..)` 메서드의 구현체에서 `PropertyEditorRegistrar`를 사용하는 예제다.
+
+```java
+public final class RegisterUserController extends SimpleFormController {
+
+    private final PropertyEditorRegistrar customPropertyEditorRegistrar;
+
+    public RegisterUserController(PropertyEditorRegistrar propertyEditorRegistrar) {
+        this.customPropertyEditorRegistrar = propertyEditorRegistrar;
+    }
+
+    protected void initBinder(HttpServletRequest request,
+            ServletRequestDataBinder binder) throws Exception {
+        this.customPropertyEditorRegistrar.registerCustomEditors(binder);
+    }
+
+    // other methods to do with registering a User
+}
+```
+
+이러한 방식의 PropertyEditor 등록으로 코드는 간결해 지고(initBinder(..)의 구현체는 딱 한줄 뿐이다!) 공통 PropertyEditor 등록코드를 클래스에 은닉화해서 필요한만큼의 많은 Controllers에서 공유할 수 있다.
