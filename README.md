@@ -47,6 +47,7 @@
       - [Validation by Using Spring’s Validator Interface](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/02_ValidationByUsingSpringValidatorInterface.md)
       - [Resolving Codes to Error Messages](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/03_ResolvingCodesToErrorMessages.md)
       - [Bean Manipulation and the `BeanWrapper`](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/04_BeanManipulationAndTheBeanWrapper.md)
+      - [Spring Type Conversion](./SpringReference/SpringFramework/CoreTechnologies//3_Validation_DataBinding_TypeConversion/05_SpringTypeConversion.md)
     - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring)
       - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/01_OverView.md)
       - [AOP Concepts](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/02_AOPConcepts.md)
