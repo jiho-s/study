@@ -54,6 +54,7 @@
 - [Validation by Using Spring’s Validator Interface](./3_Validation_DataBinding_TypeConversion/02_ValidationByUsingSpringValidatorInterface.md)
 - [Resolving Codes to Error Messages](./3_Validation_DataBinding_TypeConversion/03_ResolvingCodesToErrorMessages.md)
 - [Bean Manipulation and the `BeanWrapper`](./3_Validation_DataBinding_TypeConversion/04_BeanManipulationAndTheBeanWrapper.md)
+- [Spring Type Conversion](./3_Validation_DataBinding_TypeConversion/05_SpringTypeConversion.md)
 
 ## [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring)
 
