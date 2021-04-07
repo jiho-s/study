@@ -107,3 +107,87 @@ public interface ConditionalGenericConverter extends GenericConverter, Condition
 ```
 
 persistent 엔티티 식별자와 엔티티 참조간의 변환을 하는 `IdToEntityConverter`가 `ConditionalGenericConverter`의 좋은 예이다. `IdToEntityConverter`는 타겟 엔티티 타입이 정적 finder 메서드(예: `findAccount(Long)`)를 정의했을 때만 수행된다. `matches(TypeDescriptor, TypeDescriptor)`의 구현에서 이러한 finder 메서드 검사를 수행한다.
+
+### The `ConversionService` API
+
+`ConversionService`는 런타임시에 타입 변환 로직을 실행을 위한 규격화된 API를 정의한다. 때로는 이러한 인터페이스 뒤에서 컨버터가 실행된다.
+
+```java
+package org.springframework.core.convert;
+
+public interface ConversionService {
+
+    boolean canConvert(Class<?> sourceType, Class<?> targetType);
+
+    <T> T convert(Object source, Class<T> targetType);
+
+    boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType);
+
+    Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+}
+```
+
+대부분의 `ConversionService` 구현체는 컨버터를 등록하는 SPI를 제공하는 `ConverterRegistry`도 구현하고 있다. 내부적으로 `ConversionService` 구현체는 타입변환 로직 수행을 등록된 컨버터에 위임한다.
+
+풍부한 `ConversionService` 구현체는 `core.convert.support` 패키지에 있다. `GenericConversionService`는 대부분에 환경에서 사용할 수 있는 범용적인 구현체이다. `ConversionServiceFactory`는 공통적인 `ConversionService` 설정을 생성하는 편리한 팩토리를 제공한다.
+
+### Configuring a `ConversionService`
+
+`ConversionService`는 어플리케이션 구동시에 인스턴스화되고 여러 쓰레드 사이에서 공유되도록 설계된 무상태의 객체이다. 스프링 어플리케이션에서는 보통 스프링 컨테이너(또는 ApplicationContext)마다 `ConversionService` 인스턴스를 설정한다. 설정한 `ConversionService`를 스프링이 선택해서 프레임워크가 타입변환을 수행해야 할 때마다 사용할 것이다. 이 `ConversionService`를 어떤 빈에라도 주입해서 직접 호출할 수도 있다.
+
+>스프링에 등록된 `ConversionService`가 없으면 원래의 `PropertyEditor`기반 시스템을 사용한다.
+
+빈 정의의 id를 `conversionService`으로 추가해서 스프링에 기본 `ConversionService`를 등록한다.
+
+```xml
+<bean id="conversionService"
+    class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+```
+
+기본 `ConversionService`는 문자열, 숫자, enums, 컬렉션, 맵 등의 타입을 변환한다. `converters` 프로퍼티를 설정해서 자신의 커스텀 컴버터로 기본 컨버터를 보완하거나 오버라이드할 수 있다. 프로퍼티 값은 `Converter`, `ConverterFactory`, `GenericConverter` 인터페이스를 구현할 것이다.
+
+```xml
+<bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+        <set>
+            <bean class="example.MyCustomConverter"/>
+        </set>
+    </property>
+</bean>
+```
+
+### Using a `ConversionService` Programmatically
+
+다른 빈에 `ConversionService` 인스턴스의 참조를 주입해서 프로그래밍적으로 `ConversionService` 인스턴스를 사용할 수 있다.
+
+```java
+@Service
+public class MyService {
+
+    public MyService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
+
+    public void doIt() {
+        this.conversionService.convert(...)
+    }
+}
+```
+
+대부분의 경우에, convert 메소드를 특정한 `targetType`에 사용할 수 있다. 하지만 컬랙션 같은 복합적인 타입에서는 작동하지 않는다. 예를들어 integer 리스트를 string 리스트로 프로그램적으로 변환하기를 원하는 경우, 소스와 타겟 타입에 대한 정의를 해야한다.
+
+다행히 `TypeDescriptor`는 다음 예에서와 같이 간단히 작업을 수행할 수 있는 다양한 옵션을 제공한다.
+
+```java
+DefaultConversionService cs = new DefaultConversionService();
+
+List<Integer> input = ...
+cs.convert(input,
+    TypeDescriptor.forObject(input), // List<Integer> type descriptor
+    TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(String.class)));
+```
+
+`DefaultConversionService`는 대부분의 환경에 적합한 converter를 자동으로 등록한다. 이는 컬랙션컨버터, 스칼라 컨버터, 그리고 기본적인 `Object` 와 `String`사이의 컨버터도 포함한다. `DefaultConversionService` 의 `addDefaultConverters` static 메소드를 이용하여, `ConverterRegistry`로  컨버터를 등록할 수 있다.
+
+요소 타입에 대한 컨버터는 컬랙션, 배열 타입에서 재사용된다. 따라서, 표존 컬랙션 처리가 적절하다면,  `Collection`  `S` 에서 `Collection`  `T`로 변환하는 특정한 컨버터를 만들 필요는 없다. 
