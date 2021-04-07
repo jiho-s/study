@@ -63,3 +63,121 @@ spec:
     - containerPort: 80
 ```
 
+### 레이블 셀렉터
+
+이름, UID와 다르게 레이블은 고유하지 않다. 일반적으로 많은 오브젝트에 같은 레이블을 가질 것으로 예상한다.
+
+레이블 셀렉터를 통해 클라이언트와 사용자는 오브젝트를 식별할 수 있다. 레이블 셀렉터는 쿠버네티스 코어 그룹의 기본이다.
+
+API는 현재 *일치성 기준* 과 *집합성 기준* 이라는 두 종류의 셀렉터를 지원한다. 레이블 셀렉터는 쉼표로 구분된 다양한 *요구사항* 에 따라 만들 수 있다. 다양한 요구사항이 있는 경우 쉼표 기호가 AND(`&&`) 연산자로 구분되는 역할을 하도록 해야 한다.
+
+비어있거나 지정되지 않은 셀렉터는 상황에 따라 달라진다. 셀렉터를 사용하는 API 유형은 유효성과 의미를 문서화해야 한다.
+
+#### *일치성 기준* 요건
+
+. `=`,`==`,`!=` 이 세 가지 연산자만 허용한다. 처음 두 개의 연산자의 *일치* 나머지는 *불일치* 를 의미
+
+```
+environment = production
+tier != frontend
+```
+
+전자는 `environment`를 키로 가지는 것과 `production`을 값으로 가지는 모든 리소스를 선택. 후자는 `tier`를 키로 가지고, 값을 `frontend`를 가지는 리소스를 제외한 모든 리소스를 선택하고, `tier`를 키로 가지며, 값을 공백으로 가지는 모든 리소스를 선택
+
+`environment=production,tier!=frontend` 처럼 쉼표를 통해 한 문장으로 `frontend`를 제외한 `production`을 필터링할 수 있다.
+
+일치성 기준 레이블 요건에 대한 하나의 이용 시나리오는 파드가 노드를 선택하는 기준을 지정하는 것이다. 예를 들어, 아래 샘플 파드는 "`accelerator=nvidia-tesla-p100`" 레이블을 가진 노드를 선택한다.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cuda-test
+spec:
+  containers:
+    - name: cuda-test
+      image: "k8s.gcr.io/cuda-vector-add:v0.1"
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+  nodeSelector:
+    accelerator: nvidia-tesla-p100
+```
+
+#### *집합성 기준* 요건
+
+ 값 집합을 키로 필터링할 수 있다. `in`,`notin`과 `exists`(키 식별자만 해당)의 3개의 연산자를 지원한다
+
+```
+environment in (production, qa)
+tier notin (frontend, backend)
+partition
+!partition
+```
+
+- 첫 번째 예시에서 키가 `environment`이고 값이 `production` 또는 `qa`인 모든 리소스를 선택한다.
+- 두 번째 예시에서 키가 `tier`이고 값이 `frontend`와 `backend`를 가지는 리소스를 제외한 모든 리소스와 키로 `tier`를 가지고 값을 공백으로 가지는 모든 리소스를 선택한다.
+- 세 번째 예시에서 레이블의 값에 상관없이 키가 `partition`을 포함하는 모든 리소스를 선택한다.
+- 네 번째 예시에서 레이블의 값에 상관없이 키가 `partition`을 포함하지 않는 모든 리소스를 선택한다.
+
+*집합성 기준* 요건은 *일치성 기준* 요건과 조합해서 사용할 수 있다. 예를 들어 `partition in (customerA, customerB),environment!=qa`
+
+### API
+
+#### LIST와 WATCH 필터링
+
+LIST와 WATCH 작업은 쿼리 파라미터를 사용해서 반환되는 오브젝트 집합을 필터링하기 위해 레이블 셀렉터를 지정할 수 있다. 다음의 두 가지 요건 모두 허용된다.
+
+- *일치성 기준* 요건: `?labelSelector=environment%3Dproduction,tier%3Dfrontend`
+- *집합성 기준* 요건: `?labelSelector=environment+in+%28production%2Cqa%29%2Ctier+in+%28frontend%29`
+
+두 가지 레이블 셀렉터 스타일은 모두 REST 클라이언트를 통해 선택된 리소스를 확인하거나 목록을 볼 수 있다. 예를 들어, `kubectl`로 `apiserver`를 대상으로 *일치성 기준* 으로 하는 셀렉터를 다음과 같이 이용할 수 있다.
+
+```shell
+kubectl get pods -l environment=production,tier=frontend
+```
+
+```shell
+kubectl get pods -l 'environment in (production),tier in (frontend)'
+```
+
+#### API 오브젝트에서 참조 설정
+
+`services`, `replicationcontrollers` 와 같은 일부 쿠버네티스 오브젝트는 레이블 셀렉터를 사용해서 파드와 같은 다른 리소스 집합을 선택한다.
+
+##### 서비스와 레플리케이션 컨트롤러
+
+`services`에서 지정하는 파드 집합은 레이블 셀렉터로 정의한다. 마찬가지로 `replicationcontrollers`가 관리하는 파드의 오브젝트 그룹도 레이블 셀렉터로 정의한다.
+
+서비스와 레플리케이션 컨트롤러의 레이블 셀렉터는 `json` 또는 `yaml` 파일에 매핑된 *일치성 기준* 요구사항의 셀렉터만 지원한다
+
+```json
+"selector": {
+    "component" : "redis",
+}
+```
+
+```yaml
+selector:
+    component: redis
+```
+
+##### 집합성 기반 요건을 지원하는 리소스 
+
+Jop, Deployment, ReplicaSet 그리고 DaemonSet 같은 리소스들은 *집합성 기준* 의 요건도 지원한다.
+
+```yaml
+selector:
+  matchLabels:
+    component: redis
+  matchExpressions:
+    - {key: tier, operator: In, values: [cache]}
+    - {key: environment, operator: NotIn, values: [dev]}
+```
+
+`matchLabels`는 `{key,value}`의 쌍과 매칭된다. `matchLabels`에 매칭된 단일 `{key,value}`는 `matchExpressions`의 요소와 같으며 `key` 필드는 "key"로, `operator`는 "In" 그리고 `values`에는 "value"만 나열되어 있다. `matchExpressions`는 파드 셀렉터의 요건 목록이다. 유효한 연산자에는 In, NotIn, Exists 및 DoNotExist가 포함된다. In 및 NotIn은 설정된 값이 있어야 한다. `matchLabels`와 `matchExpressions` 모두 AND로 되어있어 일치하기 위해서는 모든 요건을 만족해야 한다.
+
+#### 노드 셋 선택
+
+레이블을 통해 선택하는 사용 사례 중 하나는 파드를 스케줄 할 수 있는 노드 셋을 제한하는 것이다.
+
