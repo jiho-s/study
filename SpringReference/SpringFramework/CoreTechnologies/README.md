@@ -55,7 +55,7 @@
 - [Resolving Codes to Error Messages](./3_Validation_DataBinding_TypeConversion/03_ResolvingCodesToErrorMessages.md)
 - [Bean Manipulation and the `BeanWrapper`](./3_Validation_DataBinding_TypeConversion/04_BeanManipulationAndTheBeanWrapper.md)
 - [Spring Type Conversion](./3_Validation_DataBinding_TypeConversion/05_SpringTypeConversion.md)
-- [Spring Field Formatting](./3_Validation_DataBinding_TypeConversion/06_ SpringFieldFormatting.md)
+- [Spring Field Formatting](./3_Validation_DataBinding_TypeConversion/06_SpringFieldFormatting.md)
 
 ## [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring)
 
