@@ -25,9 +25,9 @@
 
 - [Stream](./Stream/01_Stream.md)
 
-## [Lambda](./Lambda)
+## [Java Language](./JavaLanguage)
 
-- [Lambda](./Lambda/01_Lambda.md)
+- [Lambda](./JavaLanguage/01_Lambda.md)
 
 ## [Java Virtual Machine](./JavaVirtualMachine)
 
@@ -43,4 +43,3 @@
 ## [java.lang 패키지](./lang)
 
 - [Wrapper Classes](./lang/01_WrapperClasses.md)
-
