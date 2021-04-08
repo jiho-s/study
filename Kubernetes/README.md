@@ -25,3 +25,5 @@
 
 - 클러스터 아키텍처
   - [노드](./02_ClusterArchitecture/01_Nodes.md)
+  - [컨트롤 플레인-노드 간 통신](./02_ClusterArchitecture/02_ControlPlane_NodeCommunication.md)
+  - [컨트롤러](./02_ClusterArchitecture/03_Controllers.md)
