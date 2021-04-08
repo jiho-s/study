@@ -25,22 +25,28 @@
 
 - [Stream](./Stream/01_Stream.md)
 
-## [Lambda](./Lambda)
+## [Java Language](./JavaLanguage)
 
-- [Lambda](./Lambda/01_Lambda.md)
+- [Lambda](./JavaLanguage/01_Lambda.md)
+-  [Generics](./JavaLanguage/02_Generics.md)
 
 ## [Java Virtual Machine](./JavaVirtualMachine)
 
 - [소개](./JavaVirtualMachine/01_Intruduction.md)
-
 - Java Virtual Machine의 구조
   - [데이터 타입](./JavaVirtualMachine/02_StructureOfJVM/01_DataType.md)
   - [기본 타입과 값](./JavaVirtualMachine/02_StructureOfJVM/02_PrimitiveTypesAndValues.md)
   - [참조 타입과 값](./JavaVirtualMachine/02_StructureOfJVM/03_ReferenceTypesAndValues.md)
   - [런타임 데이터 영역](./JavaVirtualMachine/02_StructureOfJVM/04_Run-TimeDataAreas.md)
-  - 
+  - [프레임](./JavaVirtualMachine/02_StructureOfJVM/05_Frams.md)
+- 로딩, 링킹, 초기화
+  - [소개](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/01_Overview.md)
+  - [런타임 상수 풀](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/02_TheRun-TimeConstantPool.md)
+  - [자바 가상머신 시작](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/03_JavaVirtualMachineStartup.md)
+  - [생성과 로딩](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/04_CreationAndLoading.md)
+  - [링킹](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/05_Linking.md)
+  - [초기화](./JavaVirtualMachine/05_LoadingLinkingAndInitializing/06_Initialization.md)
 
 ## [java.lang 패키지](./lang)
 
 - [Wrapper Classes](./lang/01_WrapperClasses.md)
-
