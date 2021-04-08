@@ -28,6 +28,7 @@
 ## [Java Language](./JavaLanguage)
 
 - [Lambda](./JavaLanguage/01_Lambda.md)
+-  [Generics](./JavaLanguage/02_Generics.md)
 
 ## [Java Virtual Machine](./JavaVirtualMachine)
 
