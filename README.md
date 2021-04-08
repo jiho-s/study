@@ -116,7 +116,9 @@
   - [Garbage-First Garbage Collector](./Java/GarbageCollector/6_GarbageFirstGarbageCollector.md)
 - [Stream](./Java/Stream)
   - [Stream](./Java/Stream/01_Stream.md)
-- [Lambda](./Java/Lambda/01_Lambda.md)
+- [Java Language](./Java/JavaLanguage)
+  - [Lambda](./Java/JavaLanguage/01_Lambda.md)
+  - [Generics](./Java/JavaLanguage/02_Generics.md)
 - [Java Virtual Machine](./Java/JavaVirtualMachine)
   - [소개](./Java/JavaVirtualMachine/01_Intruduction.md)
   - Java Virtual Machine의 구조
