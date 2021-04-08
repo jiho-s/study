@@ -182,3 +182,5 @@
       - [레이블과 셀렉터](./Kubernetes/01_Concepts/01_Overview/04_WorkingWithKubernetesObjects/05_LabelsAndSelectors.md)
     - 클러스터 아키텍처
       - [노드](./Kubernetes/02_ClusterArchitecture/01_Nodes.md)
+      - [컨트롤 플레인-노드 간 통신](./Kubernetes/02_ClusterArchitecture/02_ControlPlane_NodeCommunication.md)
+      - [컨트롤러](./Kubernetes/02_ClusterArchitecture/03_Controllers.md)
