@@ -194,3 +194,20 @@ public interface FormatterRegistrar {
 
 Date 포매팅처럼 주어진 포매팅 분류에 따라 관련된 여러가지 컨버터와 포매터를 등록할 때 `FormatterRegistrar`가 유용하다. 선언적인 등록이 충분하지 않을 때도 유용하다. 예를 들어 포매터가 포매터의 `<T>`와는 다른 특정 필드 타입하에 색인되어야 하거나 `Printer`/`Parser` 쌍을 등록하는 경우이다
 
+### Configuring Formatting in Spring MVC
+
+기본적으로, number와 date 타입에 대한 많은 포매터가 이미 설치되어 있고, 필드에 `@NumberFormat` 와  `@DateTimeFormat`를 통해 커스터마이징도 지원하고 있다.
+
+Java 구성에서 사용자 정의 포맷터 및 변환기를 등록하려면 다음을 참고해라
+
+```java
+@Configuration
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        // ...
+    }
+}
+```
