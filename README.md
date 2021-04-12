@@ -170,6 +170,7 @@
   - [No Memory Abstraction](./OperatingSystems/03_MemoryManagement/01_NoMemoryAbstraction.md)
   - [A Memory Abstraction: Address Spcaces](./OperatingSystems/03_MemoryManagement/02_AMemoryAbstraction_AddressSpaces.md)
   - [Virtual Memory](./OperatingSystems/03_MemoryManagement/03_VirtualMemory.md)
+  - [Page Replacement Algorithms](./OperatingSystems/03_MemoryManagement/04_PageReplacementAlgorithms.md)
 
 ## [Kubernetes](./Kubernetes)
 
