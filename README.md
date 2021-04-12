@@ -50,6 +50,7 @@
       - [Spring Type Conversion](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/05_SpringTypeConversion.md)
       - [Spring Field Formatting](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/06_SpringFieldFormatting.md)
       - [Configuring a Global Date and Time Format](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/07_ConfiguringAGlobalDateAndTimeFormat.md)
+      - [Java Bean Validation](./SpringReference/SpringFramework/CoreTechnologies/3_Validation_DataBinding_TypeConversion/08_JavaBeanValidation.md)
     - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring)
       - [Aspect Oriented Programming with Spring](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/01_OverView.md)
       - [AOP Concepts](./SpringReference/SpringFramework/CoreTechnologies/5_AspectOrientedProgrammingWithSpring/02_AOPConcepts.md)
