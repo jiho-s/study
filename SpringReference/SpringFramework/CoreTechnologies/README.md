@@ -57,6 +57,7 @@
 - [Spring Type Conversion](./3_Validation_DataBinding_TypeConversion/05_SpringTypeConversion.md)
 - [Spring Field Formatting](./3_Validation_DataBinding_TypeConversion/06_SpringFieldFormatting.md)
 - [Configuring a Global Date and Time Format](./3_Validation_DataBinding_TypeConversion/07_ConfiguringAGlobalDateAndTimeFormat.md)
+- [Java Bean Validation](./3_Validation_DataBinding_TypeConversion/08_JavaBeanValidation.md)
 
 ## [Aspect Oriented Programming with Spring](./5_AspectOrientedProgrammingWithSpring)
 
