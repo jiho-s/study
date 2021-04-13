@@ -171,6 +171,7 @@
   - [A Memory Abstraction: Address Spcaces](./OperatingSystems/03_MemoryManagement/02_AMemoryAbstraction_AddressSpaces.md)
   - [Virtual Memory](./OperatingSystems/03_MemoryManagement/03_VirtualMemory.md)
   - [Page Replacement Algorithms](./OperatingSystems/03_MemoryManagement/04_PageReplacementAlgorithms.md)
+  - [Segmentation](./OperatingSystems/03_MemoryManagement/08_Segmentation.md)
 
 ## [Kubernetes](./Kubernetes)
 
