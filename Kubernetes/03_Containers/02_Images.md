@@ -65,6 +65,98 @@
 - `${HOME}/.dockercfg`
 - `/.dockercfg`
 
+ 프라이빗 레지스트리를 사용도록 사용자의 노드를 구성하기 위해서 권장되는 단계는 다음과 같다. 사용자의 데스크탑/랩탑에서 아래 내용을 실행해라.
 
+1. 사용하고 싶은 각 자격 증명 세트에 대해서 `docker login [서버]`를 실행한다. 이것은 여러분 PC의 `$HOME/.docker/config.json`를 업데이트한다.
+2. 편집기에서 `$HOME/.docker/config.json`를 보고 사용하고 싶은 자격 증명만 포함하고 있는지 확인한다.
+3. 노드의 리스트를 구한다. 예를 들면 다음과 같다.
+   - 이름을 원하는 경우: `nodes=$( kubectl get nodes -o jsonpath='{range.items[*].metadata}{.name} {end}' )`
+   - IP를 원하는 경우: `nodes=$( kubectl get nodes -o jsonpath='{range .items[*].status.addresses[?(@.type=="ExternalIP")]}{.address} {end}' )`
+4. 로컬의 `.docker/config.json`를 위의 검색 경로 리스트 중 하나에 복사한다.
+   - 이를 테스트하기 위한 예: `for n in $nodes; do scp ~/.docker/config.json root@"$n":/var/lib/kubelet/config.json; done`
 
- 
+프라이빗 이미지를 사용하는 파드를 생성하여 검증한다. 예를 들면 다음과 같다.
+
+```shell
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-image-test-1
+spec:
+  containers:
+    - name: uses-private-image
+      image: $PRIVATE_IMAGE_NAME
+      imagePullPolicy: Always
+      command: [ "echo", "SUCCESS" ]
+EOF
+```
+
+클러스터의 모든 노드가 반드시 동일한 `.docker/config.json`를 가져야 한다. 그렇지 않으면, 파드가 일부 노드에서만 실행되고 다른 노드에서는 실패할 것이다. 예를 들어, 노드 오토스케일링을 사용한다면, 각 인스턴스 템플릿은 `.docker/config.json`을 포함하거나 그것을 포함한 드라이브를 마운트해야 한다.
+
+프라이빗 레지스트리 키가 `.docker/config.json`에 추가되고 나면 모든 파드는 프라이빗 레지스트리의 이미지에 읽기 접근 권한을 가지게 될 것이다
+
+#### 미리 내려받은(pre-pulled) 이미지
+
+>Google 쿠버네티스 엔진에서 동작 중이라면, 이미 각 노드에 Google 컨테이너 레지스트리에 대한 자격 증명과 함께 `.dockercfg`가 있을 것이다. 그렇다면 이 방법은 쓸 수 없다.
+
+>이 방법은 노드의 구성을 제어할 수 있는 경우에만 적합하다. 이 방법은 클라우드 제공자가 노드를 관리하고 자동으로 교체한다면 안정적으로 작동하지 않을 것이다.
+
+기본적으로, kubelet은 지정된 레지스트리에서 각 이미지를 풀 하려고 한다. 그러나, 컨테이너의 `imagePullPolicy` 속성이 `IfNotPresent` 또는 `Never`으로 설정되어 있다면, 로컬 이미지가 사용된다(우선적으로 또는 배타적으로).
+
+레지스트리 인증의 대안으로 미리 풀 된 이미지에 의존하고 싶다면, 클러스터의 모든 노드가 동일한 미리 내려받은 이미지를 가지고 있는지 확인해야 한다.
+
+이것은 특정 이미지를 속도를 위해 미리 로드하거나 프라이빗 레지스트리에 대한 인증의 대안으로 사용될 수 있다.
+
+모든 파드는 미리 내려받은 이미지에 대해 읽기 접근 권한을 가질 것이다
+
+#### 파드에 ImagePullSecrets 명시
+
+쿠버네티스는 파드에 컨테이너 이미지 레지스트리 키를 명시하는 것을 지원한다.
+
+##### 도커 구성으로 시크릿 생성
+
+다음 커맨드를 실행한다.
+
+```shell
+kubectl create secret docker-registry <name> --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+```
+
+만약 도커 자격 증명 파일이 이미 존재한다면, 위의 명령을 사용하지 않고, 자격 증명 파일을 쿠버네티스 시크릿으로 가져올 수 있다. [기존 도커 자격 증명으로 시크릿 생성](https://kubernetes.io/ko/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)에서 관련 방법을 설명하고 있다.
+
+`kubectl create secret docker-registry`는 하나의 프라이빗 레지스트리에서만 작동하는 시크릿을 생성하기 때문에, 여러 프라이빗 컨테이너 레지스트리를 사용하는 경우 특히 유용하다.
+
+##### 파드의 imagePullSecrets 참조
+
+이제, `imagePullSecrets` 섹션을 파드의 정의에 추가함으로써 해당 시크릿을 참조하는 파드를 생성할 수 있다.
+
+예를 들면 다음과 같다.
+
+```shell
+cat <<EOF > pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: foo
+  namespace: awesomeapps
+spec:
+  containers:
+    - name: foo
+      image: janedoe/awesomeapp:v1
+  imagePullSecrets:
+    - name: myregistrykey
+EOF
+
+cat <<EOF >> ./kustomization.yaml
+resources:
+- pod.yaml
+EOF
+```
+
+이것은 프라이빗 레지스트리를 사용하는 각 파드에서 수행될 필요가 있다.
+
+그러나, 이 필드의 셋팅은 [서비스 어카운트](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) 리소스에 imagePullSecrets을 셋팅하여 자동화할 수 있다.
+
+자세한 지침을 위해서는 [서비스 어카운트에 ImagePullSecrets 추가](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account)를 확인한다.
+
+이것은 노드 당 `.docker/config.json`와 함께 사용할 수 있다. 자격 증명은 병합될 것이다.
