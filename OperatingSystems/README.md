@@ -25,4 +25,5 @@
 - [A Memory Abstraction: Address Spcaces](./03_MemoryManagement/02_AMemoryAbstraction_AddressSpaces.md)
 - [Virtual Memory](./03_MemoryManagement/03_VirtualMemory.md)
 - [Page Replacement Algorithms](./03_MemoryManagement/04_PageReplacementAlgorithms.md)
+- [Segmentation](./03_MemoryManagement/08_Segmentation.md)
 
