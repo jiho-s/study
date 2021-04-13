@@ -117,3 +117,64 @@ public class MyConstraintValidator implements ConstraintValidator {
 
 여기서 보듯이 `ConstraintValidator` 구현체는 다른 스프링 빈처럼 `@Autowired`로 의존성을 가질수 있다.
 
+#### Spring-driven Method Validation
+
+`MethodValidationPostProcessor` Bean 정의를 통해 Bean Validation 1.1 (사용자 정의 확장으로 Hibernate Validator 4.3에서도 사용할 수 있음)에서 지원하는 메소드 유효성 검사 기능을 Spring 컨텍스트에 통합 할 수 있다.
+
+```java
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MethodValidationPostProcessor validationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
+}
+```
+
+Spring 기반 메서드 유효성 검사를 사용하려면 모든 대상 클래스에 Spring의 `@Validated` 어노테이션을 추가해야한다. 이는 사용할 유효성 검사 그룹을 선택적으로 선언 할 수도 있다. Hibernate Validator 및 Bean Validation 1.1 제공 업체의 설정 세부 사항은 [`MethodValidationPostProcessor`](https://docs.spring.io/spring-framework/docs/5.3.5/javadoc-api/org/springframework/validation/beanvalidation/MethodValidationPostProcessor.html) 를 참조해라.
+
+### Configuring a `DataBinder`
+
+스프링3부터 `DataBinder` 인스턴스는 `Validator`와 함께 설정할 수 있다. 일단 설정되면 `binder.validate()` 호출에 의해서 `Validator`가 실행된다. 유효성 검사 오류는 자동적으로 바인더의 `BindingResult`에 추가된다.
+
+다음 예제는 `DataBinder` 가 타겟 객체에 바인딩후 validation 로직이 프로그램적으로 어떻게 호출되는지 보여준다.
+
+```java
+Foo target = new Foo();
+DataBinder binder = new DataBinder(target);
+binder.setValidator(new FooValidator());
+
+// bind to the target object
+binder.bind(propertyValues);
+
+// validate the target object
+binder.validate();
+
+// get BindingResult that includes any validation errors
+BindingResult results = binder.getBindingResult();
+```
+
+또한 `dataBinder.addValidators` 및 `dataBinder.replaceValidators`를 통해 여러 `Validator` 인스턴스를 사용하여 `DataBinder`를 구성할 수도 있다. 이 기능은 글로벌로 구성된 been 검증과, `DataBinder` 인스턴스에 로컬로 구성된 Spring `Validator`를 결합할 때 유용합니다.
+
+### Spring MVC 3 Validation
+
+기본적으로, 클래스 경로에 Bean Validation(예: Hibernate Validator)이 있는 경우 `LocalValidatorFactoryBean`(컨트롤러 메서드 인자에서 `@Valid` 및 `Validated`와 함께 사용할 수 있는)은  글로벌 `Validator`로 등록됩니다.
+
+Java 구성에서 다음 예제와 같이 글로벌   `Validator`인스턴스를 커스텀 할 수 있다.
+
+```java
+@Configuration
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public Validator getValidator() {
+        // ...
+    }
+}
+```
+
+다음 예제와 같이 로컬로  `Validator` 구현을 등록 할 수도 있다.
