@@ -113,3 +113,123 @@ Class c = javax.swing.JButton.class.getSuperclass();
 Class<?>[] c = Character.class.getClasses();
 ```
 
+### Class Modifier와 Type 살펴보기
+
+클래스는 여러개의 Modifier와 같이 선언될수 있다.
+
+- Access modifiers: `public`, `protected`, `private`
+- Modifier requiring override: `abstract`
+- Modifier restricting to one instance: `static`
+- Modifier prohibiting value modification: `final`
+- Modifier forcing strict floating point behavior: `strictfp`
+- Annotations
+
+`java.lang.reflect.Modifier`  클래스에는 가능한 모든 Modifier가 선언되어있다. 또한 `Class.getModifiers()` 메소드에서 반환된 값을 디코딩할 수 있는 여러 메서드들도 포함하고 있다.
+
+`ClassDeclarationSpy`예제에서는 Modifier, 제네릭 타입 매개 변수, 구현 된 인터페이스와 상속경로 등의 클래스의 선언 구성 요소를 얻는 방법을 보여준다. `Class`는 [`java.lang.reflect.AnnotatedElement`](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html)도 구현하기 때문에 런타임 Annotation도 조회할 수 있다.
+
+```java
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import static java.lang.System.out;
+
+public class ClassDeclarationSpy {
+    public static void main(String... args) {
+        try {
+            Class<?> c = Class.forName(args[0]);
+            out.format("Class:%n  %s%n%n", c.getCanonicalName());
+            out.format("Modifiers:%n  %s%n%n",
+                    Modifier.toString(c.getModifiers()));
+
+            out.format("Type Parameters:%n");
+            TypeVariable[] tv = c.getTypeParameters();
+            if (tv.length != 0) {
+                out.format("  ");
+                for (TypeVariable t : tv)
+                    out.format("%s ", t.getName());
+                out.format("%n%n");
+            } else {
+                out.format("  -- No Type Parameters --%n%n");
+            }
+
+            out.format("Implemented Interfaces:%n");
+            Type[] intfs = c.getGenericInterfaces();
+            if (intfs.length != 0) {
+                for (Type intf : intfs)
+                    out.format("  %s%n", intf.toString());
+                out.format("%n");
+            } else {
+                out.format("  -- No Implemented Interfaces --%n%n");
+            }
+
+            out.format("Inheritance Path:%n");
+            List<Class> l = new ArrayList<Class>();
+            printAncestor(c, l);
+            if (l.size() != 0) {
+                for (Class<?> cl : l)
+                    out.format("  %s%n", cl.getCanonicalName());
+                out.format("%n");
+            } else {
+                out.format("  -- No Super Classes --%n%n");
+            }
+
+            out.format("Annotations:%n");
+            Annotation[] ann = c.getAnnotations();
+            if (ann.length != 0) {
+                for (Annotation a : ann)
+                    out.format("  %s%n", a.toString());
+                out.format("%n");
+            } else {
+                out.format("  -- No Annotations --%n%n");
+            }
+
+            // production code should handle this exception more gracefully
+        } catch (ClassNotFoundException x) {
+            x.printStackTrace();
+        }
+    }
+
+    private static void printAncestor(Class<?> c, List<Class> l) {
+        Class<?> ancestor = c.getSuperclass();
+        if (ancestor != null) {
+            l.add(ancestor);
+            printAncestor(ancestor, l);
+        }
+    }
+}
+```
+
+```shell
+$ java ClassDeclarationSpy java.util.concurrent.ConcurrentNavigableMap
+Class:
+  java.util.concurrent.ConcurrentNavigableMap
+
+Modifiers:
+  public abstract interface
+
+Type Parameters:
+  K V
+
+Implemented Interfaces:
+  java.util.concurrent.ConcurrentMap<K, V>
+  java.util.NavigableMap<K, V>
+
+Inheritance Path:
+  -- No Super Classes --
+
+Annotations:
+  -- No Annotations --
+```
+
+실제 `ConcurrentNavigableMap<K,V>`의 선언은 다음과 같다.
+
+```java
+public interface ConcurrentNavigableMap<K,V>
+    extends ConcurrentMap<K,V>, NavigableMap<K,V>
+```
+
