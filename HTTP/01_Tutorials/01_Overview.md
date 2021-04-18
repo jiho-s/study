@@ -77,4 +77,68 @@ HTTP의 확장 가능한 특성은 수년 간에 걸쳐 웹의 점점 더 많은
 - *세션*
   쿠키 사용은 서버 상태를 요청과 연결하도록 해준다. 이것은 HTTP가 기본적으로 상태없는 프로토콜임에도 세션을 만들어주는 계기가 된다.
 
- 
+### HTTP 흐름
+
+1. TCP 연결을 만든다
+
+   TCP 연결은 요청을 보내거나(혹은 여러개의 요청) 응답을 받는데 사용된다. 클라이언트는 새 연결을 열거나, 기존 연결을 재사용하거나, 서버에 대한 여러 TCP 연결을 열 수 있다.
+
+2. HTTP 메시지를 전송한다
+
+   HTTP 메시지(HTTP/2 이전의)는 인간이 읽을 수 있다. HTTP/2에서는 이런 간단한 메시지가 프레임 속으로 캡슐화되어, 직접 읽는게 불가능하지만 원칙은 동일하다.
+
+   ```html
+   GET / HTTP/1.1
+   Host: developer.mozilla.org
+   Accept-Language: fr
+   ```
+
+3. 서버에 의해 전송된 응답을 읽는다
+
+   ```html
+   HTTP/1.1 200 OK
+   Date: Sat, 09 Oct 2010 14:28:02 GMT
+   Server: Apache
+   Last-Modified: Tue, 01 Dec 2009 20:18:22 GMT
+   ETag: "51142bc1-7449-479b075b2891b"
+   Accept-Ranges: bytes
+   Content-Length: 29769
+   Content-Type: text/html
+   
+   <!DOCTYPE html... (here comes the 29769 bytes of the requested web page)
+   ```
+
+4. 연결을 닫거나 다른 요청들을 위해 재사용한다.
+
+HTTP 파이프라이닝이 활성화되면, 첫번째 응답을 완전히 수신할 때까지 기다리지 않고 여러 요청을 보낼 수 있다. HTTP 파이프라이닝은 오래된 소프트웨어와 최신 버전이 공존하고 있는, 기존의 네트워크 상에서 구현하기 어렵다는게 입증되었으며, 프레임안에서 보다 활발한 다중 요청을 보내는 HTTP/2로 교체되고 있다
+
+### HTTP 메시지
+
+HTTP/1.1와 초기 HTTP 메시지는 사람이 읽을 수 있다. HTTP/2에서, 이 메시지들은 새로운 이진 구조인 프레임 안으로 임베드되어, 헤더의 압축과 다중화와 같은 최적화를 가능케 한다. 본래의 HTTP 메시지의 일부분만이 이 버전의 HTTP 내에서 전송된다고 할지라도, 각 메시지의 의미들은 변화하지 않으며 클라이언트는 본래의 HTTP/1.1 요청을 (가상으로) 재구성한다.
+
+HTTP 메시지의 두 가지 타입인 요청(requests)과 응답(responses)은 각자의 특성있는 형식을 가지고 있다.
+
+#### 요청
+
+- HTTP 메소드
+
+    [`GET`](https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/GET), [`POST`](https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/POST), [`OPTIONS`](https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/OPTIONS), [`HEAD`](https://developer.mozilla.org/ko/docs/Web/HTTP/Methods/HEAD) 등이 있다. 일반적으로, 클라이언트는 리소스를 가져오거나(`GET`을 사용하여) [HTML 폼](https://developer.mozilla.org/en-US/docs/Learn/Forms)의 데이터를 전송(`POST`를 사용하여)하려고 하지만, 다른 경우에는 다른 동작이 요구될 수도 있다.
+
+- 가져오려는 리소스의 **경로**
+
+  예를 들면 [프로토콜](https://developer.mozilla.org/en-US/docs/Glossary/Protocol) (`http://`), [도메인](https://developer.mozilla.org/en-US/docs/Glossary/Domain) (여기서는 `developer.mozilla.org`), 또는 TCP [포트](https://developer.mozilla.org/en-US/docs/Glossary/Port) (여기서는 `80`)인 요소들을 제거한 리소스의 URL이다.
+
+- HTTP 프로토콜의 버전.
+
+- 서버에 대한 추가 정보를 전달하는 선택적 [헤더들](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
+
+- `POST`와 같은 몇 가지 메서드를 위한, 전송된 리소스를 포함하는 응답의 본문과 유사한 본문
+
+#### 응답
+
+- HTTP 프로토콜의 버전.
+- 요청의 성공 여부와, 그 이유를 나타내는 [상태 코드](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status).
+- 아무런 영향력이 없는, 상태 코드의 짧은 설명을 나타내는 상태 메시지.
+- 요청 헤더와 비슷한, HTTP [헤더들](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
+- 선택 사항으로, 가져온 리소스가 포함되는 본문.
+
