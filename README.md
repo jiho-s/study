@@ -177,6 +177,8 @@
   - [Virtual Memory](./OperatingSystems/03_MemoryManagement/03_VirtualMemory.md)
   - [Page Replacement Algorithms](./OperatingSystems/03_MemoryManagement/04_PageReplacementAlgorithms.md)
   - [Segmentation](./OperatingSystems/03_MemoryManagement/08_Segmentation.md)
+- [Deadlocks](./OperatingSystems/06_Deadlocks)
+  - [Resources](./OperatingSystems/06_Deadlocks/01_Resources.md)
 
 ## [Kubernetes](./Kubernetes)
 
