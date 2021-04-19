@@ -11,6 +11,7 @@
 1. Introduction
 2. [Processes and Threads](#processes-and-threads )
 3. [Memory Management](#memory-management)
+4. [Deadlocks](#deadlocks)
 
 ## [Processes and Threads](./02_ProcessesAndThreads)
 
@@ -27,3 +28,6 @@
 - [Page Replacement Algorithms](./03_MemoryManagement/04_PageReplacementAlgorithms.md)
 - [Segmentation](./03_MemoryManagement/08_Segmentation.md)
 
+## [Deadlocks](./06_Deadlocks)
+
+- [Resources](./06_Deadlocks/01_Resources.md)
