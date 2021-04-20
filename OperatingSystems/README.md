@@ -31,3 +31,4 @@
 ## [Deadlocks](./06_Deadlocks)
 
 - [Resources](./06_Deadlocks/01_Resources.md)
+- [Introduction to Deadlocks](./06_Deadlocks/02_IntroductionToDeadlocks.md)
