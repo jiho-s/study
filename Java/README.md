@@ -7,10 +7,10 @@
 ## 목차
 
 1. [Garbage Collector](#garbage-collector)
-2. [Stream](#stream)
 3. [Lambda](#lambda)
 4. [Java Virtual Machine](#java-virtual-machine)
 5. [java.lang 패키지](#java.lang-패키지)
+5. [java.util 패키지](#java.util-패키지)
 
 ## [Garbage Collector](./GarbageCollector)
 
@@ -20,10 +20,6 @@
 - [Parallel Collector](./GarbageCollector/4_ParallelCollector.md)
 - [Concurrent Mark Sweep(CMS) Collector](./GarbageCollector/5_ConcurrentMarkSweepCollector.md)
 - [Garbage-First Garbage Collector](./GarbageCollector/6_GarbageFirstGarbageCollector.md)
-
-## [Stream](./Stream)
-
-- [Stream](./Stream/01_Stream.md)
 
 ## [Java Language](./JavaLanguage)
 
@@ -54,3 +50,7 @@
   - [Reflection API](./lang/02_Reflect/01_Overview.md)
   - [Classes](./lang/02_Reflect/02_Classes.md)
   - [Members](./lang/02_Reflect/03_Members.md)
+
+## [java.util 패키지](./util)
+
+- [Stream](./util/Stream/01_Stream.md)
