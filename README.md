@@ -182,6 +182,7 @@
   - [Segmentation](./OperatingSystems/03_MemoryManagement/08_Segmentation.md)
 - [Deadlocks](./OperatingSystems/06_Deadlocks)
   - [Resources](./OperatingSystems/06_Deadlocks/01_Resources.md)
+  - [Introduction to Deadlocks](./OperatingSystems/06_Deadlocks/02_IntroductionToDeadlocks.md)
 
 ## [Kubernetes](./Kubernetes)
 
