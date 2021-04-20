@@ -117,8 +117,6 @@
   - [Parallel Collector](./Java/GarbageCollector/4_ParallelCollector.md)
   - [Concurrent Mark Sweep(CMS) Collector](./Java/GarbageCollector/5_ConcurrentMarkSweepCollector.md)
   - [Garbage-First Garbage Collector](./Java/GarbageCollector/6_GarbageFirstGarbageCollector.md)
-- [Stream](./Java/Stream)
-  - [Stream](./Java/Stream/01_Stream.md)
 - [Java Language](./Java/JavaLanguage)
   - [Lambda](./Java/JavaLanguage/01_Lambda.md)
   - [Generics](./Java/JavaLanguage/02_Generics.md)
@@ -143,6 +141,11 @@
     - [Reflection API](./Java/lang/02_Reflect/01_Overview.md)
     - [Classes](./Java/lang/02_Reflect/02_Classes.md)
     - [Members](./Java/lang/02_Reflect/03_Members.md)
+- [java.util 패키지](./Java/util)
+  - Stream
+    - [Stream](./Java/util/Stream/01_Stream.md)
+  - [Concurrent](./util/Concurrent)
+    - [Flow](./Java/util/Concurrent/01_Flow.md)
 
 ## [Algorithm](./Algorithm)
 
