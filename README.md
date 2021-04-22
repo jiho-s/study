@@ -75,7 +75,7 @@
   - [Resource / Validation / SpEL](./SpringLean/SpringCore/ResourceValidationSpEL.md)
   - [스프링 AOP](./SpringLean/SpringCore/SpringAOPNullSafety.md)
 - [스프링 웹 MVC](./SpringLean/SpringWebMVC)
-  - [스프링 웹 MVC 소개](./SpringLean/SpringWebMVC/01_OverView.md)
+  - [스프링 웹 MVC 소개](./SpringLean/SpringWebMVC/01_Overview.md)
   - [서블릿](./SpringLean/SpringWebMVC/02_Servlet.md)
   - [스프링과 서블릿](./SpringLean/SpringWebMVC/03_SpringAndServlet.md)
   - [DispatcherServlet](./SpringLean/SpringWebMVC/04_DispatcherServlet.md)
