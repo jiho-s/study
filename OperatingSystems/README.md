@@ -33,3 +33,4 @@
 - [Resources](./06_Deadlocks/01_Resources.md)
 - [Introduction to Deadlocks](./06_Deadlocks/02_IntroductionToDeadlocks.md)
 - [Ostrich Algorithm](./06_Deadlocks/03_OstrichAlgorithm.md)
+- [Deadlock Detection And Recovery](./06_Deadlocks/04_DeadlockDetectionAndRecovery.md)
