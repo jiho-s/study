@@ -183,6 +183,8 @@
 - [Deadlocks](./OperatingSystems/06_Deadlocks)
   - [Resources](./OperatingSystems/06_Deadlocks/01_Resources.md)
   - [Introduction to Deadlocks](./OperatingSystems/06_Deadlocks/02_IntroductionToDeadlocks.md)
+  - [Ostrich Algorithm](./OperatingSystems/06_Deadlocks/03_OstrichAlgorithm.md)
+  - [Deadlock Detection And Recovery](./OperatingSystems/06_Deadlocks/04_DeadlockDetectionAndRecovery.md)
 
 ## [Kubernetes](./Kubernetes)
 
