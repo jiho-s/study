@@ -217,3 +217,4 @@
   - [HTTP](./HTTP/01_Tutorials/01_Overview.md)
   - [HTTP caching](./HTTP/01_Tutorials/02_HTTPCaching.md)
   - [HTTP cookies](./HTTP/01_Tutorials/03_HTTPCookies.md)
+  - [CORS](./HTTP/01_Tutorials/04_CrossOriginResourceSharing.md)
