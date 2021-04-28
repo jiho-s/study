@@ -6,7 +6,7 @@ Java HotSpot VM은 네가지 다른 종류의 컬렉터가 있다.
 
 싱글 스레드를 사용하기 떄문에 스레드간 오버헤드가 없어 상대적으로 효율적이다.
 
-멀티 프로세서를 활용할 수 없기 때문에 단일 프로세서 시스텡ㅁ에 적합
+멀티 프로세서를 활용할 수 없기 때문에 단일 프로세서 시스템에 적합
 
 ### Parallel Collector
 
@@ -14,7 +14,7 @@ Serial Collector와 유사한 세대별 컬렉터이다. 차이점은 Parallel C
 
 ### Mostly Concurrent Collectors
 
-Concurrent Mark Sweep(CMS) 컬렉터와 Garbage-First(G1) 수집기가 Mostly COncurrent Collector이다. Mostly Concurrent Collectors는 몇 개의 작업을 어플리케이션과 동시에 실행한다.
+Concurrent Mark Sweep(CMS) 컬렉터와 Garbage-First(G1) 수집기가 Mostly Concurrent Collector이다. Mostly Concurrent Collectors는 몇 개의 작업을 어플리케이션과 동시에 실행한다.
 
 - #### G1 Garbage Collector
 
@@ -22,7 +22,7 @@ Concurrent Mark Sweep(CMS) 컬렉터와 Garbage-First(G1) 수집기가 Mostly CO
 
 - #### CMS Collector
 
-  짧은 컬레견 중지시간을 위해 사용한다. 
+  짧은 컬렉션 중지시간을 위해 사용한다. 
 
 CMS collector 는 JDK 9 부터 deprecated 되었다.
 
