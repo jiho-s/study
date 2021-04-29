@@ -1,4 +1,4 @@
-# Spring Lean
+# Spring Learn
 
 > 스프링 강의 정리
 
