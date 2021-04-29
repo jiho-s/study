@@ -9,6 +9,8 @@
 3. [Availabe Collectors](#available-collector)
 4. [Parallel Collector](#parallel-collector)
 5. [Concurrent Mark Sweep(CMS) Collector](#concurrent-mark-sweep(cms)-collector)
+6.  [Garbage-First Garbage Collector](#garbage-first-garbage-collector)
+7. [Z Garbage Collector](#z-garbage-collector)
 
 ## [Garbage Collector](./1_GarbageCollector.md)
 
@@ -37,10 +39,20 @@
 ## [Concurrent Mark Sweep(CMS) Collector](./5_ConcurrentMarkSweepCollector.md)
 
 - CMS 컬렉터의 성능과 구조
-
 - 동시 수집 모드 실패
 - CMS 컬렉터와 플로팅 가비지
 - CMS 컬렉터 일시 중지
 - CMS 컬렉터 동시 추적
 - 동시 수집 사이클 시작
 
+## [Garbage-First Garbage Collector](./6_GarbageFirstGarbageCollector.md)
+
+- G1 활성화
+- 기본 개념
+- Garbage-First 내부구조
+- 다른 Collector와 비교
+
+## [Z Garbage Collector](./7_ZGarbageCollector.md)
+
+- 힙 크기 설정
+- 동시 GC 스레드 수 설정
