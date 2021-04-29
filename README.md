@@ -117,6 +117,7 @@
   - [Parallel Collector](./Java/GarbageCollector/4_ParallelCollector.md)
   - [Concurrent Mark Sweep(CMS) Collector](./Java/GarbageCollector/5_ConcurrentMarkSweepCollector.md)
   - [Garbage-First Garbage Collector](./Java/GarbageCollector/6_GarbageFirstGarbageCollector.md)
+  - [Z Garbage Collector](./Java/GarbageCollector/7_ZGarbageCollector.md)
 - [Java Language](./Java/JavaLanguage)
   - [Lambda](./Java/JavaLanguage/01_Lambda.md)
   - [Generics](./Java/JavaLanguage/02_Generics.md)
