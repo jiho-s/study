@@ -20,6 +20,7 @@
 - [Parallel Collector](./GarbageCollector/4_ParallelCollector.md)
 - [Concurrent Mark Sweep(CMS) Collector](./GarbageCollector/5_ConcurrentMarkSweepCollector.md)
 - [Garbage-First Garbage Collector](./GarbageCollector/6_GarbageFirstGarbageCollector.md)
+- [Z Garbage Collector](./GarbageCollector/7_ZGarbageCollector.md)
 
 ## [Java Language](./JavaLanguage)
 
