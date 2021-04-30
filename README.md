@@ -211,6 +211,8 @@
       - [컨테이너 환경 변수](./Kubernetes/03_Containers/04_ContainerEnvironment.md)
     - 워크로드
       - [워크로드 개요](./Kubernetes/04_Workloads/01_Overview.md)
+      - 파드
+        - [파드 개요](./Kubernetes/04_Workloads/02_Pods/01_Overview.md)
 
 ## [HTTP](./HTTP)
 
