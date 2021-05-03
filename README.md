@@ -213,6 +213,7 @@
       - [워크로드 개요](./Kubernetes/04_Workloads/01_Overview.md)
       - 파드
         - [파드 개요](./Kubernetes/04_Workloads/02_Pods/01_Overview.md)
+        - [파드 라이프사이클](./Kubernetes/04_Workloads/02_Pods/02_PodLifecycle.md)
 
 ## [HTTP](./HTTP)
 
