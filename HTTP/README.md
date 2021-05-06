@@ -3,10 +3,14 @@
 > HTTP 내용 정리
 >
 > [MDN HTTP 레퍼런스]: https://developer.mozilla.org/en-US/docs/Web/HTTP
+> [REST 위키]: https://en.wikipedia.org/wiki/Representational_state_transfer
+>
+> 
 
 ## 목차
 
 1. [튜토리얼](#튜토리얼)
+2. [데이터 전송방식](#데이터-전송방식)
 
 ## 튜토리얼
 
@@ -16,5 +20,8 @@
 - [CORS](./01_Tutorials/04_CrossOriginResourceSharing.md)
 - [Evolution of HTTP](./01_Tutorials/05_EvolutionOfHTTP.md)
 - [HTTP Messages](./01_Tutorials/07_HTTPMessages.md)
-- [A typical HTTP session](./A typical HTTP session/08_ATypicalHTTPSession.md)
+- [A typical HTTP session](./01_Tutorials/08_ATypicalHTTPSession.md)
 
+## 데이터 전송방식
+
+- [REST](./02_DataTransmission/01_REST.md)
