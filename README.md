@@ -225,3 +225,5 @@
   - [Evolution of HTTP](./HTTP/01_Tutorials/05_EvolutionOfHTTP.md)
   - [HTTP Messages](./HTTP/01_Tutorials/07_HTTPMessages.md)
   - [A typical HTTP session](./HTTP/01_Tutorials/08_ATypicalHTTPSession.md)
+- 데이터 전송방식
+  - [REST](./HTTP/02_DataTransmission/01_REST.md)
