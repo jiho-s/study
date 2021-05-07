@@ -121,6 +121,7 @@
 - [Java Language](./Java/JavaLanguage)
   - [Lambda](./Java/JavaLanguage/01_Lambda.md)
   - [Generics](./Java/JavaLanguage/02_Generics.md)
+  - [Static](./Java/JavaLanguage/03_Static.md)
 - [Java Virtual Machine](./Java/JavaVirtualMachine)
   - [소개](./Java/JavaVirtualMachine/01_Intruduction.md)
   - Java Virtual Machine의 구조
