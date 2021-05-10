@@ -216,6 +216,8 @@
         - [파드 개요](./Kubernetes/04_Workloads/02_Pods/01_Overview.md)
         - [파드 라이프사이클](./Kubernetes/04_Workloads/02_Pods/02_PodLifecycle.md)
         - [초기화 컨테이너](./Kubernetes/04_Workloads/02_Pods/03_InitContainers.md)
+      - 워크로드 리소스
+        - [디플로이먼트](./Kubernetes/04_Workloads/03_WorkloadResources/01_Deployments.md)
 
 ## [HTTP](./HTTP)
 
