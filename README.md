@@ -219,6 +219,7 @@
         - [초기화 컨테이너](./Kubernetes/04_Workloads/02_Pods/03_InitContainers.md)
       - 워크로드 리소스
         - [디플로이먼트](./Kubernetes/04_Workloads/03_WorkloadResources/01_Deployments.md)
+        - [스테이트풀셋](./Kubernetes/04_Workloads/03_WorkloadResources/03_StatefulSets.md)
 
 ## [HTTP](./HTTP)
 
