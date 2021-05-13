@@ -104,3 +104,68 @@ ints.subscribe(i -> System.out.println(i),
     error -> System.err.println("Error " + error),
     () -> System.out.println("Done")); 
 ```
+
+#### `Disposable` 로 `subscribe()` 취소
+
+이러한 모든 람다 기반의 ` subscirbe()` 에는 `Disposable` 을 반환한다. `Disposable` 인터페이스는 `dispose()` 메소드를 호출하여 구독을 취소할 수 있다.
+
+`Flux` 와 `Mono` 에서 취소는 소시가 아이템을 생성하는 것을 멈추어야 한다는 신호이다. 그러나 즉시 동작하는 것을 보장하지 않는다. 일부 소스는 취소 명령을 받기 전에 아이템을 빠르게 생성하여 완료할 수 있다.
+
+`Disposables` 클래스에서 `Disposable` 과 관련한 여러 도구를 제공해 준다. 이 중, `Disposables.swap()` 은 존재하는 `Disposable` 을 원자적으로 취소하거나 교체할 수 있게 해주는 `Disposable` 랩퍼를 만들어준다. 예를 들어, UI 시나리오에서 요청을 취소시카고 이를 사용자가 버튼을 클릭할 때마다 새로운 요청으로 바꿀때 유용할 수 있다. 랩퍼를 취소하면 랩처 자체가 닫힌다. 이렇게하면 현재 존재하는 값과 바뀔 값도 모두 없어진다.
+
+다른 도구는 `Disposables.composite(...)` 가 있다. 이를 사용하면 여러개의 	`Disposable` 을 모을 수 있다. 예를들어 서비스 호출과 관련된 여러개의 진행중인 요청이 있을 때 이것들을 한꺼번에 삭제할수 있다. `composite` 에 `dispose()` 메소드가 호출되면 다른 `Disposable` 을 추가하려는 모든 시도는 그것을 사라지게 한다.
+
+#### `BaseSubscriber` 를 사용하여 람다가 아닌 방법으로 사용
+
+랃다를 이용해 구성하는 것보다 일반적인 방식으로 `Subscirber` 를 추가하는 `subscribe` 메소드가 있다. 이런 `Subscriber` 작성을 돕기위해, `BaseSubscriber` 클래스가 제공된다.
+
+> `BaseSubscriber` 인스턴스는 일회용이다. 즉 `BaseSubscriber` 가 두번째 `Publisher` 를 구독하면 ,첫번째 구독을 취소한다.
+
+```java
+import org.reactivestreams.Subscription;
+import reactor.core.publisher.BaseSubscriber;
+
+public class SampleSubscriber<T> extends BaseSubscriber<T> {
+    @Override
+    protected void hookOnSubscribe(Subscription subscription) {
+        System.out.println("Subscribed");
+        request(1);
+    }
+
+    @Override
+    protected void hookOnNext(T value) {
+        System.out.println(value);
+        request(1);
+    }
+
+    @Override
+    protected void hookOnError(Throwable throwable) {
+        System.err.println(throwable.getMessage());
+    }
+}
+```
+
+```java
+SampleSubscriber<Integer> ss = new SampleSubscriber<>();
+Flux<Integer> ints = Flux.range(1, 4).map(i -> {
+    if (i == 4) {
+        throw new RuntimeException("it is 4");
+    }
+    return i;
+});
+ints.subscribe(ss);
+```
+
+```shell
+Subscribed
+1
+2
+3
+it is 4
+```
+
+`SampleSubscriber` 는 `BaseSubscriber` 를 상속했으며, `BaseSubscriber` 는 `Reactor` 에서 사용자 정의 `Subscribers`를 만드는데 권장되는 추상클래스이다. 이 클래스는 `subscriber`의 동작을 설정하기 위해 오버라이딩 할 수 있는 후크를 제공한다. 기본 값으로 bound가 없는 요청을 시작하게하고, `subscribe()` 처럼 행동한다. `BaseSubscriber` 는 커스텀 request의 양을 설정하고 싶을때 유용하다.
+
+request의 양을 설정할 때 최소한의 방법은 `hookOnSubscribe` 과 `hookOnNext`를 구현하는 것이다. 
+
+`BaseSubscriber` 또한 unbounded 모드로 전환하기 위한 `requestUnbounded` 메소드와 `cancel()` 메소드 또한 제공한다.
