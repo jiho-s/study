@@ -123,6 +123,8 @@
   - [Lambda](./Java/JavaLanguage/01_Lambda.md)
   - [Generics](./Java/JavaLanguage/02_Generics.md)
   - [Static](./Java/JavaLanguage/03_Static.md)
+  - [Interface and Inheritance](./Java/JavaLanguage/04_InterfacesAndInheritance.md)
+  - [Enum](./Java/JavaLanguage/05_EnumTypes.md)
 - [Java Virtual Machine](./Java/JavaVirtualMachine)
   - [소개](./Java/JavaVirtualMachine/01_Intruduction.md)
   - Java Virtual Machine의 구조
