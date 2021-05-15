@@ -27,6 +27,7 @@
 - [Lambda](./JavaLanguage/01_Lambda.md)
 -  [Generics](./JavaLanguage/02_Generics.md)
 -  [Static](./JavaLanguage/03_Static.md)
+-  [Interface and Inheritance](./JavaLanguage/04_InterfacesAndInheritance.md)
 
 ## [Java Virtual Machine](./JavaVirtualMachine)
 
