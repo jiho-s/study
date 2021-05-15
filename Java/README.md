@@ -28,6 +28,7 @@
 -  [Generics](./JavaLanguage/02_Generics.md)
 -  [Static](./JavaLanguage/03_Static.md)
 -  [Interface and Inheritance](./JavaLanguage/04_InterfacesAndInheritance.md)
+-  [Enum](./JavaLanguage/05_EnumTypes.md)
 
 ## [Java Virtual Machine](./JavaVirtualMachine)
 
