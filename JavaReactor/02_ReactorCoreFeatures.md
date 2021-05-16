@@ -169,3 +169,53 @@ it is 4
 request의 양을 설정할 때 최소한의 방법은 `hookOnSubscribe` 과 `hookOnNext`를 구현하는 것이다. 
 
 `BaseSubscriber` 또한 unbounded 모드로 전환하기 위한 `requestUnbounded` 메소드와 `cancel()` 메소드 또한 제공한다.
+
+#### 역압력과 요청 재구성 방법
+
+`Reactor`에서 역압력을 구현할때 consumer의 압력이 소스로 다시 전파되는 방식은 `request` 를 업스트림 연산자에게 보내는 것이다. 현재 요청의 합계는 demand 또는 pending request이라고 한다. Demand는 `Long.MAX_VALUE` 로 제한되어 있으며, 이는 unbounded 요청을 나타낸다.
+
+첫번째 요청은 subscription시 최종 subscriber로 부터 나오지만 가장 직접적인 구독 방법은 `Long.MAX_VALUE` 로 unbounded 요청을 통해 직접적으로 트리거 된다.
+
+```java
+Flux.range(1, 10)
+    .doOnRequest(r -> System.out.println("request of " + r))
+    .subscribe(new BaseSubscriber<Integer>() {
+
+      @Override
+      public void hookOnSubscribe(Subscription subscription) {
+        request(1);
+      }
+
+      @Override
+      public void hookOnNext(Integer integer) {
+        System.out.println("Cancelling after having received " + integer);
+        cancel();
+      }
+    });
+```
+
+```java
+equest of 1
+Cancelling after having received 1
+```
+
+##### 다운스트림에서 Demand를 변경하는 연산자
+
+subscribe 레벨에서 표현된 Demand는 업스트림 체인의 각각의 연산자에 의해 재설정 될 수 있다. 대표적인 예로는 `buffer(N)` 연산자이다. `request(2)` 를 받으면, Demand가 두개의 가득찬 버퍼로 해석된다. 결과적으로 버퍼는 가득차기 위해 `N` 개의 요소가 필요하므로 `buffer` 연산자는 `request` 를 `2 * N` 으로 재구성 한다.
+
+또한 몇개의 연산자는 `prefetch` 라 불리는 `int` 의 입력을 받는 경우가 있다. 이는 다운스트림 요청을 수정하는 다른 종류의 연산자이다. 일반적으로 내부 시퀀스를 다루는 연산자로, `flatMap` 처럼 들어오는 각 요소에서 `Publisher`를 가져온다.
+
+`Prefetch` 는 이러한 내부 시퀀스에 대한 초기 요청을 설정하는 방법이다. 기본적으로 `32`로 설정된다.
+
+이러한 연산자는 보통 보충 최적화도 같이 구현한다. 연산자가 `Prefetch` 요청의 75%로가 차 있는 것을 확인하면, 업스트림에 75%를 다시 요청한다.
+
+마지막으로 `limitRate` 와 `limitRequest`를 사용하여 요청을 조정할 수 있다.
+
+`limitRate(N)` 은 다운 스트림 요청을 분할하여 더 작은 배치로 업스트림에 전파할 수 있다. 예를 들어 `limitRate(10)` 으로 만든 `request(100)` 는 결과적으로 `request(10)` 을 10번 요청하게 된다. 또한 `limitRate` 는 앞에서 설명한 보충 최적화도 구현되어 있다.
+
+연산자에는 보충량을 설정할 수 도 있다(`limitRate(highTide, lowTide)`).
+
+`limitRequest(N)` 은 반면에 다운스트림 요청을 최대 총 Demand로 제한한다. N까지 요청을 추가한다. 하나의 요청으로 N에 대한 총 Demand가 넘치지 않으면 해당 요청은 업스트림으로 전바된다. 해당하는 양이 소스에서 방출된 후 `limitRequest` 는 시퀀스 완료를 하고 다운스트림에 `onComplete` 신호를 보낸다. 그리고 소스를 취소한다.
+
+### 프로그래밍적으로 시퀀스 만들기
+
