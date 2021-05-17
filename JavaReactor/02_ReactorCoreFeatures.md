@@ -219,3 +219,184 @@ subscribe 레벨에서 표현된 Demand는 업스트림 체인의 각각의 연�
 
 ### 프로그래밍적으로 시퀀스 만들기
 
+관련 이벤트(`onNext`, `onError`, `onComplete`)를 프로그래밍 방식으로 정의하여 `Flux` 또는 `Mono` 생성을 다룬다. 이러한 모든 메소드는 **sink**라고 부르는 이벤트를 트리거 하기 위해 API를 노출한다.
+
+#### `generate` 로 synchronous
+
+프로그래밍 방식으로 생성하는 가장 간단한 형태는 `generate` 를 이용해 `Flux`를 생성하는 것이다.
+
+`generate`는 **synchronous**, **one-by** 방출을 위한 것이고, **sink**는 `SynchronousSink` 이고 `next()` 메소드는 콜백호출당 최대 한번만 호출 될 수 있다. 그 다음 추가적으로 `error()` 나 `complete()` 를 선택적으로 호출할 수 있다.
+
+가장 유용한 예는 다음에 내 보낼 항목을 결정하기 위해 sink 사용량을 참조하기 위해 sink 상태를 가지고 있는 것이다. generator 함수는 `BitFunction<S, SynchronousSink<T>, S>` 의 형태이고 `<s>`는 상태 객체의 타입이고 `Supplier<S>` 로 처음 상태를 제공해야한다. generator 함수는 각각의 라운드에서 새로운 상태를 리턴한다.
+
+```java
+Flux<String> flux = Flux.generate(
+    () -> 0, 
+    (state, sink) -> {
+      sink.next("3 x " + state + " = " + 3*state); 
+      if (state == 10) sink.complete(); 
+      return state + 1; 
+    });
+```
+
+mutable한 `<S>` 도 사용할 수 있다. 다음 예시는 `AtomicLong`을 사용하여 수정할 수 있는 스태이트를 표현한 예시이다.
+
+```java
+Flux<String> flux = Flux.generate(
+    AtomicLong::new, 
+    (state, sink) -> {
+      long i = state.getAndIncrement(); 
+      sink.next("3 x " + i + " = " + 3*i);
+      if (i == 10) sink.complete();
+      return state; 
+    });
+```
+
+다음은 `Consumer`를 포함한 `generate`예시이다.
+
+```java
+Flux<String> flux = Flux.generate(
+    AtomicLong::new,
+      (state, sink) -> { 
+      long i = state.getAndIncrement(); 
+      sink.next("3 x " + i + " = " + 3*i);
+      if (i == 10) sink.complete();
+      return state; 
+    }, (state) -> System.out.println("state: " + state)); 
+```
+
+프로새스가 끝날 때 처리해야하는 리소스가 포함된 상태를 가진 경우(데이터베이스), `Consumer` 람다는 연결을 닫는 등 프로세스가 끝날 때 수행해야 할 작업을 처리할 수 있다.
+
+#### `create` Asynchronous, 멀티-스레드
+
+`create` 는 더 발전된 형태의 `Flux` 생성방법으로 멀티스레드로 라운드당 여러개를 방출하는 경우에 적합하다.
+
+`create` 는 `FluxSink`가 `next`, `error`, `complete` 메소드와 함깨 노출된다. `generate`와 달리 상태 기반 변형히 없다. 대신에 콜백에서 멀티 스레드 이벤트를 트리거 시킬 수 있다.
+
+리스너 기반 API를 연결 한다고 하면 다음과 같이 구현할 수 있다.
+
+```java
+interface MyEventListener<T> {
+    void onDataChunk(List<T> chunk);
+    void processComplete();
+}
+```
+
+```java
+Flux<String> bridge = Flux.create(sink -> {
+    myEventProcessor.register( 
+      new MyEventListener<String>() { 
+
+        public void onDataChunk(List<String> chunk) {
+          for(String s : chunk) {
+            sink.next(s); 
+          }
+        }
+
+        public void processComplete() {
+            sink.complete(); 
+        }
+    });
+});
+```
+
+`create` 는 비동기 API로 연동할 수 있으며, 역압력을 설정할 수 있다.  `OverflowStrategy`를 사용하여 역압력 방식을 재 정의 할 수 있다.
+
+- `IGNORE` 다운스트림의 역압력 요청을 완전히 무시한다. 이는 다운스트림의 큐가 가득 찰 시 `IllegalStateException` 을 발생시킬 수 있다.
+- `ERROR` 다운스트림이 따라 올수 없으면 `IllegalStateException`를 발생시킨다.
+- `Drop` 다운 스트림이 수신 할 준비가 되지 않은 경우 신호를 삭제한다.
+- `LATEST` 다운 스트림이 업스트림에서 최신 신호만 가져 오도록한다.
+- `BUFFER` 기본값으로 다운 스트림이 따라 잡을 수 없는 경우 모든 신호를 버퍼링한다.
+
+#### `push` 비동기 단일 스레드
+
+`generate` 와 `create` 사이의 중간 역할로 하나의 공급자로 부터 이벤트를 처리하기에 적합하다. 비동기일 수 있고 `create` 가 지원하는 오버플로우 전략으로 역압력을 관리할 수 있다는 점에서 `create`와 유사하다. 그러나 한번에 단 하나의 스레드만 `next` , `complete`, `error` 을 수행한다.
+
+```java
+Flux<String> bridge = Flux.push(sink -> {
+    myEventProcessor.register(
+      new SingleThreadEventListener<String>() { 
+
+        public void onDataChunk(List<String> chunk) {
+          for(String s : chunk) {
+            sink.next(s); 
+          }
+        }
+
+        public void processComplete() {
+            sink.complete(); 
+        }
+
+        public void processError(Throwable e) {
+            sink.error(e); 
+        }
+    });
+});
+```
+
+##### 하이브리드 push/pull 모델
+
+대부분의 `create` 같은 대부분의 Reactor 연산자는 하이브리드 push/poll 모델을 따른다. 이는 대부분의 처리가 비동기식 임에도 불구하고 작은 pull 구성 요소인 요청이 있다는 것이다.
+
+소비자는 처음 요청하지 않으면 아무것도 보내지 않는 다는 의미에서는, 소스에서 데이터를 가져온다. 소스는 소비자가 사용할 수 있게 될때마다 소비자에게 데이터를 보낸지만, 요청 된 양의 범위에서만 보낸다.
+
+`push`와 `create`모두 `onRequest`를 설정할 수 있게 하여 request  앵을 설정할수 있으며, 보류중인 요청이 있는 경우에만 데이터가 싱크를 통하여 들어갈 수 있도록 보장한다.
+
+```java
+Flux<String> bridge = Flux.create(sink -> {
+    myMessageProcessor.register(
+      new MyMessageListener<String>() {
+
+        public void onMessage(List<String> messages) {
+          for(String s : messages) {
+            sink.next(s); 
+          }
+        }
+    });
+    sink.onRequest(n -> {
+        List<String> messages = myMessageProcessor.getHistory(n); 
+        for(String s : messages) {
+           sink.next(s); 
+        }
+    });
+});
+
+```
+
+##### `push()` , `create()` 후 정리
+
+`onDispose`, `onCancel` 두 콜백은 취소 또는 종료에 대한 정리 작업을 수행한다. `onDispose`는 `Flux`가 `complete`, `error`, `cancel` 시 정리작업을 수행할 수 있다. `onCancle` 은 `onDispose` 를 사용하여 정리하기 전에 취소 관련 작업을 수행하는데 사용할 수 있다.
+
+#### Handle
+
+`handle` 메소드는 조금 다르다. 인스턴스 메소드로, 기존에 존재하는 것에 체인으로만 사용할 수 있다. `Mono`와 `Flux` 모두 가능하다.
+
+`SynchronousSink`를 사용하고 one-by-one 방출 만을 허용한다는 점에서 `generate`와 유사하다. 그러나, `handle`은 각각의 소스 요소에서 임의의 값을 생성하는 대 사용할 수 있다. 이러한 방식으로 `map`과 `filter`의 조합으로 사용된다.
+
+```java
+Flux<R> handle(BiConsumer<T, SynchronousSink<R>>);
+```
+
+예를 들어, `map`을 사용하고 싶지만 때때로 `null`을 반환하는 경우 `null`을 반환하지 않기 위해 사용할 수 있다.
+
+```java
+public String alphabet(int letterNumber) {
+	if (letterNumber < 1 || letterNumber > 26) {
+		return null;
+	}
+	int letterIndexAscii = 'A' + letterNumber - 1;
+	return "" + (char) letterIndexAscii;
+}
+
+```
+
+```java
+Flux<String> alphabet = Flux.just(-1, 30, 13, 9, 20)
+    .handle((i, sink) -> {
+        String letter = alphabet(i); 
+        if (letter != null) 
+            sink.next(letter); 
+    });
+
+alphabet.subscribe(System.out::println);
+```
