@@ -400,3 +400,55 @@ Flux<String> alphabet = Flux.just(-1, 30, 13, 9, 20)
 
 alphabet.subscribe(System.out::println);
 ```
+
+### 스레딩과 스케줄러
+
+Reactor는 RxJava 처럼 동시성에 구애받지 않는다고 간주될 수 있다. 즉 동시석 모델을 강제하지 않는다. 오히려 개발자가 명령을 내리게 된다. 그러나 이것이 라이브러리가 동시성을 도와주는 것을 막지는 않는다.
+
+`Flux` 또는 `Mono` 를 얻는다고 해서 받는다고 해서 전용 스레드에 실행되야 한다는 것은 아니다. 대부분의 연산자는 이전의 연산자가 실행된 스레드에서 계속 실행된다. 명시하지 않는한, 최상위 연산자(소스) 자체는 `subscirbe()`호출이 이루어진 스레드에서 실행된다. 다음 예제는 `Mono`가 새로운 스레드에서 실행되는 것을 보여준다.
+
+```java
+public static void main(String[] args) throws InterruptedException {
+  final Mono<String> mono = Mono.just("hello "); 
+
+  Thread t = new Thread(() -> mono
+      .map(msg -> msg + "thread ")
+      .subscribe(v -> 
+          System.out.println(v + Thread.currentThread().getName()) 
+      )
+  )
+  t.start();
+  t.join();
+
+}
+```
+
+```shell
+hello thread Thread-0
+```
+
+Reactor에서 실행 모델과 실행 위치는 사용하는 `Scheduler`에 의해 결정된다. `Scheduler` 는 `ExecutorService`와 비슷하게 스캐줄링일 담당하지만 전용의 추상화를 사용해서 더 많은 작업을 수행할 수 있다. 특히 클락 역할을하고 더 넒은 범위의 구현을 가능하게 한다.(테스트를 위한 가상시간 또는 트램폴린 또는 즉시 스캐툴링)
+
+`Schedulers` 클래스에는 다음 실행 컨텍스트에 대한 접근을 제공하는 static 메소드가 있다.
+
+- 실행 컨텍스트 없음(`Schedulers.immediate()`) : 프로세싱 시, 제출된 `Runnable`이 직접 실행되어 현제 `Thread` 내에서 효과적으로 실행된다.(null 객체 이거나 no-op `Scheduler`로 볼수 있다)
+
+- 재사용 가능한 단일 스레드(`Schedulers.single()`): 이메서드는 스케줄러가 삭제 될때까지 모든 호출자에 대해 동일한 스레드를 재사용한다. 호출자별 전용 스레드를 원하는 경우 `Schedulers.newSingle()`을 각각의 호출시 사용할 수있다.
+
+- unbounded 탄력적 스레드 풀(`Schedulers.elastic()`) : `Schedulers.boundedElastic()`  도입 이후에는 사용되지 않는다. `Schedulers.elastic()` 은 역압력을 숨기는 문제와 너무 많은 스래드를 유발한다.
+
+- bounded 탄력적 스레드 풀(`Schedulers.bondedElastic()`) : `elastic()`과 마찬가지로, 필요에 따라 새 워커 풀을 생성하고 비어있는 풀을 재사용한다. 너무 오랫동안 유휴 상태(기본 60초)인 작업자 풀도 삭제된다. `elastic() `과 달리 생성할 수 있는 백업 스레드 수에 제한(기본 CPU 코어수 * 10)이 있다. 
+
+  `Schedulers.boundedElastic()`은 다른 리소스를 묶지 않도록 blocking 프로레스에 자체 스레드를 제공하는 편리한 방법이다. 하지만 너무 많은 스레드로 시스템에 부담을 주지는 않는다.
+
+- 병렬 작업에 맞게 설정된 고정 워커 풀(`Schedulers.parallel()`)  : CPU 코어수 만큼 작업자를 생성한다.
+
+추가적으로 `Schedulers.fromExecutorService(ExecutorService)`를 사용하여 기존 `ExecutorService`를 사용하여 `Scheduler`를 생성할 수 있다.
+
+또한 `newXXX` 메소드를 사용하여 다양한 스캐줄러 타입의 새로운 인스턴스를 만들 수도 있다. 예를들어 `Schedulers.newParallel(youreScheduleName)`은 새로운 병렬 스캐줄러를 만든다.
+
+일부 연산자들은 기본적으로 `Schedulers`의 특정 스케줄러를 사용한다. 예를들어 `Flux.interval(Duration.ofMillis(300))` 팩토리 메소드를 호출 하면 300ms 마다 `Flux<Long>` 틱이 생성된다. 기본적으로 `Schedulers.parallel()`을 사용한다.
+
+Reactor는 리엑티브 체인에서 실행 컨텍스트(또는 스케줄러)를 전환하는 두가지 수단인 `publishOn`과 `subscribeOn`을 제공한다. 둘다 `Scheduler`를 사용하여 실행 컨텍스트를 해당 스캐줄러로 전환할 수 있다. 그러나 `publishOn`을 채인에 배치하는 것은 중요하지만, `subscribeOn`을 배치하는 것은 중요하지 않다. 이유는 구독하기 전까지는 아무 일도 일어나지 않기 때문이다.
+
+`Reactor`에서 연산자를 연결할때, 필요한 만큼 여러개의 `Flux`와 `Mono`구현을 서로 랩핑할 수 있다. 한번 구독하면, 첫번체 공급자 뒤로 `Subscriber` 객체의 체인이 만들어진다. 볼수 있는 것은 밖의 `Flux` 또는 `Mono` 와 `Subscription`이지만 그러나 이러한 중간 연산자별 구독자들이 실제 작업이 이루어지는 곳이다. 
