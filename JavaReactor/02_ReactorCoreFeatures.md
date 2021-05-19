@@ -452,3 +452,60 @@ Reactor에서 실행 모델과 실행 위치는 사용하는 `Scheduler`에 의�
 Reactor는 리엑티브 체인에서 실행 컨텍스트(또는 스케줄러)를 전환하는 두가지 수단인 `publishOn`과 `subscribeOn`을 제공한다. 둘다 `Scheduler`를 사용하여 실행 컨텍스트를 해당 스캐줄러로 전환할 수 있다. 그러나 `publishOn`을 채인에 배치하는 것은 중요하지만, `subscribeOn`을 배치하는 것은 중요하지 않다. 이유는 구독하기 전까지는 아무 일도 일어나지 않기 때문이다.
 
 `Reactor`에서 연산자를 연결할때, 필요한 만큼 여러개의 `Flux`와 `Mono`구현을 서로 랩핑할 수 있다. 한번 구독하면, 첫번체 공급자 뒤로 `Subscriber` 객체의 체인이 만들어진다. 볼수 있는 것은 밖의 `Flux` 또는 `Mono` 와 `Subscription`이지만 그러나 이러한 중간 연산자별 구독자들이 실제 작업이 이루어지는 곳이다. 
+
+#### `publishOn` 메소드
+
+`publishOn`은 subscriber 체인의 중간지점에서 다른 연산자와 같은 방식으로 적용된다. 업스트림에서 신호를 가져와 연결된 스케줄러의 워커에 대해 콜백을 실행하는 동안 다운 스트림으로 신호를 재생한다. 따라서 다음과 같이 후속 연산자가 실행되는 위치에 영향을 준다.
+
+- 실행 컨텍스트를 `Scheduler`가 선택한 하나의 `Thread`로 변경한다.
+- 명세에 따라 `onNext`호출은 순서대로 발생하므로 단일 스레드를 사용한다.
+- 특정 `Scheduler`에서 작동하지 않는한, 연산자는 `publishOn` 이후에 같은 스레드에서 실행을 계속한다.
+
+```java
+Scheduler s = Schedulers.newParallel("parallel-scheduler", 4); 
+
+final Flux<String> flux = Flux
+    .range(1, 2)
+    .map(i -> 10 + i)  
+    .publishOn(s)  
+    .map(i -> "value " + i);  
+
+new Thread(() -> flux.subscribe(System.out::println)); 
+```
+
+첫번째 map은 마지막에 생성된 익명 스레드에서 실행
+
+두번째 map은 처음에 생성된 스케줄러의 스레드에서 실행
+
+프린트는 마지막에 실행된 컨텍스트에서 실행된다.
+
+#### `subscribeOn` 메소드
+
+`subscribeOn`은 이전 체인이 구성될 때 subscription 프로세스에 적용된다. 결과적으로  `subscribeOn`이 체인에 어디에 배치하든 항상 소스 방출의 컨텍스트에 영향을 준다. 그러나 이것은 이후의 `publishOn`의 호출에 영향을 주지 않는다. `publishOn`을 사용하여 계속해서 체인의 일부에 대한 실행 컨텍스트를 전환할 수 있다.
+
+- 전체 연산자가 구독하는 `Thread`를 변경한다
+- `Scheduler`에서 스레드를 하나 선택한다.
+
+```java
+Scheduler s = Schedulers.newParallel("parallel-scheduler", 4); 
+
+final Flux<String> flux = Flux
+    .range(1, 2)
+    .map(i -> 10 + i)  
+    .subscribeOn(s)  
+    .map(i -> "value " + i);  
+
+new Thread(() -> flux.subscribe(System.out::println)); 
+```
+
+첫번째 map은 처음 생성된 스레드 중 하나에 의해 실행
+
+두번째 map도 동일한 스레드에서 실행
+
+구독이 처음으로 발생하지만 `subscribeOn`에 의해 즉시 네개의 스케줄러 스레드 중 하나로 이동한다.
+
+### 오류 처리
+
+리액티브 스트림에서는 오류가 발생하자 마자 시퀀스를 중지하고 연산자 체인을 따라 마지막 단계인 사용자가 정의한 `Subscriber`의 `onError` 메소드로 전파된다.
+
+오류는 애플리케이션 레벨에서 처리해야한다. 따라서 `Subscriber`의 `onError` 메서드를 항상 정의해야한다.
