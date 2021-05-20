@@ -509,3 +509,163 @@ new Thread(() -> flux.subscribe(System.out::println));
 리액티브 스트림에서는 오류가 발생하자 마자 시퀀스를 중지하고 연산자 체인을 따라 마지막 단계인 사용자가 정의한 `Subscriber`의 `onError` 메소드로 전파된다.
 
 오류는 애플리케이션 레벨에서 처리해야한다. 따라서 `Subscriber`의 `onError` 메서드를 항상 정의해야한다.
+
+Reactor는 또한 오류 처리 연산자로 체인 중간의 오류를 처리하는 방법을 제공한다.
+
+```java
+Flux.just(1, 2, 0)
+    .map(i -> "100 / " + i + " = " + (100 / i)) //this triggers an error with 0
+    .onErrorReturn("Divided by zero :("); // error handling example
+```
+
+#### 오류 처리 연산자
+
+`try-catch` 블록에서 예외를 다루는 것에 익숙할 수 있다. 이는 다음을 포함한다.
+
+- catch 한후 정적인 기본 값을 리턴한다.
+- catch 한후 대안의 메소드를 실행한다.
+- catch 한후 동적인 값을 계산한다.
+- catch한후 `BusinessException`으로 랩핑한후 다시 던진다
+- catch 한후 로그를 기록하고 다시 던진다.
+- `finally` 블록을 사용하여 `try-with-resource`를 사용한다
+
+이것들은 모두 Reactor에서 오류 처리 연산자의 형태와 동일하다. 이러한 연산자를 살펴보기 전에 먼저 리액티브 체인과 `try-catch` 블록의 병렬을 설정한다.
+
+구독시 체인의 끝에서 `onError` 콜백은 `catch` 블록과 유사하다. 다음 예와 같이 `Exception`이 발생할 경우 실행은 `catch`로 건너 뛴다.
+
+```java
+Flux<String> s = Flux.range(1, 10)
+    .map(v -> doSomethingDangerous(v)) 
+    .map(v -> doSecondTransform(v)); 
+s.subscribe(value -> System.out.println("RECEIVED " + value), 
+            error -> System.err.println("CAUGHT " + error) 
+);
+```
+
+앞의 예제는 개념적으로 다음의 `try-catch`블록과 유사하다.
+
+```java
+try {
+    for (int i = 1; i < 11; i++) {
+        String v1 = doSomethingDangerous(i); 
+        String v2 = doSecondTransform(v1); 
+        System.out.println("RECEIVED " + v2);
+    }
+} catch (Throwable t) {
+    System.err.println("CAUGHT " + t); 
+}
+```
+
+##### 정적 대체 값
+
+Catch후 정적인 기본값을 반환하는 것은 `onErrorReturn`이다.
+
+```java
+try {
+  return doSomethingDangerous(10);
+}
+catch (Throwable error) {
+  return "RECOVERED";
+}
+```
+
+다음은 Reactor에서 해당하는 것을 보여준다.
+
+```java
+Flux.just(10)
+    .map(this::doSomethingDangerous)
+    .onErrorReturn("RECOVERED");
+```
+
+`Predicate`를 이용하여 예외를 복구할지 선택할 수 있다.
+
+```java
+Flux.just(10)
+    .map(this::doSomethingDangerous)
+    .onErrorReturn(e -> e.getMessage().equals("boom10"), "recovered10"); 
+```
+
+##### 대체 메소드 
+
+하나 이상의 기본 값을 원하고 데이터를 처리하는 대체 방법이 있는 경우 `onErrorResume`을 사용할 수 있다. 이는 catch 한후 대안의 메소드를 실행하는 것과 같다.
+
+예를 들어, 프로세스가 외부의 신뢰할 수 ㅇ벗는 서비스에서 데이터를 가져 오지만, 좀더 오래 되었을 수 있지만, 더 안정적인 동일한 데이터의 로컬 캐시도 유지하는 경우 다음을 실행 할 수 있다.
+
+```java
+String v1;
+try {
+  v1 = callExternalService("key1");
+}
+catch (Throwable error) {
+  v1 = getFromCache("key1");
+}
+
+String v2;
+try {
+  v2 = callExternalService("key2");
+}
+catch (Throwable error) {
+  v2 = getFromCache("key2");
+}
+```
+
+다음 예제는 Reactor에서 해당하는 것을 보여준다.
+
+```java
+Flux.just("key1", "key2")
+    .flatMap(k -> callExternalService(k) 
+        .onErrorResume(e -> getFromCache(k)) 
+    );
+```
+
+`onErrorReturn`과 마찬가지로 `onErrorResume`에서도 `Predicate`를 이용해 적용할 예외를 선택할 수 있다. 발생하는 오류에 따라 전환 할 다른 대체 시퀀스를 선택할 수 있다.
+
+```java
+Flux.just("timeout1", "unknown", "key2")
+    .flatMap(k -> callExternalService(k)
+        .onErrorResume(error -> { 
+            if (error instanceof TimeoutException) 
+                return getFromCache(k);
+            else if (error instanceof UnknownKeyException)  
+                return registerNewEntry(k, "DEFAULT");
+            else
+                return Flux.error(error); 
+        })
+    );
+```
+
+##### 동적 대체 값
+
+데이터를 처리하는 대체 방법이 없더라도 받은 예외에서 대체 값을 계산할 수 있다. 이는 대체값을 찾아 동적 값을 찾는 것과 동일하다.
+
+```java
+try {
+  Value v = erroringMethod();
+  return MyWrapper.fromValue(v);
+}
+catch (Throwable error) {
+  return MyWrapper.fromError(error);
+}
+```
+
+다음과 같이  `onErrorResume`를 사용하여 대체값을 찾아 동적 값을 찾는 방법과 동일한 방식으로 리액티브 방식으로 수행 할 수 있습니다 .
+
+```java
+erroringFlux.onErrorResume(error -> Mono.just( 
+        MyWrapper.fromError(error) 
+));
+```
+
+##### Catch와 다시 던지기
+
+catch한후 `BusinessException`으로 랩핑한후 다시 던지기는 명령형 방식으로는 다음과 같다.
+
+```java
+try {
+  return callExternalService(k);
+}
+catch (Throwable error) {
+  throw new BusinessException("oops, SLA exceeded", error);
+}
+```
+
