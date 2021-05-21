@@ -669,3 +669,121 @@ catch (Throwable error) {
 }
 ```
 
+`onErrorResume`을 사용해 다음과 같이 리액티브 방식으로 수행할 수 있다.
+
+```java
+Flux.just("timeout1")
+    .flatMap(k -> callExternalService(k))
+    .onErrorResume(original -> Flux.error(
+            new BusinessException("oops, SLA exceeded", original))
+    );
+```
+
+`onErrorMap`을 사용해 더 간단히 표현할 수 있다.
+
+```java
+Flux.just("timeout1")
+    .flatMap(k -> callExternalService(k))
+    .onErrorMap(original -> new BusinessException("oops, SLA exceeded", original));
+```
+
+##### Catch후 오류 메시지 기록 및 다시 던지기
+
+오류가 계속 전파되길 원하지만 시퀀스를 수정하지 않고 계속 하려는 경우 `doOnError`
+
+연산자를 사용할 수 있다. 명령형 프로그래밍에서는 다음과 같이 작성한다.
+
+```java
+try {
+  return callExternalService(k);
+}
+catch (RuntimeException error) {
+  //make a record of the error
+  log("uh oh, falling back, service failed for key " + k);
+  throw error;
+}
+```
+
+`doOn` 이 붙은 연산자를 이용하면, 시퀀스의 수정없이 안에 내용을 `peek`하는 것이 가능하다.
+
+다음 예제는 오류를 계속해서 전파하지만, 오류가 있음을 기록할 수 있다.
+
+```java
+LongAdder failureStat = new LongAdder();
+Flux<String> flux =
+Flux.just("unknown")
+    .flatMap(k -> callExternalService(k) 
+        .doOnError(e -> {
+            failureStat.increment();
+            log("uh oh, falling back, service failed for key " + k); 
+        })
+        
+    );
+
+```
+
+##### 리소스와 finally 블록사용
+
+`finally` 블록을 사용하여 리소스 정리를 사용하거나, Java 7의 `try-with-resource` 구성을 사용하여 수행하는 방법이다.
+
+```java
+Stats stats = new Stats();
+stats.startTimer();
+try {
+  doSomethingDangerous();
+}
+finally {
+  stats.stopTimerAndRecordTiming();
+```
+
+```java
+try (SomeAutoCloseable disposableInstance = new SomeAutoCloseable()) {
+  return disposableInstance.toString();
+}
+```
+
+Reactor의 `doFinally`와 `using`을 사용하여 표현할 수 있다.
+
+`doFinally`를 이용하여 스퀀스가 종료될때(`onComplete` 또는 `onError`) 또는 취소 될때  실행을 원하는 함수를 설정할 수 있다. 어떤 종류의 종료가 호출되 었는지도 알 수 있다.
+
+```java
+Stats stats = new Stats();
+LongAdder statsCancel = new LongAdder();
+
+Flux<String> flux =
+Flux.just("foo", "bar")
+    .doOnSubscribe(s -> stats.startTimer())
+    .doFinally(type -> { 
+        stats.stopTimerAndRecordTiming();
+        if (type == SignalType.CANCEL) 
+          statsCancel.increment();
+    })
+    .take(1); 
+```
+
+`using`은 리소스에서 `Flux`가 만들어지고 처리가 완료 될 때마다 해당 리소스가 처리되어야 하는 경우 사용한다. 
+
+```java
+AtomicBoolean isDisposed = new AtomicBoolean();
+Disposable disposableInstance = new Disposable() {
+    @Override
+    public void dispose() {
+        isDisposed.set(true); 
+    }
+
+    @Override
+    public String toString() {
+        return "DISPOSABLE";
+    }
+};
+```
+
+```java
+Flux<String> flux =
+Flux.using(
+        () -> disposableInstance, 
+        disposable -> Flux.just(disposable.toString()), 
+        Disposable::dispose 
+);
+```
+
