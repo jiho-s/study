@@ -8,3 +8,9 @@
 
 ## 목차
 
+1. [gRPC](#grpc)
+
+## gRPC
+
+- [gRPC 소개](./01_Introduction.md)
+
