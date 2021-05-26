@@ -13,4 +13,5 @@
 ## gRPC
 
 - [gRPC 소개](./01_Introduction.md)
+- [핵심 개념, 아키텍쳐, 라이프사이클](./02_CoreConcepts_Architecture_Lifecycle.md)
 
