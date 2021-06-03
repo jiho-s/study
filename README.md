@@ -16,6 +16,7 @@
 8.  [HTTP](#http)
 9. [Java Reactor](#java-reactor)
 10. [gRPC](#grpc)
+11. [Kafka](#kafka)
 
 ## [Spring Reference](./SpringReference)
 
@@ -251,3 +252,7 @@
   - [gRPC 소개](./gRPC/01_Introduction.md)
   - [핵심 개념, 아키텍쳐, 라이프사이클](./gRPC/02_CoreConcepts_Architecture_Lifecycle.md)
 
+## [Kafka](./Kafka)
+
+- 시작하기
+  - [소개](./Kafka/01_GettingStarted/01_Introduction.md)
