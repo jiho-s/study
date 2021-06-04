@@ -10,4 +10,4 @@
 
 ## [시작하기](./01_GettingStarted)
 
-- 
+- [소개](./01_GettingStarted/01_Introduction.md)
