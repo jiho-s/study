@@ -256,3 +256,4 @@
 
 - 시작하기
   - [소개](./Kafka/01_GettingStarted/01_Introduction.md)
+  - [사용예시](./Kafka/01_GettingStarted/02_UseCases.md)
