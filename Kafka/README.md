@@ -7,8 +7,13 @@
 ## 목차
 
 1. [시작하기](#시작하기)
+2. [디자인](#디자인)
 
 ## [시작하기](./01_GettingStarted)
 
 - [소개](./01_GettingStarted/01_Introduction.md)
 - [사용예시](./01_GettingStarted/02_UseCases.md)
+
+## [디자인](./04_Design)
+
+- [동기](./04_Design/01_Motivation.md)
