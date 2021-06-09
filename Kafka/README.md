@@ -17,3 +17,4 @@
 ## [디자인](./04_Design)
 
 - [동기](./04_Design/01_Motivation.md)
+- [영속성](./04_Design/02_Persistence.md)
