@@ -12,3 +12,7 @@
 
 - [Architecture](01_Architecture.md)
 
+## [Domain Model](./02_DomainModel)
+
+- [Mapping Types](./02_DomainModel/01_MappingTypes.md)
+
