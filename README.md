@@ -252,6 +252,7 @@
 - 네티 개념과 아키텍처
   - 네티: 비동기식 이벤트 기반 네트워크 프레임워크
     - [자바의 네트워킹](./Netty/01_NettyConceptsAndArchitecture/01_AsynchronousAndEventDriven/01_NetworkingInJava.md)
+    - [네티 소개](./Netty/01_NettyConceptsAndArchitecture/01_AsynchronousAndEventDriven/02_IntroducingNetty.md)
 
 ## [gRPC](./gRPC)
 
