@@ -16,3 +16,5 @@
 
 1. [자바의 네트워킹](./01_NettyConceptsAndArchitecture/01_AsynchronousAndEventDriven/01_NetworkingInJava.md)
 2. [네티 소개](./01_NettyConceptsAndArchitecture/01_AsynchronousAndEventDriven/02_IntroducingNetty.md)
+3. [네티의 핵심 컴포넌트](./01_NettyConceptsAndArchitecture/01_AsynchronousAndEventDriven/03_NettyCoreComponents.md)
+
