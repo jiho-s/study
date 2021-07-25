@@ -6,13 +6,17 @@
 
 ## 목차
 
-1. [Architecture](#architecture)
+1. [Hibernate ORM Guide](#hibernate-orm-guide)
+2. [자바 ORM 표준 JPA 프로그래밍](#자바-orm-표준-jpa-프로그래밍)
 
-## Architecture
+## Hibernate ORM Guide
 
 - [Architecture](01_Architecture.md)
+- [Domain Model](./02_DomainModel)
+  - [Mapping Types](./02_DomainModel/01_MappingTypes.md)
 
-## [Domain Model](./02_DomainModel)
+## 자바 ORM 표준 JPA 프로그래밍
 
-- [Mapping Types](./02_DomainModel/01_MappingTypes.md)
+- [영속성 관리](./03_PersistenceManaging.md)
+- [프록시와 연관관계 관리](./08_ProxyAndRelationalMapping.md)
 
