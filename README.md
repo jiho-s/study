@@ -9,15 +9,16 @@
 1. [Spring Reference](#spring-reference)
 2. [Spring Learn](#spring-learn)
 3. [Java](#java)
-4. [Algorithm](#algorithm)
-5. [Software Design](#software-design)
-6. [Operating Systems](#operating-systems)
-7. [Kubernetes](#kubernetes)
-8.  [HTTP](#http)
-9. [Java Reactor](#java-reactor)
-10. [Netty](#netty)
-11. [gRPC](#grpc)
-12. [Kafka](#kafka)
+4. [JPA](#jpa)
+5. [Algorithm](#algorithm)
+6. [Software Design](#software-design)
+7. [Operating Systems](#operating-systems)
+8. [Kubernetes](#kubernetes)
+9. [HTTP](#http)
+10. [Java Reactor](#java-reactor)
+11. [Netty](#netty)
+12. [gRPC](#grpc)
+13. [Kafka](#kafka)
 
 ## [Spring Reference](./SpringReference)
 
@@ -154,6 +155,16 @@
     - [Stream](./Java/util/Stream/01_Stream.md)
   - [Concurrent](./util/Concurrent)
     - [Flow](./Java/util/Concurrent/01_Flow.md)
+
+## [JPA](./JPA)
+
+- Hibernate ORM Guide
+  - [Architecture](./JPA/01_Architecture.md)
+  - [Domain Model](./JPA/02_DomainModel)
+    - [Mapping Types](./JPA/02_DomainModel/01_MappingTypes.md)
+- 자바 ORM 표준 JPA 프로그래밍
+  - [영속성 관리](./JPA/03_PersistenceManaging.md)
+  - [프록시와 연관관계 관리](./JPA/08_ProxyAndRelationalMapping.md)
 
 ## [Algorithm](./Algorithm)
 
