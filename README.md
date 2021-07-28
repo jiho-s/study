@@ -165,6 +165,7 @@
 - 자바 ORM 표준 JPA 프로그래밍
   - [영속성 관리](./JPA/03_PersistenceManaging.md)
   - [프록시와 연관관계 관리](./JPA/08_ProxyAndRelationalMapping.md)
+  - [웹 애플리케이션과 영속성 관리](./JPA/13_WebApplicationAndPersistenceManage.md)
 
 ## [Algorithm](./Algorithm)
 
