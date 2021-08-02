@@ -166,6 +166,8 @@
   - [영속성 관리](./JPA/03_PersistenceManaging.md)
   - [프록시와 연관관계 관리](./JPA/08_ProxyAndRelationalMapping.md)
   - [웹 애플리케이션과 영속성 관리](./JPA/13_WebApplicationAndPersistenceManage.md)
+  - [고급 주제와 성능 최적화](./JPA/15.md)
+  - [트랜잭션과 락, 2차 캐시](./JPA/16.md)
 
 ## [Algorithm](./Algorithm)
 
