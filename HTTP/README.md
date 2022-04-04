@@ -32,3 +32,4 @@
 ## HTTP 완벽 가이드
 
 - [HTTP 메세지](./03_HTTP/03_HTTPMessages.md)
+- [커넥션 관리](./03_HTTP/03_HTTPMessages.md)
