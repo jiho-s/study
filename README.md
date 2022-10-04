@@ -286,4 +286,4 @@
 
 ## [Data Pipeline](./DataPipeline)
 
-- 최신 데이터 인프라
+- [최신 데이터 인프라](./DataPipeLine/02_ModernDataInfra.md)
