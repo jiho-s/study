@@ -15,3 +15,6 @@
 - [SOLID](./01_ObjectOrientedPrograming/02_SOLID.md)
 
 ## [만들면서 배우는 클린 아키텍쳐](./02_GetYourHandsDirtyOnCleanArchitecture)
+
+- [계층형 아키텍쳐의 문제는 무엇일까?](./02_GetYourHandsDirtyOnCleanArchitecture/01_WrongWithLayers.md)
+
